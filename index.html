@@ -31,7 +31,7 @@
     "description": "Free casual games online with instant play and no login.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://vibeverse.app/index.html?game={game}",
+      "target": "https://miniverse.app/index.html?game={game}",
       "query-input": "required name=game"
     }
   }
@@ -44,24 +44,24 @@
     "description": "Free casual games online — fast, fun, mobile-first",
     "numberOfItems": 18,
     "itemListElement": [
-      {"@type":"ListItem","position":1,"name":"Squishy Chick","url":"https://vibeverse.app/games/squishy-chick.html"},
-      {"@type":"ListItem","position":2,"name":"Neon Rush","url":"https://vibeverse.app/games/neon-rush.html"},
-      {"@type":"ListItem","position":3,"name":"Daily Fortune","url":"https://vibeverse.app/games/daily-fortune.html"},
-      {"@type":"ListItem","position":4,"name":"Blue Planet Diary","url":"https://vibeverse.app/games/blue-planet-diary.html"},
-      {"@type":"ListItem","position":5,"name":"Fresh Fruit Stand","url":"https://vibeverse.app/games/fresh-fruit-stand.html"},
-      {"@type":"ListItem","position":6,"name":"Born To vs Forced To","url":"https://vibeverse.app/games/born-vs-forced.html"},
-      {"@type":"ListItem","position":7,"name":"Lily Pad Leap","url":"https://vibeverse.app/games/lily-pad-leap.html"},
-      {"@type":"ListItem","position":8,"name":"Cute Stack","url":"https://vibeverse.app/games/cute-stack.html"},
-      {"@type":"ListItem","position":9,"name":"Runway Glow-Up","url":"https://vibeverse.app/games/runway-glow-up.html"},
-      {"@type":"ListItem","position":10,"name":"Mystery Flavor Box","url":"https://vibeverse.app/games/mystery-flavor-box.html"},
-      {"@type":"ListItem","position":11,"name":"Office Pets","url":"https://vibeverse.app/games/office-pets.html"},
-      {"@type":"ListItem","position":12,"name":"Rainbow Salt Lake","url":"https://vibeverse.app/games/rainbow-salt-lake.html"},
-      {"@type":"ListItem","position":13,"name":"Tile Draw","url":"https://vibeverse.app/games/tile-draw.html"},
-      {"@type":"ListItem","position":14,"name":"Starfall","url":"https://vibeverse.app/games/starfall.html"},
-      {"@type":"ListItem","position":15,"name":"Stack Rush","url":"https://vibeverse.app/games/stack-rush.html"},
-      {"@type":"ListItem","position":16,"name":"Memory Match","url":"https://vibeverse.app/games/memory-match.html"},
-      {"@type":"ListItem","position":17,"name":"Number Merge","url":"https://vibeverse.app/games/number-merge.html"},
-      {"@type":"ListItem","position":18,"name":"Beat Tap","url":"https://vibeverse.app/games/beat-tap.html"}
+      {"@type":"ListItem","position":1,"name":"Squishy Chick","url":"https://miniverse.app/games/squishy-chick.html"},
+      {"@type":"ListItem","position":2,"name":"Neon Rush","url":"https://miniverse.app/games/neon-rush.html"},
+      {"@type":"ListItem","position":3,"name":"Daily Fortune","url":"https://miniverse.app/games/daily-fortune.html"},
+      {"@type":"ListItem","position":4,"name":"Blue Planet Diary","url":"https://miniverse.app/games/blue-planet-diary.html"},
+      {"@type":"ListItem","position":5,"name":"Fresh Fruit Stand","url":"https://miniverse.app/games/fresh-fruit-stand.html"},
+      {"@type":"ListItem","position":6,"name":"Born To vs Forced To","url":"https://miniverse.app/games/born-vs-forced.html"},
+      {"@type":"ListItem","position":7,"name":"Lily Pad Leap","url":"https://miniverse.app/games/lily-pad-leap.html"},
+      {"@type":"ListItem","position":8,"name":"Cute Stack","url":"https://miniverse.app/games/cute-stack.html"},
+      {"@type":"ListItem","position":9,"name":"Runway Glow-Up","url":"https://miniverse.app/games/runway-glow-up.html"},
+      {"@type":"ListItem","position":10,"name":"Mystery Flavor Box","url":"https://miniverse.app/games/mystery-flavor-box.html"},
+      {"@type":"ListItem","position":11,"name":"Office Pets","url":"https://miniverse.app/games/office-pets.html"},
+      {"@type":"ListItem","position":12,"name":"Rainbow Salt Lake","url":"https://miniverse.app/games/rainbow-salt-lake.html"},
+      {"@type":"ListItem","position":13,"name":"Tile Draw","url":"https://miniverse.app/games/tile-draw.html"},
+      {"@type":"ListItem","position":14,"name":"Starfall","url":"https://miniverse.app/games/starfall.html"},
+      {"@type":"ListItem","position":15,"name":"Stack Rush","url":"https://miniverse.app/games/stack-rush.html"},
+      {"@type":"ListItem","position":16,"name":"Memory Match","url":"https://miniverse.app/games/memory-match.html"},
+      {"@type":"ListItem","position":17,"name":"Number Merge","url":"https://miniverse.app/games/number-merge.html"},
+      {"@type":"ListItem","position":18,"name":"Beat Tap","url":"https://miniverse.app/games/beat-tap.html"}
     ]
   }
   </script>
@@ -254,11 +254,17 @@
     }
 
     .brand-subtitle,
-    .brand-cta {
+    .brand-cta,
+    .brand-note {
       font-size: clamp(1rem, 2.5vw, 1.1rem);
       color: #334155;
       margin: 0;
       line-height: 1.6;
+    }
+
+    .brand-note {
+      opacity: 0.85;
+      margin-top: 10px;
     }
 
     .hero-scoreboard {
@@ -412,12 +418,27 @@
       window.prompt('Copy this link to share:', window.location.href);
     }
 
+    function scrollToFeed() {
+      var target = document.getElementById('feed');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function loadMiniverseScores() {
+      var highScore = localStorage.getItem('miniverse_high_score') || 0;
+      var lastScore = localStorage.getItem('miniverse_last_score') || 0;
+      document.getElementById('miniHighScore').textContent = highScore;
+      document.getElementById('miniScore').textContent = lastScore;
+    }
+
     // Close guide when clicking backdrop
     document.getElementById('guideBackdrop').addEventListener('click', closeGuide);
 
     // Auto-show guide on first visit only
     window.addEventListener('load', function(){
       document.getElementById('appLoader').classList.add('hidden');
+      loadMiniverseScores();
       if (!localStorage.getItem('miniverse_guide_seen')) {
         setTimeout(showGuide, 500);
         localStorage.setItem('miniverse_guide_seen', 'true');
@@ -481,8 +502,9 @@
               </div>
             </div>
           </div>
+          <p class="brand-note">Today’s picks are waiting in the feed below — tap a card to jump into instant fun.</p>
           <div class="miniverse-action-row">
-            <button class="miniverse-btn" type="button" onclick="window.location.reload()">Restart</button>
+            <button class="miniverse-btn" type="button" onclick="scrollToFeed()">Play now</button>
             <button class="miniverse-btn miniverse-btn--secondary" type="button" onclick="shareMiniverse()">Share</button>
           </div>
         </section>
