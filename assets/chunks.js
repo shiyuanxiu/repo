@@ -1,0 +1,110 @@
+/** Script chunk manifests — Games vs Learn, plus per-section Learn hubs. */
+window.VV_CHUNKS = {
+  games: {
+    bundle: "assets/bundle/games-core.js",
+    scripts: ["assets/feed-meta.js"],
+  },
+  learnCore: {
+    bundle: "assets/bundle/learn-core.js",
+    scripts: [
+      "assets/learn-feed-sync.js",
+      "assets/financial-news-rss.js",
+      "assets/learn-rss-proxy.js",
+      "assets/learn-radar-snippet.js",
+      "assets/learn-radar-hub.js",
+      "assets/learn-picks.js",
+    ],
+  },
+  learnSections: {
+    radar: [
+      "assets/hotspot-radar-feeds.js",
+      "assets/hotspot-radar.js",
+      "assets/hotspot-radar-hub.js",
+    ],
+    finance: [
+      "assets/financial-news-feeds.js",
+      "assets/financial-news.js",
+      "assets/financial-news-hub.js",
+    ],
+    worldcup: ["assets/wc2026-data.js", "assets/wc2026-hub.js"],
+    wiki: ["assets/knowledge-app-data.js", "assets/knowledge-app-hub.js"],
+    space: ["assets/space-app-data.js", "assets/space-app-hub.js"],
+    poetry: ["assets/poetry-app-data.js", "assets/poetry-app-hub.js"],
+    vibecoding: ["assets/vibe-coding-app-data.js", "assets/vibe-coding-app-hub.js"],
+    hustle: ["assets/hustle-app-data.js", "assets/hustle-app-hub.js"],
+    aitools: [
+      "assets/ai-tools-app-data.js",
+      "assets/ai-tools-daily.js",
+      "assets/ai-tools-app-hub.js",
+    ],
+    mind: ["assets/mind-app-data.js", "assets/mind-app-hub.js"],
+    campus: [
+      "assets/campus-life-feeds.js",
+      "assets/campus-life.js",
+      "assets/campus-life-hub.js",
+    ],
+    dating: ["assets/dating-social-app-data.js", "assets/dating-social-app-hub.js"],
+    career: [
+      "assets/job-radar-feeds.js",
+      "assets/job-radar.js",
+      "assets/startup-wire-feeds.js",
+      "assets/startup-wire.js",
+      "assets/career-radar-hub.js",
+    ],
+    jobs: [
+      "assets/job-radar-feeds.js",
+      "assets/job-radar.js",
+      "assets/startup-wire-feeds.js",
+      "assets/startup-wire.js",
+      "assets/career-radar-hub.js",
+    ],
+    startup: [
+      "assets/job-radar-feeds.js",
+      "assets/job-radar.js",
+      "assets/startup-wire-feeds.js",
+      "assets/startup-wire.js",
+      "assets/career-radar-hub.js",
+    ],
+    creatorplay: [
+      "assets/gaming-pulse-feeds.js",
+      "assets/gaming-pulse.js",
+      "assets/creator-kit-feeds.js",
+      "assets/creator-kit.js",
+      "assets/creator-play-radar-hub.js",
+    ],
+    gaming: [
+      "assets/gaming-pulse-feeds.js",
+      "assets/gaming-pulse.js",
+      "assets/creator-kit-feeds.js",
+      "assets/creator-kit.js",
+      "assets/creator-play-radar-hub.js",
+    ],
+    creator: [
+      "assets/gaming-pulse-feeds.js",
+      "assets/gaming-pulse.js",
+      "assets/creator-kit-feeds.js",
+      "assets/creator-kit.js",
+      "assets/creator-play-radar-hub.js",
+    ],
+    wellness: [
+      "assets/wellness-wire-feeds.js",
+      "assets/wellness-wire.js",
+      "assets/wellness-wire-hub.js",
+    ],
+    climate: [
+      "assets/climate-brief-feeds.js",
+      "assets/climate-brief.js",
+      "assets/climate-brief-hub.js",
+    ],
+    food: [
+      "assets/food-campus-feeds.js",
+      "assets/food-campus.js",
+      "assets/food-campus-hub.js",
+    ],
+    stocks: [
+      "assets/stock-pulse-feeds.js",
+      "assets/stock-pulse.js",
+      "assets/stock-pulse-hub.js",
+    ],
+  },
+};

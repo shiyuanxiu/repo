@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://vibeverse.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://vibeverse.app/index.html</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://vibeverse.app/about.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vibeverse.app/contact.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://vibeverse.app/privacy.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://vibeverse.app/terms.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://vibeverse.app/favorites.html</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://vibeverse.app/play-tips.html</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://vibeverse.app/how-it-works.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://vibeverse.app/whats-new.html</loc><changefreq>weekly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://vibeverse.app/games/</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://vibeverse.app/games/index.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://vibeverse.app/categories/arcade.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://vibeverse.app/categories/puzzle.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://vibeverse.app/categories/chill.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://vibeverse.app/categories/social.html</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://vibeverse.app/games/squishy-chick.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/neon-rush.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/daily-fortune.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/blue-planet-diary.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/fresh-fruit-stand.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/born-vs-forced.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/lily-pad-leap.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/cute-stack.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/runway-glow-up.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/mystery-flavor-box.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/office-pets.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/rainbow-salt-lake.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/tile-draw.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/starfall.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/stack-rush.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/memory-match.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/number-merge.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://vibeverse.app/games/beat-tap.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

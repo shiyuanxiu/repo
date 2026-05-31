@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Games — My Vibes | VibeVerse</title>
+  <meta name="description" content="Your saved VibeVerse mini games. Star games in the feed to build your personal favorites list.">
+  <link rel="canonical" href="https://vibeverse.app/favorites.html">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/legal.css">
+</head>
+<body>
+  <header class="site-chrome">
+    <div class="site-chrome-inner">
+      <a class="site-chrome-brand" href="index.html"><span aria-hidden="true">✦</span> VibeVerse</a>
+      <nav class="site-chrome-nav">
+        <a href="index.html">Play</a>
+        <a href="games/index.html">All guides</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="content-page">
+    <h1>Saved games</h1>
+    <p>Games you starred in the feed appear here. Tap ⭐ on any card in the feed to add favorites.</p>
+    <div id="favoritesGrid" class="favorites-grid" aria-live="polite"></div>
+    <div id="favoritesEmpty" class="favorites-empty hidden">
+      <p>No saved games yet.</p>
+      <a class="play-cta" href="index.html">Browse the feed</a>
+    </div>
+  </main>
+
+  <footer class="site-chrome-footer">
+    <p>© 2026 VibeVerse · <a href="about.html">About</a> · <a href="privacy.html">Privacy</a></p>
+  </footer>
+
+  <script>
+    const CATALOG = {
+      chick: { name: "Squishy Chick", emoji: "🐣", play: "index.html?game=chick", guide: "games/squishy-chick.html" },
+      run: { name: "Neon Rush", emoji: "⚡", play: "index.html?game=run", guide: "games/neon-rush.html" },
+      shop: { name: "Fresh Fruit Stand", emoji: "🏪", play: "index.html?game=shop", guide: "games/fresh-fruit-stand.html" },
+      fortune: { name: "Daily Fortune", emoji: "🌸", play: "index.html?game=fortune", guide: "games/daily-fortune.html" },
+      earth: { name: "Blue Planet Diary", emoji: "🌍", play: "index.html?game=earth", guide: "games/blue-planet-diary.html" },
+      box: { name: "Mystery Flavor Box", emoji: "🎁", play: "index.html?game=box", guide: "games/mystery-flavor-box.html" },
+      sente: { name: "Born To vs Forced To", emoji: "✨", play: "index.html?game=sente", guide: "games/born-vs-forced.html" },
+      pet: { name: "Office Pets", emoji: "🐾", play: "index.html?game=pet", guide: "games/office-pets.html" },
+      leap: { name: "Lily Pad Leap", emoji: "🐸", play: "index.html?game=leap", guide: "games/lily-pad-leap.html" },
+      block: { name: "Cute Stack", emoji: "🦌", play: "index.html?game=block", guide: "games/cute-stack.html" },
+      face: { name: "Runway Glow-Up", emoji: "💅", play: "index.html?game=face", guide: "games/runway-glow-up.html" },
+      spot: { name: "Rainbow Salt Lake", emoji: "🌈", play: "index.html?game=spot", guide: "games/rainbow-salt-lake.html" },
+      mj: { name: "Tile Draw", emoji: "🀄", play: "index.html?game=mj", guide: "games/tile-draw.html" },
+      star: { name: "Starfall", emoji: "⭐", play: "index.html?game=star", guide: "games/starfall.html" },
+      stack: { name: "Stack Rush", emoji: "🧱", play: "index.html?game=stack", guide: "games/stack-rush.html" },
+      match: { name: "Memory Match", emoji: "🃏", play: "index.html?game=match", guide: "games/memory-match.html" },
+      merge: { name: "Number Merge", emoji: "🔢", play: "index.html?game=merge", guide: "games/number-merge.html" },
+      beat: { name: "Beat Tap", emoji: "🎵", play: "index.html?game=beat", guide: "games/beat-tap.html" },
+    };
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem("vv_saved") || "[]"); } catch (_) {}
+    const grid = document.getElementById("favoritesGrid");
+    const empty = document.getElementById("favoritesEmpty");
+    if (!saved.length) {
+      empty.classList.remove("hidden");
+    } else {
+      saved.forEach((id) => {
+        const g = CATALOG[id];
+        if (!g) return;
+        const wrap = document.createElement("div");
+        wrap.className = "favorite-card-wrap";
+        wrap.innerHTML = `
+          <a class="favorite-card" href="${g.play}">
+            <span class="favorite-card-emoji">${g.emoji}</span>
+            <span class="favorite-card-name">${g.name}</span>
+          </a>
+          ${g.guide ? `<a class="favorite-guide-link" href="${g.guide}">Guide</a>` : ""}
+        `;
+        grid.appendChild(wrap);
+      });
+    }
+  </script>
+</body>
+</html>

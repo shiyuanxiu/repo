@@ -1,0 +1,20 @@
+{
+  "name": "VibeVerse — Free Mini Games",
+  "short_name": "VibeVerse",
+  "description": "18 free browser mini games in a scroll feed. No download.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdf4ff",
+  "theme_color": "#a855f7",
+  "orientation": "portrait-primary",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
