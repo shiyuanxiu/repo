@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VibeVerse — Free Mini Games & Daily Vibes</title>
   <meta name="description" content="Play free mini games, daily fortune, meme generators, and chill vibes in one TikTok-style feed. No download — tap and play on VibeVerse.">
   <meta name="theme-color" content="#a855f7">
@@ -72,14 +72,243 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="assets/legal.css">
+  <style>
+    /* Enhanced loading overlay */
+    #appLoader {
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      font-size: clamp(16px, 5vw, 24px);
+      color: #fff;
+      font-weight: 500;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    #appLoader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .app-loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #a855f7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Guide modal */
+    #guideModal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
+      color: white;
+      padding: clamp(20px, 5vw, 30px);
+      border-radius: 16px;
+      z-index: 998;
+      max-width: 90vw;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(168,85,247,0.2);
+      display: none;
+    }
+
+    #guideModal.show {
+      display: block;
+      animation: slideUp 0.4s ease;
+    }
+
+    #guideModal.hidden {
+      display: none;
+    }
+
+    @keyframes slideUp {
+      from { 
+        transform: translate(-50%, calc(-50% + 30px));
+        opacity: 0;
+      }
+      to { 
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+
+    #guideModal h3 {
+      font-size: clamp(20px, 6vw, 28px);
+      margin-bottom: 15px;
+      color: #a855f7;
+    }
+
+    #guideModal p {
+      font-size: clamp(14px, 4vw, 16px);
+      margin-bottom: 12px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    #guideModal button {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 28px);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: clamp(14px, 4vw, 16px);
+      font-weight: 600;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    #guideModal button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(168,85,247,0.4);
+    }
+
+    #guideModal button:active {
+      transform: translateY(0);
+    }
+
+    #guideBackdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 997;
+      display: none;
+    }
+
+    #guideBackdrop.show {
+      display: block;
+    }
+
+    /* Restart button */
+    #restartBtn {
+      position: fixed;
+      bottom: clamp(15px, 3vw, 25px);
+      right: clamp(15px, 3vw, 25px);
+      background: linear-gradient(135deg, #ff4444 0%, #ff1744 100%);
+      color: white;
+      border: none;
+      padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 20px);
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 99;
+      font-size: clamp(12px, 3vw, 14px);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255,68,68,0.3);
+    }
+
+    #restartBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,68,68,0.5);
+    }
+
+    #restartBtn:active {
+      transform: translateY(0);
+    }
+
+    /* Help button in navbar */
+    .navbar-help-btn {
+      background: none;
+      border: none;
+      font-size: clamp(16px, 4vw, 20px);
+      cursor: pointer;
+      padding: 8px;
+      transition: all 0.3s ease;
+      color: #a855f7;
+    }
+
+    .navbar-help-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Mobile optimization */
+    @media (max-width: 480px) {
+      #guideModal {
+        max-width: 95vw;
+        padding: 20px;
+      }
+
+      #restartBtn {
+        font-size: 12px;
+        padding: 10px 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#feed">Skip to games</a>
-
-  <div class="app-loader" id="appLoader" role="status" aria-live="polite">
+  <!-- Enhanced loading overlay with gradient and spinner -->
+  <div id="appLoader" role="status" aria-live="polite">
     <div class="app-loader-spinner" aria-hidden="true"></div>
-    <p>Loading vibes…</p>
+    <p>Loading VibeVerse...</p>
   </div>
+
+  <!-- Guide modal backdrop -->
+  <div id="guideBackdrop"></div>
+
+  <!-- Welcome guide modal -->
+  <div id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <h3 id="guideTitle">✦ Welcome to VibeVerse</h3>
+    <p>Swipe to play · 18 free mini games · No download</p>
+    <p>Browse by category · Save favorites · Daily picks</p>
+    <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.7; margin-top: 15px;">Enjoy the vibe 😊</p>
+    <br>
+    <button onclick="closeGuide()">Got it, let's play!</button>
+  </div>
+
+  <!-- Restart button (fixed position) -->
+  <button id="restartBtn" onclick="window.location.reload()" title="Refresh page" aria-label="Restart">
+    ↻ Restart
+  </button>
+
+  <!-- Guide helper scripts -->
+  <script>
+    function showGuide() {
+      document.getElementById('guideModal').classList.add('show');
+      document.getElementById('guideBackdrop').classList.add('show');
+    }
+
+    function closeGuide() {
+      document.getElementById('guideModal').classList.remove('show');
+      document.getElementById('guideBackdrop').classList.remove('show');
+    }
+
+    // Close guide when clicking backdrop
+    document.getElementById('guideBackdrop').addEventListener('click', closeGuide);
+
+    // Auto-show guide on first visit only
+    window.addEventListener('load', function(){
+      document.getElementById('appLoader').classList.add('hidden');
+      if (!localStorage.getItem('vibeverse_guide_seen')) {
+        setTimeout(showGuide, 500);
+        localStorage.setItem('vibeverse_guide_seen', 'true');
+      }
+    });
+  </script>
+
+  <a class="skip-link" href="#feed">Skip to games</a>
 
   <div class="toast hidden" id="appToast" role="alert"></div>
 
@@ -97,6 +326,7 @@
         </nav>
         <a class="nav-guides" href="games/index.html" aria-label="Game guides" title="Game guides">📖</a>
         <a class="nav-saved" href="favorites.html" aria-label="Saved games">⭐</a>
+        <button class="navbar-help-btn" onclick="showGuide()" title="How to use VibeVerse" aria-label="Help">ℹ</button>
         <div class="avatar">
           <span class="avatar-emoji" aria-hidden="true">✦</span>
         </div>
