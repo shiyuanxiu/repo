@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VibeVerse — Free Mini Games & Daily Vibes</title>
-  <meta name="description" content="Play free mini games, daily fortune, meme generators, and chill vibes in one TikTok-style feed. No download — tap and play on VibeVerse.">
-  <meta name="theme-color" content="#a855f7">
-  <link rel="canonical" href="https://vibeverse.app/">
+  <title>Miniverse - Fun Casual Games</title>
+  <meta name="description" content="Play free casual games online • No download • No login. Miniverse brings simple fun and instant play.">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="canonical" href="https://miniverse.app/">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icon.svg">
   <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="VibeVerse — Free Mini Games & Daily Vibes">
-  <meta property="og:description" content="Squishy chicks, neon runners, fortune sticks & more — one swipe away.">
-  <meta property="og:url" content="https://vibeverse.app/">
-  <meta property="og:image" content="https://vibeverse.app/assets/og/og-default.png">
+  <meta property="og:title" content="Miniverse - Fun Casual Games">
+  <meta property="og:description" content="Play free casual games online • No download • No login. Keep the game going at Miniverse.">
+  <meta property="og:url" content="https://miniverse.app/">
+  <meta property="og:image" content="https://miniverse.app/assets/og/og-default.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VibeVerse — Free Mini Games">
-  <meta name="twitter:description" content="Tap, play, share — mini games in a scroll feed.">
-  <meta name="twitter:image" content="https://vibeverse.app/assets/og/og-default.png">
+  <meta name="twitter:title" content="Miniverse - Fun Casual Games">
+  <meta name="twitter:description" content="Tap or click to play free casual games online. No download, no login.">
+  <meta name="twitter:image" content="https://miniverse.app/assets/og/og-default.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "VibeVerse",
-    "url": "https://vibeverse.app/",
-    "description": "Free browser mini games, daily fortune, and chill interactive vibes.",
+    "name": "Miniverse",
+    "url": "https://miniverse.app/",
+    "description": "Free casual games online with instant play and no login.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://vibeverse.app/index.html?game={game}",
@@ -40,8 +40,8 @@
   {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "VibeVerse Mini Games",
-    "description": "Free browser mini games in a scroll feed",
+    "name": "Miniverse Games",
+    "description": "Free casual games online — fast, fun, mobile-first",
     "numberOfItems": 18,
     "itemListElement": [
       {"@type":"ListItem","position":1,"name":"Squishy Chick","url":"https://vibeverse.app/games/squishy-chick.html"},
@@ -229,6 +229,111 @@
       transform: translateY(0);
     }
 
+    .miniverse-hero {
+      display: grid;
+      gap: 18px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.12);
+    }
+
+    .miniverse-hero > div:first-child {
+      display: grid;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .brand-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .brand-subtitle,
+    .brand-cta {
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      color: #334155;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .hero-scoreboard {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .score-pill {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 120px;
+      text-align: left;
+      box-shadow: 0 12px 24px rgba(15,23,42,0.08);
+    }
+
+    .score-pill span {
+      display: block;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .score-pill strong {
+      display: block;
+      font-size: 1.55rem;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .score-pill--alt {
+      background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      color: white;
+    }
+
+    .miniverse-action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin-top: 18px;
+    }
+
+    .miniverse-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 12px 25px rgba(59,130,246,0.18);
+    }
+
+    .miniverse-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(59,130,246,0.22);
+    }
+
+    .miniverse-btn--secondary {
+      background: rgba(15,23,42,0.95);
+    }
+
+    .miniverse-btn--secondary:hover {
+      background: rgba(15,23,42,1);
+    }
+
     /* Help button in navbar */
     .navbar-help-btn {
       background: none;
@@ -237,7 +342,7 @@
       cursor: pointer;
       padding: 8px;
       transition: all 0.3s ease;
-      color: #a855f7;
+      color: #3b82f6;
     }
 
     .navbar-help-btn:hover {
@@ -262,7 +367,7 @@
   <!-- Enhanced loading overlay with gradient and spinner -->
   <div id="appLoader" role="status" aria-live="polite">
     <div class="app-loader-spinner" aria-hidden="true"></div>
-    <p>Loading VibeVerse...</p>
+    <p>Loading Miniverse...</p>
   </div>
 
   <!-- Guide modal backdrop -->
@@ -270,10 +375,10 @@
 
   <!-- Welcome guide modal -->
   <div id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
-    <h3 id="guideTitle">✦ Welcome to VibeVerse</h3>
-    <p>Swipe to play · 18 free mini games · No download</p>
-    <p>Browse by category · Save favorites · Daily picks</p>
-    <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.7; margin-top: 15px;">Enjoy the vibe 😊</p>
+    <h3 id="guideTitle">✦ Welcome to Miniverse</h3>
+    <p>Play free casual games online • No download • No login.</p>
+    <p>How to play: Tap or click to start.</p>
+    <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.7; margin-top: 15px;">Simple fun, quick sessions, memorable play.</p>
     <br>
     <button onclick="closeGuide()">Got it, let's play!</button>
   </div>
@@ -295,15 +400,27 @@
       document.getElementById('guideBackdrop').classList.remove('show');
     }
 
+    function shareMiniverse() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Miniverse - Fun Casual Games',
+          text: 'Play free casual games online • No download • No login.',
+          url: window.location.href
+        }).catch(() => {});
+        return;
+      }
+      window.prompt('Copy this link to share:', window.location.href);
+    }
+
     // Close guide when clicking backdrop
     document.getElementById('guideBackdrop').addEventListener('click', closeGuide);
 
     // Auto-show guide on first visit only
     window.addEventListener('load', function(){
       document.getElementById('appLoader').classList.add('hidden');
-      if (!localStorage.getItem('vibeverse_guide_seen')) {
+      if (!localStorage.getItem('miniverse_guide_seen')) {
         setTimeout(showGuide, 500);
-        localStorage.setItem('vibeverse_guide_seen', 'true');
+        localStorage.setItem('miniverse_guide_seen', 'true');
       }
     });
   </script>
@@ -315,9 +432,9 @@
   <div class="app">
     <header class="navbar">
       <div class="navbar-inner">
-        <a class="brand-logo" href="index.html" aria-label="VibeVerse Home">
+        <a class="brand-logo" href="index.html" aria-label="Miniverse Home">
           <span class="brand-mark" aria-hidden="true">✦</span>
-          <span class="brand-name">VibeVerse</span>
+          <span class="brand-name">Miniverse</span>
         </a>
         <nav class="tabs tabs-wide">
           <button class="tab active" data-tab="recommend" type="button">For You</button>
@@ -326,7 +443,7 @@
         </nav>
         <a class="nav-guides" href="games/index.html" aria-label="Game guides" title="Game guides">📖</a>
         <a class="nav-saved" href="favorites.html" aria-label="Saved games">⭐</a>
-        <button class="navbar-help-btn" onclick="showGuide()" title="How to use VibeVerse" aria-label="Help">ℹ</button>
+        <button class="navbar-help-btn" onclick="showGuide()" title="How to use Miniverse" aria-label="Help">ℹ</button>
         <div class="avatar">
           <span class="avatar-emoji" aria-hidden="true">✦</span>
         </div>
@@ -346,28 +463,27 @@
           <button type="button" class="feed-streak-share hidden" id="streakShareBtn" aria-label="Share streak">📤</button>
         </div>
 
-        <section class="feed-intro" aria-label="About VibeVerse">
-          <p class="feed-intro-lead">Swipe to play · 18 free mini games · No download</p>
-          <div class="feed-search-wrap">
-            <label class="feed-search-label" for="feedSearch">Search games</label>
-            <input type="search" class="feed-search" id="feedSearch" placeholder="Search games…" autocomplete="off" enterkeyhint="search">
+        <section class="feed-intro" aria-label="About Miniverse">
+          <div class="miniverse-hero">
+            <div>
+              <p class="brand-title">Miniverse</p>
+              <p class="brand-subtitle">Play free casual games online • No download • No login</p>
+              <p class="brand-cta">How to play: Tap or click to start.</p>
+            </div>
+            <div class="hero-scoreboard">
+              <div class="score-pill">
+                <span>Score</span>
+                <strong id="miniScore">0</strong>
+              </div>
+              <div class="score-pill score-pill--alt">
+                <span>High Score</span>
+                <strong id="miniHighScore">0</strong>
+              </div>
+            </div>
           </div>
-          <div class="feed-hub-bar">
-            <button type="button" class="feed-today-btn" id="todayPickBtn">Today's pick…</button>
-            <span class="feed-hub-dot" aria-hidden="true">·</span>
-            <a class="feed-hub-link" href="whats-new.html" id="whatsNewLink"><span id="whatsNew"></span></a>
-            <a class="feed-hub-link" href="games/index.html">Guides</a>
-            <a class="feed-hub-link" href="play-tips.html">Tips</a>
-          </div>
-          <nav class="feed-cat-links" aria-label="Browse by category">
-            <a href="categories/arcade.html">⚡ Arcade</a>
-            <a href="categories/puzzle.html">🧩 Puzzle</a>
-            <a href="categories/chill.html">🌸 Chill</a>
-            <a href="categories/social.html">✨ Social</a>
-          </nav>
-          <div class="feed-highlights" id="feedHighlights" aria-label="Share-worthy picks">
-            <p class="feed-highlights-label">Share-worthy picks</p>
-            <ul class="feed-highlights-list" id="feedHighlightsList"></ul>
+          <div class="miniverse-action-row">
+            <button class="miniverse-btn" type="button" onclick="window.location.reload()">Restart</button>
+            <button class="miniverse-btn miniverse-btn--secondary" type="button" onclick="shareMiniverse()">Share</button>
           </div>
         </section>
 
@@ -3148,7 +3264,7 @@
         </aside>
 
         <footer class="site-footer">
-          <p>© 2026 VibeVerse · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+          <p>© 2026 Miniverse Games · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
           <p class="site-footer-games">
             <a href="games/squishy-chick.html">Squishy Chick</a> ·
             <a href="games/neon-rush.html">Neon Rush</a> ·
