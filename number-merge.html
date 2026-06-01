@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>2248 Chain — Link &amp; Double</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;touch-action:manipulation;overflow:hidden}
+body{
+  background:linear-gradient(145deg,#fdf4ff 0%,#ede9fe 28%,#e0f2fe 62%,#fef9c3 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background:radial-gradient(circle at 20% 15%,rgba(244,114,182,.25),transparent 42%),
+              radial-gradient(circle at 82% 78%,rgba(56,189,248,.22),transparent 40%);
+}
+#wrap{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:1}
+.hidden{display:none!important}
+/* ---- Cover ---- */
+#cover{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.merge-badge{
+  display:inline-block;padding:5px 14px;border-radius:999px;
+  background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 4px 16px rgba(167,139,250,.2);
+  font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;
+}
+.cover-frame{
+  width:100%;max-width:390px;padding:8px;border-radius:22px;
+  background:rgba(255,255,255,.55);border:2px solid rgba(255,255,255,.85);
+  box-shadow:0 16px 40px rgba(124,58,237,.15);
+}
+#coverCv{display:block;width:100%;height:auto;border-radius:16px}
+.cover-copy{padding:0 8px}
+.cover-kicker{margin:0 0 4px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#a855f7}
+.cover-title{
+  margin:0 0 8px;font-size:34px;font-weight:900;line-height:1.05;
+  background:linear-gradient(135deg,#6d28d9,#ec4899 55%,#f59e0b);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cover-sub{margin:0 0 16px;font-size:14px;line-height:1.45;color:#64748b;max-width:28ch;margin-left:auto;margin-right:auto}
+#playBtn{
+  width:100%;max-width:390px;min-height:52px;border:none;border-radius:16px;
+  font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;
+  box-shadow:0 10px 28px rgba(139,92,246,.4);touch-action:manipulation;
+  animation:btnPulse 2.4s ease-in-out infinite;
+}
+@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+#playBtn:active{transform:scale(.97);animation:none}
+.cover-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.cover-tags span{
+  padding:4px 10px;border-radius:999px;font-size:10px;font-weight:700;
+  background:rgba(255,255,255,.7);color:#6366f1;border:1px solid rgba(99,102,241,.15);
+}
+/* ---- Game ---- */
+header{display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px}
+.brand{font-size:15px;font-weight:800;color:#6d28d9;letter-spacing:-.02em}
+.scores{display:flex;gap:8px}
+.pill{
+  min-width:86px;padding:8px 12px;border-radius:14px;
+  background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 4px 14px rgba(139,92,246,.1);text-align:center;
+}
+.pill span{display:block;font-size:9px;font-weight:800;color:#a78bfa;text-transform:uppercase;letter-spacing:.08em}
+.pill strong{display:block;font-size:20px;font-weight:900;color:#5b21b6;margin-top:2px}
+#stage{
+  width:100%;max-width:390px;padding:10px;border-radius:22px;
+  background:rgba(255,255,255,.5);border:2px solid rgba(255,255,255,.8);
+  box-shadow:0 12px 32px rgba(124,58,237,.12);
+}
+canvas{display:block;width:100%;height:auto;border-radius:14px;touch-action:none;cursor:pointer}
+#hint{font-size:12px;font-weight:600;color:#8b5cf6;text-align:center;min-height:18px}
+#toast{
+  position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-120%);
+  padding:10px 20px;border-radius:999px;background:rgba(30,27,75,.92);color:#fde68a;
+  font-size:14px;font-weight:800;letter-spacing:.02em;opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s;
+  pointer-events:none;z-index:20;white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+footer{display:flex;gap:10px;width:100%;max-width:390px}
+.btn{
+  flex:1;min-height:48px;border:none;border-radius:14px;
+  font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation;
+}
+#restartBtn{background:linear-gradient(180deg,#fff,#f5f3ff);color:#6d28d9;border:1px solid #ddd6fe}
+#muteBtn{background:linear-gradient(180deg,#fff,#f0f9ff);color:#0369a1;border:1px solid #bae6fd}
+#muteBtn.muted{color:#cbd5e1}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="cover">
+    <span class="merge-badge">No ads · Offline · Free</span>
+    <div class="cover-frame"><canvas id="coverCv" width="390" height="260" aria-hidden="true"></canvas></div>
+    <div class="cover-copy">
+      <p class="cover-kicker">2248 Chain</p>
+      <h1 class="cover-title">Link &amp; Double</h1>
+      <p class="cover-sub">Drag through matching numbers. Merge ×2. Chase your personal best on the commute.</p>
+    </div>
+    <div class="cover-tags">
+      <span>5×5 grid</span><span>One-hand play</span><span>Brain snack</span>
+    </div>
+    <button id="playBtn" type="button">▶ Play Now</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <header>
+      <div class="brand">2248 Chain</div>
+      <div class="scores">
+        <div class="pill"><span>Score</span><strong id="scoreEl">0</strong></div>
+        <div class="pill"><span>Best</span><strong id="bestEl">0</strong></div>
+      </div>
+    </header>
+    <div id="stage"><canvas id="cv" width="390" height="390" aria-label="Number merge grid"></canvas></div>
+    <p id="hint">Drag to link same numbers · release to merge ×2</p>
+    <footer>
+      <button class="btn" id="restartBtn" type="button">↺ Restart</button>
+      <button class="btn" id="muteBtn" type="button">🔊 Sound</button>
+    </footer>
+  </div>
+</div>
+<div id="toast" aria-live="polite"></div>
+<script>
+(() => {
+"use strict";
+
+const N = 5, PAD = 10, GAP = 8, HIT = 6;
+const BEST_KEY = "number-merge-2248-best", MUTE_KEY = "number-merge-2248-mute";
+const CV = document.getElementById("cv"), ctx = CV.getContext("2d"), W = CV.width;
+const CELL = (W - PAD * 2 - GAP * (N - 1)) / N;
+const COVER_CV = document.getElementById("coverCv"), COVER_CTX = COVER_CV.getContext("2d");
+
+const PALETTE = {
+  2:    { bg: "#ddd6fe", fg: "#5b21b6", glow: "#a78bfa" },
+  4:    { bg: "#c4b5fd", fg: "#4c1d95", glow: "#8b5cf6" },
+  8:    { bg: "#bae6fd", fg: "#075985", glow: "#38bdf8" },
+  16:   { bg: "#99f6e4", fg: "#115e59", glow: "#2dd4bf" },
+  32:   { bg: "#fde68a", fg: "#92400e", glow: "#fbbf24" },
+  64:   { bg: "#fdba74", fg: "#9a3412", glow: "#fb923c" },
+  128:  { bg: "#f9a8d4", fg: "#831843", glow: "#ec4899" },
+  256:  { bg: "#e879f9", fg: "#701a75", glow: "#d946ef" },
+  512:  { bg: "#a5b4fc", fg: "#312e81", glow: "#6366f1" },
+  1024: { bg: "#fb7185", fg: "#fff", glow: "#f43f5e" },
+  2048: { bg: "#1e1b4b", fg: "#fde047", glow: "#facc15" },
+};
+
+let board, score, best, muted, over, path, dragging, pointerId, lastLinkLen;
+let pops = [], sparks = [], spawnPop = null, loopId = 0, coverId = 0, toastTimer = 0;
+let audioCtx = null, maxTile = 0;
+
+function $(id) { return document.getElementById(id); }
+
+function loadBest() {
+  best = parseInt(localStorage.getItem(BEST_KEY) || "0", 10);
+  $("bestEl").textContent = best;
+}
+function saveBest() {
+  if (score > best) {
+    best = score;
+    localStorage.setItem(BEST_KEY, String(best));
+    $("bestEl").textContent = best;
+    showToast("New best! 🔥");
+  }
+}
+function loadMute() {
+  muted = localStorage.getItem(MUTE_KEY) === "1";
+  $("muteBtn").textContent = muted ? "🔇 Muted" : "🔊 Sound";
+  $("muteBtn").classList.toggle("muted", muted);
+}
+
+function showToast(msg) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 1400);
+}
+
+function emptyBoard() { return Array.from({ length: N }, () => Array(N).fill(0)); }
+
+function cellRect(r, c) {
+  const x = PAD + c * (CELL + GAP), y = PAD + r * (CELL + GAP);
+  return { x, y, w: CELL, h: CELL, cx: x + CELL / 2, cy: y + CELL / 2 };
+}
+
+function ptFromEvent(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+  const t = e.changedTouches?.[0] ?? e.touches?.[0] ?? e;
+  return { x: (t.clientX - rect.left) * sx, y: (t.clientY - rect.top) * sy };
+}
+
+function cellAt(x, y) {
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const { x: cx, y: cy } = cellRect(r, c);
+    if (x >= cx - HIT && x <= cx + CELL + HIT && y >= cy - HIT && y <= cy + CELL + HIT) return { r, c };
+  }
+  return null;
+}
+
+function adj(a, b) {
+  const dr = Math.abs(a.r - b.r);
+  const dc = Math.abs(a.c - b.c);
+  return dr <= 1 && dc <= 1 && dr + dc > 0;
+}
+
+function spawnRandomTile() {
+  const empty = [];
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++)
+    if (board[r][c] === 0) empty.push({ r, c });
+  if (!empty.length) return false;
+  const slot = empty[Math.floor(Math.random() * empty.length)];
+  board[slot.r][slot.c] = Math.random() < 0.85 ? 2 : 4;
+  spawnPop = { r: slot.r, c: slot.c, t: 0 };
+  sfx("spawn");
+  return true;
+}
+
+function canPlay() {
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    const v = board[r][c];
+    if (v === 0) return true;
+    for (const [dr, dc] of [[0,1],[1,0],[0,-1],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]) {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < N && nc >= 0 && nc < N && board[nr][nc] === v) return true;
+    }
+  }
+  return false;
+}
+
+function sfx(kind, merged) {
+  if (muted) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const t = audioCtx.currentTime, m = 0.09;
+    const tone = (freq, dur, type = "sine", vol = m) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.connect(g).connect(audioCtx.destination);
+      o.start(t); o.stop(t + dur);
+    };
+    if (kind === "link") tone(520, 0.04, "triangle", 0.035);
+    else if (kind === "spawn") tone(740, 0.07, "sine", 0.05);
+    else if (kind === "merge") {
+      const base = 280 + Math.log2(Math.max(merged, 2)) * 65;
+      tone(base, 0.14, "sine", 0.1);
+      tone(base * 1.25, 0.12, "triangle", 0.06);
+      tone(base * 1.5, 0.1, "sine", 0.04);
+    } else if (kind === "over") { tone(180, 0.35, "sine", 0.08); tone(120, 0.4, "triangle", 0.05); }
+    else if (kind === "start") { tone(440, 0.1); tone(554, 0.12); tone(659, 0.14); }
+  } catch (_) { /* noop */ }
+}
+
+function milestone(v) {
+  if (v >= 128 && maxTile < 128) showToast("128 unlocked ✨");
+  else if (v >= 256 && maxTile < 256) showToast("256 — keep going!");
+  else if (v >= 512 && maxTile < 512) showToast("512 beast mode 🚀");
+  else if (v >= 1024 && maxTile < 1024) showToast("1024 legend!");
+  maxTile = Math.max(maxTile, v);
+}
+
+function applyMerge(chain) {
+  if (!chain || chain.length < 2) return;
+  const val = board[chain[0].r][chain[0].c];
+  if (!val) return;
+  const end = chain[chain.length - 1], merged = val * 2;
+  for (let i = 0; i < chain.length; i++) {
+    const p = chain[i];
+    board[p.r][p.c] = i === chain.length - 1 ? merged : 0;
+  }
+  score += merged;
+  $("scoreEl").textContent = score;
+  saveBest();
+  milestone(merged);
+  pops.push({ r: end.r, c: end.c, t: 0 });
+  const { cx, cy } = cellRect(end.r, end.c);
+  const col = tileColor(merged);
+  for (let i = 0; i < 12; i++) {
+    sparks.push({
+      x: cx, y: cy,
+      vx: (Math.random() - 0.5) * 5,
+      vy: (Math.random() - 0.5) * 5 - 1.5,
+      life: 1, hue: col.glow,
+    });
+  }
+  sfx("merge", merged);
+  spawnRandomTile();
+  if (!canPlay()) { over = true; sfx("over"); }
+}
+
+function rr(c, x, y, w, h, rad) {
+  const r = Math.min(rad, w / 2, h / 2);
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + h, r);
+  c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+}
+
+function tileColor(v) { return PALETTE[v] || { bg: "#cbd5e1", fg: "#1e293b", glow: "#94a3b8" }; }
+function fontSize(v) { const s = String(v).length; return s >= 4 ? 16 : s === 3 ? 18 : 22; }
+
+function drawBoard(c, w, h, opts = {}) {
+  const { board: b, path: p = [], pops: pp = [], spawnPop: sp = null, over: ov = false, score: sc = 0, cell, pad, gap, n } = opts;
+  const cellSz = cell ?? CELL, padV = pad ?? PAD, gapV = gap ?? GAP, nV = n ?? N;
+
+  const cellR = (r, c) => {
+    const x = padV + c * (cellSz + gapV), y = padV + r * (cellSz + gapV);
+    return { x, y, cx: x + cellSz / 2, cy: y + cellSz / 2 };
+  };
+
+  const bg = c.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, "#faf5ff"); bg.addColorStop(0.5, "#f0f9ff"); bg.addColorStop(1, "#fefce8");
+  c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+  for (let r = 0; r < nV; r++) for (let c2 = 0; c2 < nV; c2++) {
+    const { x, y } = cellR(r, c2);
+    c.fillStyle = "rgba(255,255,255,0.45)";
+    rr(c, x, y, cellSz, cellSz, 12); c.fill();
+  }
+
+  if (p.length > 1) {
+    c.save();
+    c.strokeStyle = "rgba(167,139,250,0.7)";
+    c.lineWidth = cellSz * 0.4;
+    c.lineCap = "round"; c.lineJoin = "round";
+    c.shadowColor = "rgba(236,72,153,0.55)"; c.shadowBlur = 16;
+    c.beginPath();
+    p.forEach((pt, i) => {
+      const { cx, cy } = cellR(pt.r, pt.c);
+      if (i === 0) c.moveTo(cx, cy); else c.lineTo(cx, cy);
+    });
+    c.stroke(); c.restore();
+  }
+
+  for (let r = 0; r < nV; r++) for (let c2 = 0; c2 < nV; c2++) {
+    const v = b?.[r]?.[c2];
+    if (!v) continue;
+    const { x, y } = cellR(r, c2);
+    const col = tileColor(v);
+    let scale = 1;
+    const pop = pp?.find?.((pp2) => pp2.r === r && pp2.c === c2);
+    if (pop) scale = 1 + Math.sin(Math.min(1, pop.t / 220) * Math.PI) * 0.16;
+    if (sp && sp.r === r && sp.c === c2) scale = 0.55 + Math.min(1, sp.t / 200) * 0.45;
+    const inPath = p.some((pt) => pt.r === r && pt.c === c2);
+    const cx = x + cellSz / 2, cy = y + cellSz / 2;
+    c.save();
+    c.translate(cx, cy); c.scale(scale, scale); c.translate(-cx, -cy);
+    c.fillStyle = col.bg;
+    rr(c, x, y, cellSz, cellSz, 12); c.fill();
+    c.fillStyle = "rgba(0,0,0,0.04)";
+    rr(c, x, y + cellSz * 0.72, cellSz, cellSz * 0.28, 12); c.fill();
+    c.strokeStyle = inPath ? col.glow : "rgba(255,255,255,0.65)";
+    c.lineWidth = inPath ? 2.5 : 1.2; c.stroke();
+    c.fillStyle = col.fg;
+    c.font = `800 ${fontSize(v)}px system-ui,sans-serif`;
+    c.textAlign = "center"; c.textBaseline = "middle";
+    c.fillText(String(v), cx, cy + 1);
+    c.restore();
+  }
+
+  if (ov) {
+    c.fillStyle = "rgba(30,27,75,0.72)"; c.fillRect(0, 0, w, h);
+    c.fillStyle = "#fde68a"; c.font = "800 20px system-ui,sans-serif"; c.textAlign = "center";
+    c.fillText("Out of moves", w / 2, h / 2 - 16);
+    c.fillStyle = "#e9d5ff"; c.font = "600 14px system-ui,sans-serif";
+    c.fillText(`Score ${sc} · tap to run it back`, w / 2, h / 2 + 12);
+  }
+}
+
+function draw(now) {
+  drawBoard(ctx, W, W, { board, path, pops, spawnPop, over, score: score });
+  sparks = sparks.filter((s) => {
+    s.x += s.vx; s.y += s.vy; s.vy += 0.07; s.life -= 0.035;
+    if (s.life <= 0) return false;
+    ctx.fillStyle = s.hue ? `${s.hue}${Math.floor(s.life * 255).toString(16).padStart(2,"0")}` : `rgba(255,255,255,${s.life})`;
+    if (s.hue) ctx.fillStyle = `rgba(236,72,153,${s.life * 0.85})`;
+    ctx.beginPath(); ctx.arc(s.x, s.y, 3 * s.life, 0, Math.PI * 2); ctx.fill();
+    return true;
+  });
+  pops.forEach((p) => { p.t += 16; });
+  pops = pops.filter((p) => p.t < 240);
+  if (spawnPop) { spawnPop.t += 16; if (spawnPop.t >= 200) spawnPop = null; }
+}
+
+function drawCover(now) {
+  const w = COVER_CV.width, h = COVER_CV.height;
+  const demo = [
+    [2,4,8,4,2],[0,2,8,2,0],[4,2,16,2,4],[0,8,16,8,0],[2,4,32,4,2],
+  ];
+  const t = now * 0.001;
+  const demoPath = [
+    {r:0,c:0},{r:0,c:1},{r:0,c:2},{r:1,c:2},{r:2,c:2},{r:2,c:3},{r:2,c:4},
+  ];
+  const idx = Math.floor(t * 2.2) % (demoPath.length + 2);
+  const pathSlice = demoPath.slice(0, Math.max(0, idx));
+
+  const cell = (w - 40 - 32) / 5;
+  COVER_CTX.clearRect(0, 0, w, h);
+  const bg = COVER_CTX.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, "#ede9fe"); bg.addColorStop(1, "#fce7f3");
+  COVER_CTX.fillStyle = bg; COVER_CTX.fillRect(0, 0, w, h);
+
+  drawBoard(COVER_CTX, w, h, {
+    board: demo, path: pathSlice, cell, pad: 20, gap: 8, n: 5,
+  });
+
+  COVER_CTX.fillStyle = "rgba(255,255,255,0.55)";
+  COVER_CTX.fillRect(0, h - 52, w, 52);
+  COVER_CTX.fillStyle = "#6d28d9";
+  COVER_CTX.font = "800 13px system-ui,sans-serif";
+  COVER_CTX.textAlign = "center";
+  COVER_CTX.fillText("Drag → link → merge ×2", w / 2, h - 22);
+  coverId = requestAnimationFrame(drawCover);
+}
+
+function loop() { draw(); loopId = requestAnimationFrame(loop); }
+
+function resetGame() {
+  board = emptyBoard(); score = 0; over = false; maxTile = 0;
+  path = []; pops = []; sparks = []; spawnPop = null;
+  dragging = false; pointerId = null; lastLinkLen = 0;
+  $("scoreEl").textContent = "0";
+  spawnRandomTile(); spawnRandomTile();
+  $("hint").textContent = "Drag to link same numbers · release to merge ×2";
+}
+
+function startGame() {
+  $("cover").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  cancelAnimationFrame(coverId);
+  resetGame();
+  sfx("start");
+  if (!loopId) loopId = requestAnimationFrame(loop);
+}
+
+function onDown(e) {
+  if (over) { resetGame(); return; }
+  e.preventDefault();
+  pointerId = e.pointerId ?? 0;
+  dragging = true; path = []; lastLinkLen = 0;
+  try { CV.setPointerCapture(e.pointerId); } catch (_) {}
+  const p = ptFromEvent(e, CV);
+  const cell = cellAt(p.x, p.y);
+  if (cell && board[cell.r][cell.c]) path = [cell];
+}
+
+function onMove(e) {
+  if (!dragging || (e.pointerId != null && e.pointerId !== pointerId)) return;
+  e.preventDefault();
+  const p = ptFromEvent(e, CV);
+  const cell = cellAt(p.x, p.y);
+  if (!cell || !path.length) return;
+  const last = path[path.length - 1];
+  if (cell.r === last.r && cell.c === last.c) return;
+  if (path.some((x) => x.r === cell.r && x.c === cell.c)) return;
+  if (!adj(last, cell)) return;
+  const base = board[path[0].r][path[0].c];
+  if (!board[cell.r][cell.c] || board[cell.r][cell.c] !== base) return;
+  path.push(cell);
+  if (path.length > lastLinkLen) { sfx("link"); lastLinkLen = path.length; }
+}
+
+function onUp(e) {
+  if (!dragging || (e.pointerId != null && pointerId != null && e.pointerId !== pointerId)) return;
+  dragging = false;
+  try { if (CV.hasPointerCapture(e.pointerId)) CV.releasePointerCapture(e.pointerId); } catch (_) {}
+  pointerId = null;
+  const chain = path.slice(); path = [];
+  if (chain.length >= 2) applyMerge(chain);
+}
+
+CV.addEventListener("pointerdown", onDown);
+CV.addEventListener("pointermove", onMove);
+CV.addEventListener("pointerup", onUp);
+CV.addEventListener("pointercancel", onUp);
+CV.addEventListener("contextmenu", (e) => e.preventDefault());
+
+$("playBtn").addEventListener("click", startGame);
+$("restartBtn").addEventListener("click", resetGame);
+$("muteBtn").addEventListener("click", () => {
+  muted = !muted;
+  localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+  $("muteBtn").textContent = muted ? "🔇 Muted" : "🔊 Sound";
+  $("muteBtn").classList.toggle("muted", muted);
+});
+
+loadBest(); loadMute();
+if (new URLSearchParams(location.search).has("testBoard")) {
+  window.__seedMergeBoard = () => {
+    board = emptyBoard();
+    board[2][1] = 2;
+    board[2][2] = 2;
+    board[2][3] = 2;
+    score = 0;
+    over = false;
+    path = [];
+    pops = [];
+    sparks = [];
+    spawnPop = null;
+    $("scoreEl").textContent = "0";
+    draw();
+  };
+}
+coverId = requestAnimationFrame(drawCover);
+})();
+</script>
+</body>
+</html>

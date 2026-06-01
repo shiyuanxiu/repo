@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Piggy Catch — River Match-3</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:linear-gradient(180deg,#ecfccb,#bae6fd);font-family:system-ui,-apple-system,sans-serif;overflow:hidden;touch-action:manipulation}
+#wrap{max-width:420px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;overflow-y:auto}
+#game{width:100%;max-width:390px;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(14,116,144,.25);background:#fff;position:relative}
+canvas{display:block;width:100%;height:auto;touch-action:manipulation;cursor:pointer}
+#hud{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px 0;width:100%;max-width:390px}
+.pill{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.95);box-shadow:0 4px 12px rgba(14,165,233,.12);font-size:11px;font-weight:600;color:#0369a1}
+.pill strong{font-size:15px;color:#0ea5e9}
+#toolbar{display:flex;gap:8px;padding:8px 12px 12px;width:100%;max-width:390px}
+.btn{flex:1;min-height:44px;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation}
+#undoBtn{background:linear-gradient(180deg,#fff,#e0f2fe);color:#0369a1;border:1px solid #7dd3fc}
+#undoBtn:disabled{opacity:.45;cursor:not-allowed}
+#resetBtn{background:linear-gradient(180deg,#fff,#fef3c7);color:#92400e;border:1px solid #fcd34d}
+#startBtn{background:linear-gradient(180deg,#fda4af,#f472b6);color:#fff;box-shadow:0 8px 20px rgba(244,114,182,.35)}
+#cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:24px 20px 32px;background:linear-gradient(180deg,rgba(255,255,255,0) 40%,rgba(255,255,255,.94));z-index:5;text-align:center}
+#cover h1{font-family:Georgia,serif;font-size:28px;color:#0c4a6e;margin-bottom:6px}
+#cover p{font-size:13px;color:#0369a1;line-height:1.45;margin-bottom:16px;max-width:28ch}
+#cover.hidden{display:none}
+#overlay{display:none}
+#resultPanel{width:100%;max-width:390px;margin-top:10px;padding:16px 18px;border-radius:16px;background:#fff;border:2px solid #7dd3fc;box-shadow:0 8px 24px rgba(14,165,233,.14);text-align:center;color:#0c4a6e}
+#resultPanel.hidden{display:none}
+#resultPanel h2{margin-bottom:6px;font-size:18px;color:#0c4a6e}
+#resultPanel p{margin-bottom:12px;font-size:13px;line-height:1.45;color:#0369a1}
+#resultPanel .btn{margin-top:6px}
+.badge{display:inline-block;margin-bottom:8px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.9);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0284c7}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="hud" class="hidden">
+    <div class="pill"><span>Level</span><strong id="lvEl">1</strong></div>
+    <div class="pill"><span>Left</span><strong id="leftEl">0</strong></div>
+    <div class="pill"><span>Score</span><strong id="scoreEl">0</strong></div>
+  </div>
+  <div id="game">
+    <canvas id="cv" width="390" height="520" aria-label="Piggy Catch game"></canvas>
+    <div id="cover">
+      <span class="badge">Offline · No ads</span>
+      <h1>🐷 Piggy Catch</h1>
+      <p>Tap fish &amp; shells into 7 slots. Match 3 to clear. Free undo once per level.</p>
+      <button class="btn" id="startBtn" type="button">▶ Start / Resume</button>
+    </div>
+  </div>
+  <div id="resultPanel" class="hidden">
+    <h2 id="overTitle">Game Over</h2>
+    <p id="overMsg"></p>
+    <button class="btn" id="againBtn" type="button" style="background:linear-gradient(180deg,#fde047,#eab308);color:#422006">Try Again</button>
+  </div>
+  <div id="toolbar" class="hidden">
+    <button class="btn" id="undoBtn" type="button" disabled>↩ Undo (1 free)</button>
+    <button class="btn" id="resetBtn" type="button">↺ Reset</button>
+  </div>
+</div>
+<script>
+(() => {
+"use strict";
+
+const CV = document.getElementById("cv");
+const ctx = CV.getContext("2d");
+const SAVE_KEY = "piggy-catch-v2";
+const TYPES = [
+  { id: "clown", label: "Clownfish" },
+  { id: "gold", label: "Goldfish" },
+  { id: "blue", label: "Bluefish" },
+  { id: "puffer", label: "Puffer" },
+  { id: "seahorse", label: "Seahorse" },
+  { id: "wshell", label: "White shell" },
+  { id: "sshell", label: "Striped shell" },
+  { id: "pearl", label: "Pearl shell" },
+];
+const TRAY_MAX = 7;
+const TILE = 58;
+const OUTLINE = "#374151";
+const PINK = "#f9a8a8";
+
+let tiles = [], tray = [], level = 1, score = 0, over = "";
+let undoLeft = 1, history = [], playing = false;
+let fly = [], sparks = [], splashes = [], matchFlash = 0;
+let pig = { mood: "idle", ear: 0, tail: 0, rod: 0, rodVel: 0, shyStart: 0 };
+let pointer = { x: 195, y: 300, active: false };
+let t0 = 0, loopId = 0;
+
+function pigEyeLook(pigX, pigY, sc) {
+  if (!pointer.active) return { ox: 0, oy: 0 };
+  const hx = pigX;
+  const hy = pigY - 26 * sc;
+  const dx = pointer.x - hx;
+  const dy = pointer.y - hy;
+  const d = Math.hypot(dx, dy);
+  if (d < 2) return { ox: 0, oy: 0 };
+  const m = Math.min(2.2, d * 0.011);
+  return { ox: (dx / d) * m, oy: (dy / d) * m * 0.85 };
+}
+
+const $ = (id) => document.getElementById(id);
+const hud = $("hud"), toolbar = $("toolbar"), cover = $("cover");
+const resultPanel = $("resultPanel"), undoBtn = $("undoBtn");
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function typesForLevel(lv) {
+  return Math.min(4 + Math.floor((lv - 1) / 2), 8);
+}
+
+function setsForLevel(lv) {
+  return 1 + Math.floor((lv - 1) / 2);
+}
+
+function layout(n) {
+  const spots = [];
+  const layers = [
+    { layer: 0, cols: 4, rows: 3, ox: 22, oy: 158, step: 56 },
+    { layer: 1, cols: 3, rows: 3, ox: 50, oy: 128, step: 56 },
+    { layer: 2, cols: 3, rows: 2, ox: 50, oy: 98, step: 56 },
+    { layer: 3, cols: 2, rows: 2, ox: 78, oy: 72, step: 56 },
+  ];
+  let i = 0;
+  layers.forEach((L) => {
+    for (let r = 0; r < L.rows && i < n; r++)
+      for (let c = 0; c < L.cols && i < n; c++)
+        spots.push({ x: L.ox + c * L.step, y: L.oy + r * L.step, layer: L.layer }), i++;
+  });
+  return spots.slice(0, n);
+}
+
+function overlap(a, b) {
+  const p = 6;
+  return a.x + p < b.x + TILE - p && a.x + TILE - p > b.x + p
+    && a.y + p < b.y + TILE - p && a.y + TILE - p > b.y + p;
+}
+
+function updateBlocked() {
+  tiles.forEach((t) => {
+    if (t.removed) { t.blocked = false; return; }
+    t.blocked = tiles.some((o) => !o.removed && o.layer > t.layer && overlap(t, o));
+  });
+}
+
+function buildLevel(lv) {
+  const nTypes = typesForLevel(lv);
+  const sets = setsForLevel(lv);
+  const pool = [];
+  for (let s = 0; s < sets; s++)
+    for (let i = 0; i < nTypes; i++)
+      pool.push(TYPES[i].id, TYPES[i].id, TYPES[i].id);
+  shuffle(pool);
+  const spots = layout(pool.length);
+  tiles = pool.map((type, i) => ({
+    id: i, type, x: spots[i].x, y: spots[i].y, layer: spots[i].layer,
+    removed: false, blocked: false,
+  }));
+  tray = [];
+  fly = [];
+  updateBlocked();
+  undoLeft = 1;
+  history = [];
+  undoBtn.disabled = true;
+  updateHud();
+}
+
+function boardLeft() {
+  return tiles.filter((t) => !t.removed).length;
+}
+
+function traySlotPos(i) {
+  const slotW = 44, gap = 4, total = TRAY_MAX * slotW + (TRAY_MAX - 1) * gap;
+  const start = (CV.width - total) / 2;
+  const trayY = CV.height - 54;
+  return { x: start + i * (slotW + gap) + slotW / 2, y: trayY + slotW / 2 };
+}
+
+function snapshot() {
+  return {
+    tiles: tiles.map((t) => ({ ...t })),
+    tray: [...tray],
+    score,
+    undoLeft,
+  };
+}
+
+function restore(snap) {
+  tiles = snap.tiles.map((t) => ({ ...t }));
+  tray = [...snap.tray];
+  score = snap.score;
+  undoLeft = snap.undoLeft;
+  undoBtn.disabled = undoLeft <= 0;
+  updateHud();
+}
+
+function saveGame() {
+  if (!playing || over) return;
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      level, score, tiles, tray, undoLeft, playing: true, over: "",
+    }));
+  } catch (_) { /* offline quota */ }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    if (!d.playing || d.over) return false;
+    level = d.level;
+    score = d.score;
+    tiles = d.tiles;
+    tray = d.tray;
+    undoLeft = d.undoLeft ?? 1;
+    over = "";
+    undoBtn.disabled = undoLeft <= 0;
+    updateBlocked();
+    return true;
+  } catch (_) { return false; }
+}
+
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch (_) {}
+}
+
+function updateHud() {
+  $("lvEl").textContent = level;
+  $("leftEl").textContent = boardLeft();
+  $("scoreEl").textContent = score;
+}
+
+function spawnSparkles(x, y) {
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    sparks.push({ x, y, vx: Math.cos(a) * 2.5, vy: Math.sin(a) * 2.5, life: 1 });
+  }
+}
+
+function spawnSplash(x, y) {
+  splashes.push({ x, y, r: 4, life: 1 });
+}
+
+function resolveMatches() {
+  let matched = false;
+  TYPES.forEach((ft) => {
+    const idxs = [];
+    tray.forEach((t, i) => { if (t === ft.id) idxs.push(i); });
+    while (idxs.length >= 3) {
+      matched = true;
+      const rm = idxs.splice(0, 3).sort((a, b) => b - a);
+      const mid = traySlotPos(rm[1] ?? rm[0]);
+      rm.forEach((i) => tray.splice(i, 1));
+      spawnSparkles(mid.x, mid.y);
+      score += 50;
+      pig.mood = "happy";
+      pig.tail = 1;
+    }
+  });
+  if (matched) {
+    matchFlash = 1;
+    setTimeout(() => { if (pig.mood === "happy") pig.mood = "idle"; }, 600);
+  }
+  return matched;
+}
+
+function checkEnd() {
+  if (tray.length >= TRAY_MAX) {
+    endGame(false);
+    return;
+  }
+  if (boardLeft() === 0 && fly.length === 0) endGame(true);
+}
+
+let overTimer = 0;
+
+function hideOver() {
+  if (overTimer) { clearTimeout(overTimer); overTimer = 0; }
+  resultPanel.classList.add("hidden");
+  toolbar.classList.remove("hidden");
+}
+
+function showOver(won) {
+  hideOver();
+  $("overTitle").textContent = won ? "River cleared! 🎉" : "Slots full!";
+  const showPanel = () => {
+    $("overMsg").textContent = won
+      ? `Level ${level} complete · Score ${score}. Next level adds more types!`
+      : `${boardLeft()} items left · Score ${score}. The pig turned away shyly…`;
+    resultPanel.classList.remove("hidden");
+    toolbar.classList.add("hidden");
+    overTimer = 0;
+  };
+  if (won) showPanel();
+  else overTimer = setTimeout(showPanel, 700);
+}
+
+function endGame(won) {
+  over = won ? "win" : "lose";
+  playing = false;
+  if (won) {
+    pig.mood = "happy";
+    pig.shyStart = 0;
+  } else {
+    pig.mood = "shy";
+    pig.shyStart = performance.now();
+  }
+  clearSave();
+  showOver(won);
+}
+
+function resetLevel() {
+  hideOver();
+  over = "";
+  playing = true;
+  pig.mood = "idle";
+  pig.shyStart = 0;
+  pig.rod = 0;
+  pig.rodVel = 0;
+  undoLeft = 1;
+  history = [];
+  undoBtn.disabled = true;
+  fly = [];
+  sparks = [];
+  matchFlash = 0;
+  buildLevel(level);
+  updateHud();
+  saveGame();
+}
+
+function pickTile(tile) {
+  if (tile.removed || tile.blocked || over || fly.length) return;
+  history.push(snapshot());
+  undoBtn.disabled = false;
+
+  tile.removed = true;
+  score += 10;
+  updateBlocked();
+
+  const cx = tile.x + TILE / 2, cy = tile.y + TILE / 2;
+  let insertAt = tray.length;
+  for (let i = tray.length - 1; i >= 0; i--)
+    if (tray[i] === tile.type) { insertAt = i + 1; break; }
+
+  const dest = traySlotPos(insertAt);
+  fly.push({ type: tile.type, x: cx, y: cy, tx: dest.x, ty: dest.y, t: 0, dur: 280, insertAt });
+
+  pig.rodVel = -1;
+  spawnSplash(cx, cy);
+  updateHud();
+  saveGame();
+}
+
+function undo() {
+  if (undoLeft <= 0 || !history.length || over) return;
+  restore(history.pop());
+  undoLeft = 0;
+  undoBtn.disabled = true;
+  over = "";
+  hideOver();
+  saveGame();
+}
+
+function drawShyCaption(ctx, w, h, now) {
+  if (over !== "lose" || !pig.shyStart) return;
+  const t = Math.min(1, (now - pig.shyStart) / 620);
+  if (t < 0.7) return;
+  const alpha = Math.min(1, (t - 0.7) / 0.25);
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  rr(ctx, 108, h * 0.775, 128, 30, 12);
+  ctx.fill();
+  ctx.strokeStyle = OUTLINE;
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(108, h * 0.805);
+  ctx.lineTo(98, h * 0.82);
+  ctx.lineTo(108, h * 0.815);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = OUTLINE;
+  ctx.font = "600 11px system-ui,sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("So embarrassed…", 172, h * 0.795);
+  ctx.restore();
+}
+
+function rr(ctx, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
+
+function drawIcon(ctx, type, cx, cy, s) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(s, s);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = OUTLINE;
+  ctx.lineWidth = 2.2;
+  switch (type) {
+    case "clown":
+      ctx.fillStyle = "#fb923c";
+      ctx.beginPath(); ctx.ellipse(0, 0, 14, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-4, -9); ctx.lineTo(-4, 9); ctx.moveTo(4, -9); ctx.lineTo(4, 9); ctx.stroke();
+      ctx.fillStyle = "#fb923c";
+      ctx.beginPath(); ctx.moveTo(12, 0); ctx.lineTo(18, -5); ctx.lineTo(18, 5); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = OUTLINE; ctx.stroke();
+      break;
+    case "gold": {
+      const g = ctx.createLinearGradient(-12, -8, 12, 8);
+      g.addColorStop(0, "#fde047"); g.addColorStop(1, "#eab308");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(0, 0, 15, 10, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(5, -2, 3, 0, Math.PI * 2); ctx.fill();
+      break;
+    }
+    case "blue":
+      ctx.fillStyle = "#38bdf8";
+      ctx.beginPath(); ctx.ellipse(0, 0, 14, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#0ea5e9";
+      ctx.beginPath(); ctx.moveTo(-12, 2); ctx.lineTo(-18, 6); ctx.lineTo(-12, 8); ctx.fill();
+      break;
+    case "puffer":
+      ctx.fillStyle = "#fcd34d";
+      ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ctx.beginPath(); ctx.moveTo(Math.cos(a) * 10, Math.sin(a) * 10); ctx.lineTo(Math.cos(a) * 14, Math.sin(a) * 14); ctx.stroke();
+      }
+      ctx.fillStyle = OUTLINE;
+      ctx.beginPath(); ctx.arc(-4, -2, 2, 0, Math.PI * 2); ctx.arc(4, -2, 2, 0, Math.PI * 2); ctx.fill();
+      break;
+    case "seahorse":
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(0, 12); ctx.quadraticCurveTo(10, 4, 4, -8); ctx.quadraticCurveTo(-2, -16, 0, -18); ctx.stroke();
+      ctx.fillStyle = "#a78bfa"; ctx.beginPath(); ctx.arc(0, -18, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      break;
+    case "wshell":
+      ctx.fillStyle = "#f8fafc";
+      ctx.beginPath(); ctx.moveTo(0, -12); ctx.quadraticCurveTo(14, 0, 0, 12); ctx.quadraticCurveTo(-14, 0, 0, -12); ctx.fill(); ctx.stroke();
+      break;
+    case "sshell":
+      ctx.fillStyle = "#fda4af";
+      ctx.beginPath(); ctx.moveTo(0, -12); ctx.quadraticCurveTo(14, 0, 0, 12); ctx.quadraticCurveTo(-14, 0, 0, -12); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5;
+      for (let i = -8; i <= 8; i += 4) { ctx.beginPath(); ctx.moveTo(i, -8); ctx.lineTo(i * 0.3, 8); ctx.stroke(); }
+      break;
+    case "pearl":
+      ctx.fillStyle = "#e0e7ff";
+      ctx.beginPath(); ctx.moveTo(0, -12); ctx.quadraticCurveTo(14, 0, 0, 12); ctx.quadraticCurveTo(-14, 0, 0, -12); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, 2, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#c4b5fd"; ctx.stroke();
+      break;
+  }
+  ctx.restore();
+}
+
+function drawPigFront(ctx, now, turnT, pigX, pigY, sc) {
+  const earW = Math.sin(now * 0.008) * (pig.mood === "happy" ? 0.15 : 0.08);
+  const tailW = pig.tail > 0 ? Math.sin(now * 0.02) * 0.4 : Math.sin(now * 0.005) * 0.06;
+  if (pig.tail > 0) pig.tail -= 0.02;
+  pig.rod += (pig.rodVel - pig.rod) * 0.18;
+  pig.rodVel *= 0.82;
+  const rodA = 0.25 + pig.rod * 0.12;
+  const rodHide = turnT > 0.25 ? Math.min(1, (turnT - 0.25) / 0.35) : 0;
+
+  ctx.save();
+  ctx.translate(-7, 8);
+  ctx.rotate(tailW);
+  ctx.strokeStyle = PINK;
+  ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(10, 6, 8, 16); ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = PINK;
+  rr(ctx, -22, -34, 44, 52, 14); ctx.fill(); ctx.stroke();
+
+  ctx.save();
+  ctx.translate(-14, -34);
+  ctx.rotate(-0.2 + earW);
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(4, -14); ctx.lineTo(10, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.translate(14, -34);
+  ctx.rotate(0.2 - earW);
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-4, -14); ctx.lineTo(-10, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = "#fff";
+  rr(ctx, -8, -18, 16, 11, 5); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = OUTLINE;
+  ctx.beginPath(); ctx.ellipse(-2, -14, 2.2, 3, 0, 0, Math.PI * 2); ctx.ellipse(4, -14, 2.2, 3, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#fff";
+  ctx.beginPath(); ctx.arc(-8, -24, 3.5, 0, Math.PI * 2); ctx.arc(8, -24, 3.5, 0, Math.PI * 2); ctx.fill();
+  const look = pigEyeLook(pigX, pigY, sc);
+  ctx.fillStyle = OUTLINE;
+  ctx.beginPath();
+  ctx.arc(-8 + look.ox, -24 + look.oy, 1.8, 0, Math.PI * 2);
+  ctx.arc(8 + look.ox, -24 + look.oy, 1.8, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  ctx.beginPath();
+  ctx.arc(-8 + look.ox - 0.55, -24 + look.oy - 0.55, 0.45, 0, Math.PI * 2);
+  ctx.arc(8 + look.ox - 0.55, -24 + look.oy - 0.55, 0.45, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (rodHide < 1) {
+    ctx.globalAlpha = 1 - rodHide;
+    ctx.strokeStyle = "#9ca3af";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(16, -10); ctx.lineTo(34, -22); ctx.stroke();
+    ctx.save();
+    ctx.translate(34, -22);
+    ctx.rotate(rodA);
+    ctx.strokeStyle = OUTLINE;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(8, 18, 0, 36); ctx.stroke();
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawPigBack(ctx, now) {
+  const hunch = 3 + Math.sin(now * 0.003) * 0.8;
+  ctx.translate(0, hunch);
+
+  const tailW = Math.sin(now * 0.014) * 0.3;
+  ctx.save();
+  ctx.translate(0, 10);
+  ctx.rotate(tailW);
+  ctx.strokeStyle = PINK;
+  ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(-10, 8, -2, 20); ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = PINK;
+  rr(ctx, -22, -34, 44, 52, 14); ctx.fill();
+  ctx.strokeStyle = OUTLINE;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.fillStyle = "#f8a0a0";
+  rr(ctx, -18, -32, 36, 28, 12);
+  ctx.fill();
+
+  ctx.fillStyle = PINK;
+  ctx.beginPath();
+  ctx.moveTo(-16, -34); ctx.lineTo(-22, -50); ctx.lineTo(-6, -36); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(16, -34); ctx.lineTo(22, -50); ctx.lineTo(6, -36); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  ctx.fillStyle = "rgba(244,114,182,0.5)";
+  ctx.beginPath();
+  ctx.ellipse(-14, -10, 5.5, 3.2, 0, 0, Math.PI * 2);
+  ctx.ellipse(14, -10, 5.5, 3.2, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(56,189,248,0.75)";
+  ctx.beginPath();
+  ctx.moveTo(-20, -22); ctx.lineTo(-18, -14); ctx.lineTo(-22, -16); ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(22, -20); ctx.lineTo(20, -12); ctx.lineTo(24, -14); ctx.closePath(); ctx.fill();
+
+  const bob = Math.sin(now * 0.005) * 1.2;
+  ctx.fillStyle = OUTLINE;
+  [[-7, -44 + bob], [0, -47 + bob], [7, -44 + bob]].forEach(([dx, dy]) => {
+    ctx.beginPath(); ctx.arc(dx, dy, 1.3, 0, Math.PI * 2); ctx.fill();
+  });
+}
+
+function drawPig(ctx, x, y, sc, now) {
+  let turnT = 0;
+  if (pig.mood === "shy") {
+    if (!pig.shyStart) pig.shyStart = now;
+    const raw = Math.min(1, (now - pig.shyStart) / 620);
+    turnT = 1 - Math.pow(1 - raw, 3);
+  }
+
+  ctx.save();
+  ctx.translate(x - turnT * 10, y + turnT * 2);
+  ctx.scale(sc, sc);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = OUTLINE;
+  ctx.lineWidth = 3;
+
+  const angle = turnT * Math.PI;
+  const sx = Math.cos(angle);
+  ctx.scale(sx, 1);
+  if (sx >= 0) {
+    drawPigFront(ctx, now, turnT, x, y, sc);
+  } else {
+    ctx.scale(-1, 1);
+    drawPigBack(ctx, now);
+  }
+  ctx.restore();
+}
+
+function drawWater(ctx, w, h, now) {
+  const phase = now * 0.00065;
+  const sky = ctx.createLinearGradient(0, 0, 0, h * 0.4);
+  sky.addColorStop(0, "#bae6fd");
+  sky.addColorStop(1, "#ecfccb");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h * 0.4);
+  ctx.fillStyle = "#86efac";
+  ctx.fillRect(0, h * 0.36, w, h * 0.08);
+
+  const wy0 = h * 0.42;
+  const wy1 = h * 0.76;
+  const waterGrad = ctx.createLinearGradient(0, wy0, 0, wy1);
+  waterGrad.addColorStop(0, "#4fc3f7");
+  waterGrad.addColorStop(0.45, "#29b6f6");
+  waterGrad.addColorStop(1, "#0277bd");
+  ctx.fillStyle = waterGrad;
+  ctx.fillRect(0, wy0, w, wy1 - wy0);
+
+  ctx.save();
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = "#01579b";
+  for (let band = 0; band < 4; band++) {
+    const baseY = wy0 + 18 + band * 32;
+    ctx.beginPath();
+    ctx.moveTo(0, baseY);
+    for (let x = 0; x <= w; x += 5) {
+      ctx.lineTo(x, baseY + Math.sin(x * 0.016 + phase * 1.4 + band * 0.9) * 5);
+    }
+    ctx.lineTo(w, wy1);
+    ctx.lineTo(0, wy1);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.fillStyle = "#ffffff";
+  for (let i = 0; i < 5; i++) {
+    const y0 = wy0 + 14 + i * 26;
+    ctx.beginPath();
+    ctx.moveTo(0, y0);
+    for (let x = 0; x <= w; x += 4) {
+      const y = y0 + Math.sin(x * 0.022 + phase * 2.2 + i * 0.6) * 2.5;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.lineTo(w, y0 + 10);
+    ctx.lineTo(0, y0 + 10);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 3; i++) {
+    const y = wy0 + 10 + i * 22;
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += 4) {
+      const wy = y + Math.sin(x * 0.028 + phase * 2.8 + i * 1.1) * 2;
+      if (x === 0) ctx.moveTo(x, wy);
+      else ctx.lineTo(x, wy);
+    }
+    ctx.stroke();
+  }
+
+  splashes.forEach((s) => {
+    ctx.strokeStyle = `rgba(255,255,255,${s.life * 0.55})`;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r + (1 - s.life) * 8, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  ctx.fillStyle = "#fde68a";
+  ctx.fillRect(0, h * 0.76, w, h * 0.24);
+  drawPig(ctx, 78, h * 0.88, 1.08, now);
+}
+
+function drawTile(ctx, tile) {
+  const cx = tile.x + TILE / 2, cy = tile.y + TILE / 2;
+  ctx.save();
+  ctx.fillStyle = tile.blocked ? "rgba(226,232,240,0.95)" : "rgba(255,255,255,0.96)";
+  rr(ctx, tile.x, tile.y, TILE, TILE, 12);
+  ctx.fill();
+  ctx.strokeStyle = tile.blocked ? "rgba(148,163,184,0.6)" : OUTLINE;
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  drawIcon(ctx, tile.type, cx, cy, tile.blocked ? 0.68 : 0.92);
+  if (tile.blocked) {
+    ctx.fillStyle = "rgba(100,116,139,0.42)";
+    rr(ctx, tile.x, tile.y, TILE, TILE, 12);
+    ctx.fill();
+  } else {
+    ctx.strokeStyle = "rgba(253,224,71,0.5)";
+    ctx.lineWidth = 2;
+    rr(ctx, tile.x + 2, tile.y + 2, TILE - 4, TILE - 4, 10);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawTray(ctx, w, h) {
+  const slotW = 44, gap = 4, trayY = h - 54;
+  const total = TRAY_MAX * slotW + (TRAY_MAX - 1) * gap;
+  const start = (w - total) / 2;
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  rr(ctx, start - 8, trayY - 8, total + 16, slotW + 16, 14);
+  ctx.fill();
+  ctx.strokeStyle = OUTLINE;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  for (let i = 0; i < TRAY_MAX; i++) {
+    const sx = start + i * (slotW + gap);
+    ctx.fillStyle = tray[i] ? "#fff" : "rgba(255,255,255,0.35)";
+    rr(ctx, sx, trayY, slotW, slotW, 8);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(55,65,81,0.3)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    if (tray[i]) drawIcon(ctx, tray[i], sx + slotW / 2, trayY + slotW / 2, 0.8);
+  }
+  if (matchFlash > 0) {
+    ctx.fillStyle = `rgba(253,224,71,${matchFlash * 0.4})`;
+    rr(ctx, start - 8, trayY - 8, total + 16, slotW + 16, 14);
+    ctx.fill();
+    matchFlash -= 0.06;
+  }
+}
+
+function render(now) {
+  const w = CV.width, h = CV.height;
+  drawWater(ctx, w, h, now);
+  [...tiles].sort((a, b) => a.layer - b.layer).forEach((t) => {
+    if (!t.removed) drawTile(ctx, t);
+  });
+  fly.forEach((f) => {
+    const p = Math.min(1, f.t / f.dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    const x = f.x + (f.tx - f.x) * e;
+    const y = f.y + (f.ty - f.y) * e - Math.sin(p * Math.PI) * 28;
+    ctx.save();
+    ctx.globalAlpha = 1 - p * 0.1;
+    ctx.fillStyle = "#fff";
+    rr(ctx, x - 22, y - 22, 44, 44, 10);
+    ctx.fill();
+    ctx.strokeStyle = OUTLINE;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    drawIcon(ctx, f.type, x, y, 0.85);
+    ctx.restore();
+  });
+  drawTray(ctx, w, h);
+  sparks.forEach((s) => {
+    ctx.fillStyle = `rgba(253,224,71,${s.life})`;
+    ctx.beginPath(); ctx.arc(s.x, s.y, 3 * s.life, 0, Math.PI * 2); ctx.fill();
+  });
+  if (playing && !over && !history.length && fly.length === 0) {
+    ctx.fillStyle = "rgba(55,65,81,0.7)";
+    ctx.font = "600 12px system-ui,sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Tap glowing tiles → match 3 in slots", w / 2, h * 0.5);
+  }
+  drawShyCaption(ctx, w, h, now);
+}
+
+function update(dt) {
+  if (fly.length) {
+    const f = fly[0];
+    f.t += dt;
+    if (f.t >= f.dur) {
+      tray.splice(f.insertAt, 0, f.type);
+      fly = [];
+      resolveMatches();
+      updateHud();
+      checkEnd();
+      saveGame();
+    }
+  }
+  sparks = sparks.filter((s) => {
+    s.x += s.vx; s.y += s.vy; s.vy += 0.08; s.life -= 0.04;
+    return s.life > 0;
+  });
+  splashes = splashes.filter((s) => { s.life -= 0.05; return s.life > 0; });
+}
+
+let last = 0;
+function loop(now) {
+  if (!last) last = now;
+  const dt = Math.min(32, now - last);
+  last = now;
+  if (playing) update(dt);
+  render(now);
+  loopId = requestAnimationFrame(loop);
+}
+
+function hitTile(x, y) {
+  return tiles
+    .filter((t) => !t.removed && !t.blocked)
+    .filter((t) => x >= t.x && x <= t.x + TILE && y >= t.y && y <= t.y + TILE)
+    .sort((a, b) => b.layer - a.layer)[0] ?? null;
+}
+
+function pt(e) {
+  const r = CV.getBoundingClientRect();
+  const s = e.changedTouches?.[0] ?? e.touches?.[0] ?? e;
+  return { x: (s.clientX - r.left) * (CV.width / r.width), y: (s.clientY - r.top) * (CV.height / r.height) };
+}
+
+function startFresh() {
+  level = 1; score = 0; over = ""; playing = true;
+  pig.mood = "idle"; pig.shyStart = 0;
+  buildLevel(level);
+  cover.classList.add("hidden");
+  hud.classList.remove("hidden");
+  toolbar.classList.remove("hidden");
+  hideOver();
+  saveGame();
+}
+
+function startGame(resume) {
+  if (resume && loadGame()) {
+    playing = true; over = "";
+    cover.classList.add("hidden");
+    hud.classList.remove("hidden");
+    toolbar.classList.remove("hidden");
+    hideOver();
+    updateHud();
+  } else startFresh();
+  if (!loopId) loopId = requestAnimationFrame(loop);
+}
+
+CV.addEventListener("click", (e) => {
+  if (!playing || over) return;
+  const p = pt(e);
+  pointer.x = p.x; pointer.y = p.y; pointer.active = true;
+  if (p.y > CV.height - 68) return;
+  const t = hitTile(p.x, p.y);
+  if (t) pickTile(t);
+});
+
+CV.addEventListener("mousemove", (e) => {
+  const p = pt(e);
+  pointer.x = p.x; pointer.y = p.y; pointer.active = true;
+});
+CV.addEventListener("mouseleave", () => { pointer.active = false; });
+CV.addEventListener("touchstart", (e) => {
+  const p = pt(e);
+  pointer.x = p.x; pointer.y = p.y; pointer.active = true;
+}, { passive: true });
+CV.addEventListener("touchmove", (e) => {
+  const p = pt(e);
+  pointer.x = p.x; pointer.y = p.y; pointer.active = true;
+}, { passive: true });
+
+$("startBtn").addEventListener("click", () => startGame(!!localStorage.getItem(SAVE_KEY)));
+$("againBtn").addEventListener("click", () => {
+  if (over === "win") level++;
+  resetLevel();
+});
+$("resetBtn").addEventListener("click", () => {
+  if (playing && !over) resetLevel();
+});
+undoBtn.addEventListener("click", undo);
+
+loopId = requestAnimationFrame(loop);
+drawWater(ctx, CV.width, CV.height, 0);
+render(0);
+})();
+</script>
+</body>
+</html>

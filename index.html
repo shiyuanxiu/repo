@@ -59,12 +59,12 @@
       {"@type":"ListItem","position":10,"name":"Mystery Flavor Box","url":"https://miniverse.app/games/mystery-flavor-box.html"},
       {"@type":"ListItem","position":11,"name":"Office Pets","url":"https://miniverse.app/games/office-pets.html"},
       {"@type":"ListItem","position":12,"name":"Rainbow Salt Lake","url":"https://miniverse.app/games/rainbow-salt-lake.html"},
-      {"@type":"ListItem","position":13,"name":"Tile Draw","url":"https://miniverse.app/games/tile-draw.html"},
+      {"@type":"ListItem","position":13,"name":"Brain Sketch","url":"https://miniverse.app/games/brain-sketch.html"},
       {"@type":"ListItem","position":14,"name":"Starfall","url":"https://miniverse.app/games/starfall.html"},
-      {"@type":"ListItem","position":15,"name":"Stack Rush","url":"https://miniverse.app/games/stack-rush.html"},
+      {"@type":"ListItem","position":15,"name":"Piggy Catch","url":"https://miniverse.app/games/stack-rush.html"},
       {"@type":"ListItem","position":16,"name":"Memory Match","url":"https://miniverse.app/games/memory-match.html"},
-      {"@type":"ListItem","position":17,"name":"Number Merge","url":"https://miniverse.app/games/number-merge.html"},
-      {"@type":"ListItem","position":18,"name":"Beat Tap","url":"https://miniverse.app/games/beat-tap.html"}
+      {"@type":"ListItem","position":17,"name":"2248 Chain","url":"https://miniverse.app/games/number-merge.html"},
+      {"@type":"ListItem","position":18,"name":"Mochi Snake","url":"https://miniverse.app/games/snake-bite.html"}
     ]
   }
   </script>
@@ -433,6 +433,13 @@
 
       <article class="feed-item" data-feed="recommend">
         <div class="game-card fortune-card" id="fortuneCard">
+          <div class="fortune-ambient" aria-hidden="true">
+            <span class="fortune-float fortune-float-a"></span>
+            <span class="fortune-float fortune-float-b"></span>
+            <span class="fortune-float fortune-float-c"></span>
+            <span class="fortune-float fortune-float-d"></span>
+            <span class="fortune-float fortune-float-e"></span>
+          </div>
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="fortune" aria-label="Sound">
               <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -444,10 +451,14 @@
             </button>
           </div>
 
-          <h1 class="card-title">Daily Fortune</h1>
+          <header class="fortune-header">
+            <p class="fortune-kicker">✦ Fortune Corner</p>
+            <h1 class="card-title">Daily Fortune</h1>
+            <p class="fortune-date" id="fortuneDate"></p>
+          </header>
 
           <div class="draw-scene" id="drawScene">
-            <p class="draw-hint">Tap the tube to draw today's fortune</p>
+            <p class="draw-hint">Hold a gentle thought · tap the tube · receive today's nudge</p>
             <button class="tube-area" id="tubeArea" aria-label="Draw fortune">
               <div class="glow-outer"></div>
               <div class="glow-inner"></div>
@@ -456,23 +467,36 @@
                 <div class="tube-body">
                   <div class="tube-rim"></div>
                   <div class="tube-band"></div>
+                  <div class="tube-label" aria-hidden="true">福</div>
                   <div class="tube-main"></div>
                   <div class="tube-bottom"></div>
                 </div>
               </div>
             </button>
+            <p class="draw-sub">A soft ritual — not prediction, just kindness</p>
           </div>
 
           <div class="result-scene hidden" id="resultScene">
-            <div class="scroll-container">
-              <div class="scroll-roller top"></div>
-              <div class="scroll-paper"><p class="fortune-text" id="fortuneText"></p></div>
-              <div class="scroll-roller bottom"></div>
+            <div class="fortune-reveal" id="fortuneReveal">
+              <div class="fortune-sparkles" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="fortune-slip">
+                <div class="fortune-slip-head">
+                  <span class="fortune-slip-cat" id="fortuneCat"></span>
+                  <span class="fortune-slip-num" id="fortuneNum"></span>
+                </div>
+                <p class="fortune-quote-mark" aria-hidden="true">“</p>
+                <p class="fortune-text" id="fortuneText"></p>
+                <div class="fortune-seal" aria-hidden="true">吉</div>
+              </div>
             </div>
-            <div class="actions">
-              <button class="btn btn-primary" id="drawAgainBtn">Draw Again</button>
-              <button class="btn btn-secondary" id="fortuneShareBtn" type="button">Share fortune</button>
-              <button class="btn btn-secondary" id="resetFortuneBtn">Reset</button>
+            <div class="fortune-actions">
+              <button class="fortune-btn fortune-btn-primary" id="drawAgainBtn" type="button">✦ Draw Again</button>
+              <div class="fortune-actions-row">
+                <button class="fortune-btn fortune-btn-ghost" id="fortuneShareBtn" type="button">Share fortune</button>
+                <button class="fortune-btn fortune-btn-ghost" id="resetFortuneBtn" type="button">Back to tube</button>
+              </div>
             </div>
           </div>
         </div>
@@ -507,10 +531,22 @@
 
           
           <div class="earth-scene earth-home" id="earthHome">
-            <div class="earth-stars" aria-hidden="true"></div>
-            <h2 class="earth-title">Blue Planet Diary</h2>
-            <p class="earth-subtitle">Daily quests & wishes</p>
+            <div class="earth-ambient" aria-hidden="true">
+              <div class="earth-nebula"></div>
+              <div class="earth-stars"></div>
+            </div>
+            <header class="earth-header">
+              <p class="earth-kicker">🌍 Blue Planet · Daily Quests</p>
+              <h2 class="earth-title">Blue Planet Diary</h2>
+              <p class="earth-date" id="earthDate"></p>
+            </header>
+            <div class="earth-stats">
+              <span class="earth-stat"><strong id="earthQuestCount">0</strong> quests</span>
+              <span class="earth-stat-dot" aria-hidden="true">·</span>
+              <span class="earth-stat"><strong id="earthStreak">0</strong> streak</span>
+            </div>
             <div class="earth-globe-wrap">
+              <div class="earth-atmosphere" aria-hidden="true"></div>
               <div class="earth-orbit" aria-hidden="true">
                 <span class="orbit-dot"></span><span class="orbit-dot"></span><span class="orbit-dot"></span>
                 <span class="orbit-dot"></span><span class="orbit-dot"></span><span class="orbit-dot"></span>
@@ -518,61 +554,76 @@
                 <span class="orbit-dot"></span><span class="orbit-dot"></span>
               </div>
               <div class="earth-globe">
+                <span class="earth-shine" aria-hidden="true"></span>
                 <span class="continent c1"></span>
                 <span class="continent c2"></span>
                 <span class="continent c3"></span>
                 <span class="continent c4"></span>
               </div>
+              <span class="earth-moon" aria-hidden="true"></span>
             </div>
+            <p class="earth-tagline">Tiny real-world wins · one quest at a time</p>
             <div class="earth-actions">
-              <button class="earth-btn-primary" id="earthRandomBtn" type="button">Random Quest</button>
-              <button class="earth-btn-history" id="earthHistoryBtn" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <button class="earth-btn-primary" id="earthRandomBtn" type="button">✦ Draw Today's Quest</button>
+              <button class="earth-btn-ghost" id="earthHistoryBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
                 Quest Log
               </button>
             </div>
           </div>
 
-          
           <div class="earth-scene earth-task hidden" id="earthTask">
-            <div class="earth-stars" aria-hidden="true"></div>
-            <div class="task-card">
-              <p class="task-greet">Hey! Today's quest is here — ready? 🎁</p>
+            <div class="earth-ambient" aria-hidden="true">
+              <div class="earth-nebula"></div>
+              <div class="earth-stars"></div>
+            </div>
+            <div class="earth-quest-card" id="earthQuestReveal">
+              <div class="earth-quest-head">
+                <span class="earth-quest-cat" id="earthTaskCat"></span>
+                <span class="earth-quest-badge">Today's mission</span>
+              </div>
+              <p class="task-greet">Nova beamed you a quest from orbit 🛰️</p>
               <h3 class="task-name" id="earthTaskName">Learn a nursery rhyme</h3>
-              <div class="task-sparkles" aria-hidden="true">✦ ✦ ✦</div>
+              <p class="task-hint">Do it in real life when you're ready — no timer, no fail state.</p>
               <button class="task-done-btn" id="earthDoneBtn" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
-                Complete
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+                Mark Complete
               </button>
             </div>
           </div>
 
-          
           <div class="earth-scene earth-reward hidden" id="earthReward">
-            <div class="earth-stars earth-stars-dense" aria-hidden="true"></div>
-            <ul class="reward-list" id="earthRewardList">
-              <li>✨✨ Karma +1</li>
-              <li>💖 Joy +999</li>
-              <li>🌟 Happiness maxed out</li>
-              <li>📝 Good deed logged</li>
-              <li>👍 The universe approves</li>
-              <li>💌 Warmth delivered</li>
-            </ul>
+            <div class="earth-ambient" aria-hidden="true">
+              <div class="earth-nebula earth-nebula-bright"></div>
+              <div class="earth-stars earth-stars-dense"></div>
+            </div>
+            <div class="earth-reward-card" id="earthRewardCard">
+              <p class="earth-reward-kicker">✦ Quest complete</p>
+              <p class="earth-reward-task" id="earthRewardTask"></p>
+              <ul class="reward-list" id="earthRewardList">
+                <li><span class="reward-chip">✨ Karma +1</span></li>
+                <li><span class="reward-chip">💖 Joy +999</span></li>
+                <li><span class="reward-chip">🌟 Happiness maxed</span></li>
+                <li><span class="reward-chip">📝 Good deed logged</span></li>
+                <li><span class="reward-chip">👍 Universe approves</span></li>
+                <li><span class="reward-chip">💌 Warmth delivered</span></li>
+              </ul>
+            </div>
             <div class="earth-reward-actions">
-              <button class="earth-btn-share" id="earthShareBtn" type="button">📤 Share quest</button>
+              <button class="earth-btn-share" id="earthShareBtn" type="button">Share quest</button>
               <button class="earth-btn-back" id="earthBackBtn" type="button">Back to Earth</button>
             </div>
           </div>
 
-          
           <div class="earth-history hidden" id="earthHistory">
             <div class="history-panel">
               <div class="history-header">
                 <h3>Quest Log</h3>
+                <p class="history-sub">Your completed missions</p>
                 <button class="history-close" id="earthHistoryClose" type="button" aria-label="Close">×</button>
               </div>
               <ul class="history-list" id="earthHistoryList"></ul>
-              <p class="history-empty hidden" id="earthHistoryEmpty">No completed quests yet</p>
+              <p class="history-empty hidden" id="earthHistoryEmpty">No completed quests yet — draw your first one!</p>
             </div>
           </div>
         </div>
@@ -580,7 +631,7 @@
         <footer class="feed-meta">
           <div class="feed-meta-left">
             <p class="feed-title">Blue Planet · Daily Quests</p>
-            <p class="feed-desc">Small wins, better mood</p>
+            <p class="feed-desc">Tiny real-world quests — complete one, feel better</p>
             <p class="feed-date" id="earthFeedDate"></p>
             <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🌍</span><span>Nova</span></div>
           </div>
@@ -1458,8 +1509,8 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
-        <div class="game-card mj-card" id="mjCard">
+      <article class="feed-item" data-feed="games" data-game="mj">
+        <div class="game-card brain-card" id="mjCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="mj" aria-label="Sound">
               <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -1467,23 +1518,52 @@
             </button>
             <button class="control-btn fullscreen-btn" data-target="mjCard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>Full</button>
           </div>
-          <div class="mini-scene mj-scene" id="mjScene">
-            <span class="mini-tag mj-tag">#TileZen</span>
-            <h2 class="mini-title mj-title">Tile Draw</h2>
-            <p class="mini-sub"> Solo random draws, no rules</p>
-            <div class="mj-table">
-              <canvas id="mjCanvas" width="200" height="260" aria-label="Mahjong tile"></canvas>
+          <div class="mini-scene brain-landing" id="brainLanding">
+            <span class="brain-deco brain-deco-1" aria-hidden="true">✏️</span>
+            <span class="brain-deco brain-deco-2" aria-hidden="true">⭐</span>
+            <span class="brain-deco brain-deco-3" aria-hidden="true">📐</span>
+            <span class="brain-badge">Sketchbook physics</span>
+            <div class="brain-cover-wrap">
+              <canvas id="brainCoverCanvas" width="360" height="240" aria-hidden="true"></canvas>
+              <div class="brain-cover-content">
+                <p class="brain-cover-kicker">Brain Sketch</p>
+                <h2 class="brain-title">Draw &amp; Roll</h2>
+                <p class="brain-sub">Sketch a ramp, tap Play, roll the ball into the star</p>
+                <button class="brain-start-btn" id="brainStartBtn" type="button">▶ Start</button>
+              </div>
             </div>
-            <p class="mj-draw-count">Drawn <strong id="mjCount">0</strong>  tiles</p>
-            <div class="mj-hand" id="mjHand"></div>
-            <button class="mj-draw-btn" id="mjDrawBtn" type="button">🀄 Draw Tile</button>
+          </div>
+          <div class="mini-scene brain-scene brain-play hidden" id="brainPlay">
+            <div class="brain-play-head">
+              <p class="brain-level-label" id="brainLevelLabel">Level 1 / 12</p>
+              <div class="brain-level-dots" id="brainLevelDots" aria-label="Level progress"></div>
+            </div>
+            <div class="brain-stage-frame">
+              <div class="brain-stage" id="brainStage">
+                <canvas id="brainCanvas" width="360" height="480" aria-label="Physics puzzle — draw lines"></canvas>
+                <p class="brain-hint" id="brainHint">Draw a ramp to the star, then tap Play</p>
+                <div class="brain-win-toast hidden" id="brainWinToast" aria-live="polite">⭐ Level clear!</div>
+              </div>
+            </div>
+            <div class="brain-ink-row">
+              <span class="brain-ink-label">Ink</span>
+              <div class="brain-ink-track" aria-hidden="true"><div class="brain-ink-fill" id="brainInkFill"></div></div>
+            </div>
+            <div class="brain-toolbar">
+              <button class="brain-action-btn" id="brainClearBtn" type="button">Clear</button>
+              <button class="brain-action-btn" id="brainUndoBtn" type="button">Undo <span class="brain-undo-n" id="brainUndoN">3</span></button>
+              <button class="brain-action-btn brain-action-play" id="brainGoBtn" type="button">▶ Play</button>
+            </div>
+            <button class="brain-theme-btn" id="brainThemeBtn" type="button" aria-label="Toggle day/night theme">◐</button>
+            <button class="brain-back-btn" id="brainBackBtn" type="button">← Exit</button>
+            <span class="brain-level-num hidden" id="brainLevelMax" aria-hidden="true">12</span>
           </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">Solo Tile Draw</p>
-            <p class="feed-desc">Quick tile draws for chill breaks</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🀄</span><span>Tile House</span></div>
+            <p class="feed-title">Brain Sketch</p>
+            <p class="feed-desc">Editor's pick: sketchbook physics — draw a ramp, roll the ball, catch the star.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🧠</span><span>Line Lab</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1494,7 +1574,7 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
+      <article class="feed-item" data-feed="games" data-game="star">
         <div class="game-card star-card" id="starCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="star" aria-label="Sound">
@@ -1510,19 +1590,30 @@
             <div class="star-cover-wrap">
               <canvas id="starCoverCanvas" width="360" height="280" aria-hidden="true"></canvas>
               <div class="star-cover-content">
-                <h2 class="star-title">Starfall</h2>
-                <p class="star-sub">Catch stars, dodge meteors</p>
+                <h2 class="star-title">Starfall · Night Sky</h2>
+                <p class="star-sub">Slide the pyramid · catch starlight · build combos</p>
+                <div class="star-landing-settings">
+                  <label class="star-setting"><input type="checkbox" id="starTrailsToggle" checked> Star trails</label>
+                  <label class="star-setting star-setting-range">Sensitivity <input type="range" id="starSensRange" min="0.5" max="2" step="0.1" value="1"></label>
+                </div>
                 <button class="star-start-btn" id="starStartBtn" type="button">▶ Start</button>
               </div>
             </div>
           </div>
           <div class="star-scene star-play hidden" id="starPlay">
-            <div class="star-hud">
-              <div class="star-hud-box"><span>Score</span><strong id="starScore">0</strong></div>
-              <div class="star-hud-box"><span>Combo</span><strong id="starCombo">0</strong></div>
+            <div class="star-hud star-hud-compact">
+              <div class="star-hud-box star-hud-main"><span>Score</span><strong id="starScore">0</strong></div>
+              <div class="star-hud-box star-hud-combo"><span>Combo</span><strong id="starCombo">×0</strong></div>
+              <div class="star-hud-box star-hud-lives"><span>Lives</span><strong id="starLives">♥♥♥</strong></div>
             </div>
             <div class="star-canvas-wrap" id="starCanvasWrap">
-              <canvas id="starCanvas" width="360" height="400" aria-label="Catch stars"></canvas>
+              <canvas id="starCanvas" width="360" height="420" aria-label="Catch stars with the pyramid"></canvas>
+              <div class="star-canvas-hud" aria-hidden="true">
+                <div class="star-meter-inline"><div class="star-meter-fill" id="starMeterFill"></div></div>
+                <div class="star-mode-badge hidden" id="starModeBadge">✦ Starlight</div>
+              </div>
+              <div class="star-dim-overlay" id="starDimOverlay" aria-hidden="true"></div>
+              <p class="star-touch-hint" id="starTouchHint">Slide anywhere to move</p>
             </div>
             <div class="star-controls">
               <button class="star-back-btn" id="starBackBtn" type="button">← Exit</button>
@@ -1532,9 +1623,10 @@
               </div>
             </div>
             <div class="star-over hidden" id="starOver">
-              <div class="star-over-box">
-                <h3>Star Pause</h3>
+              <div class="star-over-box star-over-fade">
+                <h3>Starlight Fade</h3>
                 <p>Score <strong id="starOverScore">0</strong></p>
+                <p class="star-over-best" id="starOverBest"></p>
                 <div class="game-over-actions">
                   <button class="game-share-btn" id="starShareBtn" type="button">Share score</button>
                   <button class="star-over-btn" id="starAgainBtn" type="button">Try Again</button>
@@ -1546,7 +1638,7 @@
         <footer class="feed-meta">
           <div class="feed-meta-left">
             <p class="feed-title">Starfall · Night Sky</p>
-            <p class="feed-desc">Move the basket, catch falling stars</p>
+            <p class="feed-desc">Catch falling stars with a glowing pyramid — cozy night sky, starlight combos, offline.</p>
             <div class="feed-user"><span class="feed-avatar" aria-hidden="true">⭐</span><span>Night Breeze</span></div>
           </div>
           <div class="feed-stats">
@@ -1558,8 +1650,8 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
-        <div class="game-card stack-card" id="stackCard">
+      <article class="feed-item" data-feed="games" data-game="stack">
+        <div class="game-card fish-card" id="stackCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="stack" aria-label="Sound">
               <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -1570,39 +1662,50 @@
               Full
             </button>
           </div>
-          <div class="stack-scene stack-landing" id="stackLanding">
-            <h2 class="stack-title">Stack Rush</h2>
-            <p class="stack-sub">Time your drops, stack higher</p>
-            <canvas id="stackCoverCanvas" width="360" height="200" aria-hidden="true"></canvas>
-            <button class="stack-start-btn" id="stackStartBtn" type="button">▶ Start</button>
-          </div>
-          <div class="stack-scene stack-play hidden" id="stackPlay">
-            <div class="stack-hud">
-              <div class="stack-hud-box"><span>Level</span><strong id="stackLevel">0</strong></div>
-              <div class="stack-hud-box"><span>Score</span><strong id="stackScore">0</strong></div>
-            </div>
-            <div class="stack-canvas-wrap" id="stackCanvasWrap">
-              <canvas id="stackCanvas" width="360" height="420" aria-label="Stack blocks"></canvas>
-              <p class="stack-hint">Tap screen or press Space to drop</p>
-            </div>
-            <button class="stack-back-btn" id="stackBackBtn" type="button">← Exit</button>
-            <div class="stack-over hidden" id="stackOver">
-              <div class="stack-over-box">
-                <h3>Tower fell</h3>
-                <p>Stacked <strong id="stackOverLevel">0</strong> levels</p>
-                <div class="game-over-actions">
-                  <button class="game-share-btn" id="stackShareBtn" type="button">Share score</button>
-                  <button class="stack-over-btn" id="stackAgainBtn" type="button">Try Again</button>
-                </div>
+          <div class="fish-scene fish-landing" id="fishLanding">
+            <span class="fish-deco fish-deco-1" aria-hidden="true">🐠</span>
+            <span class="fish-deco fish-deco-2" aria-hidden="true">🐚</span>
+            <span class="fish-deco fish-deco-3" aria-hidden="true">🎣</span>
+            <span class="fish-badge">Match-3 puzzle</span>
+            <div class="fish-cover-wrap">
+              <canvas id="fishCoverCanvas" width="360" height="240" aria-hidden="true"></canvas>
+              <div class="fish-cover-content">
+                <p class="fish-cover-kicker">Piggy Catch</p>
+                <h2 class="fish-title">Fish &amp; Shell Match</h2>
+                <p class="fish-sub">Tap river tiles into 7 slots — match 3 to clear the board</p>
+                <button class="fish-start-btn" id="fishStartBtn" type="button">▶ Start</button>
               </div>
+            </div>
+          </div>
+          <div class="fish-scene fish-play hidden" id="fishPlay">
+            <div class="fish-hud">
+              <div class="fish-hud-pill"><span>Level</span><strong id="fishLevel">1</strong></div>
+              <div class="fish-hud-pill"><span>Left</span><strong id="fishLeft">0</strong></div>
+              <div class="fish-hud-pill"><span>Score</span><strong id="fishScore">0</strong></div>
+            </div>
+            <div class="fish-stage-frame">
+              <canvas id="fishCanvas" width="390" height="520" aria-label="Pig fishing match puzzle"></canvas>
+            </div>
+            <div class="fish-result-panel hidden" id="fishOver">
+              <h3 id="fishOverTitle">Slots full!</h3>
+              <p id="fishOverMsg">The pig's basket overflowed.</p>
+              <div class="game-over-actions">
+                <button class="game-share-btn" id="stackShareBtn" type="button">Share result</button>
+                <button class="fish-over-btn" id="fishAgainBtn" type="button">Try Again</button>
+              </div>
+            </div>
+            <div class="fish-play-tools" id="fishPlayTools">
+              <button class="fish-undo-btn" id="fishUndoBtn" type="button" disabled>↩ Undo (1 free)</button>
+              <button class="fish-reset-btn" id="fishResetBtn" type="button">↺ Reset</button>
+              <button class="fish-back-btn" id="fishBackBtn" type="button">← Back</button>
             </div>
           </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">Stack Rush</p>
-            <p class="feed-desc">Drop blocks on beat — stack higher</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🧱</span><span>Block Crafter</span></div>
+            <p class="feed-title">Piggy Catch</p>
+            <p class="feed-desc">Editor's pick: a pink pig fishing by the river — match fish &amp; shells before slots fill up.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🐷</span><span>River Pig Studio</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1613,7 +1716,7 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
+      <article class="feed-item" data-feed="games" data-game="match">
         <div class="game-card match-card" id="matchCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="match" aria-label="Sound">
@@ -1626,22 +1729,51 @@
             </button>
           </div>
           <div class="match-scene match-landing" id="matchLanding">
-            <h2 class="match-title">Memory Match</h2>
-            <p class="match-sub">Flip matching pairs, clear the board</p>
-            <button class="match-start-btn" id="matchStartBtn" type="button">▶ Start</button>
+            <span class="match-badge">No ads · Offline · Free</span>
+            <div class="match-cover-hero">
+              <div class="match-cover-sky" aria-hidden="true">
+                <div class="match-cover-sun"></div>
+                <span class="match-deco match-deco-a">🐚</span>
+                <span class="match-deco match-deco-b">⭐</span>
+                <span class="match-deco match-deco-c">🫧</span>
+              </div>
+              <div class="match-cover-shore" aria-hidden="true"></div>
+              <div class="match-mascot-strip" id="matchMascotRows"></div>
+              <h2 class="match-title">Seaside Memory</h2>
+              <p class="match-sub match-sub-hero">Three quirky friends · eyes follow you</p>
+            </div>
+            <div class="match-cover-panel">
+              <p class="match-sub">Flip cards · match seaside pairs · beat your best</p>
+              <div class="match-diff-row" role="group" aria-label="Difficulty">
+                <button type="button" class="match-diff-btn" data-match-diff="easy"><strong>Easy</strong><span>3×2</span></button>
+                <button type="button" class="match-diff-btn active" data-match-diff="medium"><strong>Medium</strong><span>4×3</span></button>
+                <button type="button" class="match-diff-btn" data-match-diff="hard"><strong>Hard</strong><span>4×4</span></button>
+              </div>
+              <label class="match-timer-toggle"><input type="checkbox" id="matchTimerToggle"> Timer mode (optional)</label>
+              <button class="match-start-btn" id="matchStartBtn" type="button">▶ Play Now</button>
+            </div>
           </div>
           <div class="match-scene match-play hidden" id="matchPlay">
             <div class="match-hud">
               <div class="match-hud-box"><span>Moves</span><strong id="matchMoves">0</strong></div>
               <div class="match-hud-box"><span>Pairs</span><strong id="matchPairs">0/6</strong></div>
-              <div class="match-hud-box"><span>Time</span><strong id="matchTime">0s</strong></div>
+              <div class="match-hud-box match-hud-best"><span>Best</span><strong id="matchBest">—</strong></div>
+              <div class="match-hud-box hidden" id="matchTimePill"><span>Time</span><strong id="matchTime">0s</strong></div>
             </div>
-            <div class="match-grid" id="matchGrid"></div>
-            <button class="match-back-btn" id="matchBackBtn" type="button">← Exit</button>
+            <div class="match-board-wrap">
+              <div class="match-grid cols-4" id="matchGrid"></div>
+            </div>
+            <div class="match-play-tools">
+              <button class="match-tool-btn" id="matchShuffleBtn" type="button">🔀 Shuffle</button>
+              <button class="match-tool-btn" id="matchRestartBtn" type="button">↺ Restart</button>
+              <button class="match-tool-btn" id="matchMuteBtn" type="button">🔊 Sound</button>
+              <button class="match-back-btn" id="matchBackBtn" type="button">← Menu</button>
+            </div>
             <div class="match-win hidden" id="matchWin">
               <div class="match-win-box">
-                <h3>All pairs!</h3>
-                <p><strong id="matchWinMoves">0</strong> moves</p>
+                <h3>All matched! 🐚</h3>
+                <p><strong id="matchWinMoves">0</strong> moves <span id="matchWinTime"></span></p>
+                <p class="match-win-best" id="matchWinBest"></p>
                 <div class="game-over-actions">
                   <button class="game-share-btn" id="matchShareBtn" type="button">Share result</button>
                   <button class="match-win-btn" id="matchAgainBtn" type="button">Play Again</button>
@@ -1652,9 +1784,9 @@
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">Memory Match</p>
-            <p class="feed-desc">Find all matching pairs</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🃏</span><span>Memory Shop</span></div>
+            <p class="feed-title">Seaside Memory</p>
+            <p class="feed-desc">Editor's pick: calm memory training — flip pairs, track moves, no pressure unless you want a timer.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🐚</span><span>Shore Games</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1665,7 +1797,7 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
+      <article class="feed-item" data-feed="games" data-game="merge">
         <div class="game-card merge-card" id="mergeCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="merge" aria-label="Sound">
@@ -1678,35 +1810,45 @@
             </button>
           </div>
           <div class="merge-scene merge-landing" id="mergeLanding">
-            <h2 class="merge-title">Number Merge</h2>
-            <p class="merge-sub">Swipe to merge numbers — chase 2048</p>
-            <button class="merge-start-btn" id="mergeStartBtn" type="button">▶ Start</button>
+            <span class="merge-badge">No ads · Offline · Free</span>
+            <span class="merge-deco merge-deco-1" aria-hidden="true">✦</span>
+            <span class="merge-deco merge-deco-2" aria-hidden="true">2</span>
+            <span class="merge-deco merge-deco-3" aria-hidden="true">128</span>
+            <div class="merge-cover-wrap">
+              <canvas id="mergeCoverCanvas" width="360" height="260" aria-hidden="true"></canvas>
+              <div class="merge-cover-content">
+                <p class="merge-cover-kicker">2248 Chain</p>
+                <h2 class="merge-title">Link &amp; Double</h2>
+                <p class="merge-sub">Drag through matching numbers · merge ×2 · beat your best</p>
+                <button class="merge-start-btn" id="mergeStartBtn" type="button">▶ Play Now</button>
+              </div>
+            </div>
+            <div class="merge-tags">
+              <span>5×5 grid</span><span>One-hand</span><span>Brain snack</span>
+            </div>
           </div>
           <div class="merge-scene merge-play hidden" id="mergePlay">
             <div class="merge-hud">
               <div class="merge-hud-box"><span>Score</span><strong id="mergeScore">0</strong></div>
               <div class="merge-hud-box"><span>Best</span><strong id="mergeBest">0</strong></div>
             </div>
-            <div class="merge-grid" id="mergeGrid"></div>
-            <p class="merge-hint">Swipe or use arrow keys to move tiles</p>
-            <button class="merge-back-btn" id="mergeBackBtn" type="button">← Exit</button>
-            <div class="merge-over hidden" id="mergeOver">
-              <div class="merge-over-box">
-                <h3 id="mergeOverTitle">Grid full</h3>
-                <p>Score <strong id="mergeOverScore">0</strong></p>
-                <div class="game-over-actions">
-                  <button class="game-share-btn" id="mergeShareBtn" type="button">Share score</button>
-                  <button class="merge-over-btn" id="mergeAgainBtn" type="button">Play Again</button>
-                </div>
-              </div>
+            <div class="merge-toast hidden" id="mergeToast" aria-live="polite"></div>
+            <div class="merge-stage-frame">
+              <canvas id="mergeCanvas" width="390" height="390" aria-label="Number merge 2248 grid"></canvas>
+            </div>
+            <p class="merge-hint" id="mergeHint">Drag to link same numbers · release to merge ×2</p>
+            <div class="merge-play-tools" id="mergePlayTools">
+              <button class="merge-tool-btn" id="mergeRestartBtn" type="button">↺ Restart</button>
+              <button class="merge-tool-btn" id="mergeMuteBtn" type="button">🔊 Sound</button>
+              <button class="merge-back-btn" id="mergeBackBtn" type="button">← Back</button>
             </div>
           </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">Number Merge</p>
-            <p class="feed-desc">Classic merge puzzle — go bigger</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🔢</span><span>Logic Blocks</span></div>
+            <p class="feed-title">2248 Chain</p>
+            <p class="feed-desc">Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">✨</span><span>Chain Labs</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1717,8 +1859,8 @@
       </article>
 
       
-      <article class="feed-item" data-feed="games">
-        <div class="game-card beat-card" id="beatCard">
+      <article class="feed-item" data-feed="games" data-game="beat">
+        <div class="game-card snake-card" id="beatCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="beat" aria-label="Sound">
               <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -1729,44 +1871,53 @@
               Full
             </button>
           </div>
-          <div class="beat-scene beat-landing" id="beatLanding">
-            <h2 class="beat-title">Beat Tap</h2>
-            <p class="beat-sub">Tap when lights hit the zone — stay on rhythm</p>
-            <button class="beat-start-btn" id="beatStartBtn" type="button">▶ Start</button>
-          </div>
-          <div class="beat-scene beat-play hidden" id="beatPlay">
-            <div class="beat-hud">
-              <div class="beat-hud-box"><span>Score</span><strong id="beatScore">0</strong></div>
-              <div class="beat-hud-box"><span>Combo</span><strong id="beatCombo">0</strong></div>
-              <div class="beat-hud-box"><span>Lives</span><strong id="beatLife">3</strong></div>
-            </div>
-            <div class="beat-stage" id="beatStage">
-              <canvas id="beatCanvas" width="360" height="320" aria-label="Rhythm game"></canvas>
-              <div class="beat-lanes">
-                <button class="beat-lane-btn" data-beat="0" type="button"></button>
-                <button class="beat-lane-btn" data-beat="1" type="button"></button>
-                <button class="beat-lane-btn" data-beat="2" type="button"></button>
-                <button class="beat-lane-btn" data-beat="3" type="button"></button>
+          <div class="mini-scene snake-landing" id="snakeLanding">
+            <span class="snake-deco snake-deco-1" aria-hidden="true">🌿</span>
+            <span class="snake-deco snake-deco-2" aria-hidden="true">🌸</span>
+            <span class="snake-deco snake-deco-3" aria-hidden="true">🍃</span>
+            <span class="snake-deco snake-deco-4" aria-hidden="true">🥟</span>
+            <span class="snake-badge">Hand-painted meadow</span>
+            <div class="snake-cover-wrap">
+              <canvas id="snakeCoverCanvas" width="360" height="260" aria-hidden="true"></canvas>
+              <div class="snake-cover-content">
+                <p class="snake-cover-kicker">Mochi Snake</p>
+                <h2 class="snake-title">Food Hunt</h2>
+                <p class="snake-sub">Tap to steer · picnic snacks · dodge rivals</p>
+                <button class="snake-start-btn" id="snakeStartBtn" type="button">▶ Start</button>
               </div>
             </div>
-            <button class="beat-back-btn" id="beatBackBtn" type="button">← Exit</button>
-            <div class="beat-over hidden" id="beatOver">
-              <div class="beat-over-box">
-                <h3>Rhythm broken</h3>
-                <p>Score <strong id="beatOverScore">0</strong></p>
-                <div class="game-over-actions">
-                  <button class="game-share-btn" id="beatShareBtn" type="button">Share score</button>
-                  <button class="beat-over-btn" id="beatAgainBtn" type="button">Try Again</button>
+          </div>
+          <div class="mini-scene snake-scene snake-play hidden" id="snakePlay">
+            <div class="snake-hud">
+              <div class="snake-hud-box"><span>Score</span><strong id="snakeScore">0</strong></div>
+              <div class="snake-hud-box"><span>Best</span><strong id="snakeBest">0</strong></div>
+              <div class="snake-hud-box snake-hud-rivals hidden" id="snakeRivalHud"><span>Rivals</span><strong id="snakeRivalCount">0</strong></div>
+            </div>
+            <div class="snake-stage-frame">
+              <div class="snake-stage" id="snakeStage">
+              <canvas id="snakeCanvas" width="360" height="400" aria-label="Snake game — tap to steer"></canvas>
+              <div class="snake-over hidden" id="snakeOver">
+                <div class="snake-over-box">
+                  <h3 id="snakeOverTitle">Ouch!</h3>
+                  <p class="snake-over-score">Score <strong id="snakeOverScore">0</strong></p>
+                  <p class="snake-over-best" id="snakeOverBestLine"></p>
+                  <div class="game-over-actions">
+                    <button class="game-share-btn" id="snakeShareBtn" type="button">Share score</button>
+                    <button class="snake-over-btn" id="snakeAgainBtn" type="button">Play Again</button>
+                  </div>
                 </div>
               </div>
             </div>
+            </div>
+            <p class="snake-hint">Tap to steer — stay inside the dashed edge</p>
+            <button class="snake-back-btn" id="snakeBackBtn" type="button">← Exit</button>
           </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">Beat Tap · Light Rails</p>
-            <p class="feed-desc">Four lanes — tap on beat for high scores</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🎵</span><span>Rhythm Lab</span></div>
+            <p class="feed-title">Mochi Snake · Food Hunt</p>
+            <p class="feed-desc">Eat food, dodge rival snakes — new rivals spawn in the meadow.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🍜</span><span>Snack Lab</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1796,7 +1947,7 @@
             <a href="games/lily-pad-leap.html">Lily Pad</a> ·
             <a href="games/memory-match.html">Memory Match</a> ·
             <a href="games/rainbow-salt-lake.html">Salt Lake</a> ·
-            <a href="games/number-merge.html">Number Merge</a>
+            <a href="games/number-merge.html">2248 Chain</a>
           </p>
           <p class="site-footer-games site-footer-games-sub">
             <a href="games/index.html">All game guides →</a> ·
@@ -1813,7 +1964,7 @@
   <script src="assets/chunks.js"></script>
   <script src="assets/games-chunk.js"></script>
   <script src="assets/learn-chunk.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=starfall-night-3"></script>
 
   <div class="onboard-overlay hidden" id="onboardOverlay" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
     <div class="onboard-card">

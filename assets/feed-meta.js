@@ -84,11 +84,11 @@ window.FEED_META = {
     "name": "Rainbow Salt Lake"
   },
   "mj": {
-    "editorPick": "Editor's pick: ASMR tile draws — the palate cleanser between intense games.",
-    "guide": "tile-draw.html",
-    "category": "chill",
-    "categoryLabel": "Chill",
-    "name": "Tile Draw"
+    "editorPick": "Editor's pick: sketchbook physics — draw a ramp, roll the ball, catch the star.",
+    "guide": "brain-sketch.html",
+    "category": "puzzle",
+    "categoryLabel": "Puzzle",
+    "name": "Brain Sketch"
   },
   "star": {
     "editorPick": "Editor's pick: classic catch-and-dodge — easy start, hard stop.",
@@ -98,32 +98,32 @@ window.FEED_META = {
     "name": "Starfall"
   },
   "stack": {
-    "editorPick": "Editor's pick: one button, one more try — pure stacker satisfaction.",
+    "editorPick": "Editor's pick: a pink pig fishing by the river — match 3 fish & shells before slots fill up.",
     "guide": "stack-rush.html",
     "category": "puzzle",
     "categoryLabel": "Puzzle",
-    "name": "Stack Rush"
+    "name": "Piggy Catch"
   },
   "match": {
-    "editorPick": "Editor's pick: calm memory training — no clock, just move count.",
+    "editorPick": "Editor's pick: calm memory training — flip pairs, track moves, no pressure unless you want a timer.",
     "guide": "memory-match.html",
     "category": "puzzle",
     "categoryLabel": "Puzzle",
-    "name": "Memory Match"
+    "name": "Seaside Memory"
   },
   "merge": {
-    "editorPick": "Editor's pick: the 2048 fix with no app install required.",
+    "editorPick": "Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.",
     "guide": "number-merge.html",
     "category": "puzzle",
     "categoryLabel": "Puzzle",
-    "name": "Number Merge"
+    "name": "2248 Chain"
   },
   "beat": {
-    "editorPick": "Editor's pick: four-lane rhythm when you want a real score chase.",
-    "guide": "beat-tap.html",
+    "editorPick": "Editor's pick: a hand-painted picnic meadow — guide your mochi caterpillar to snacks.",
+    "guide": "snake-bite.html",
     "category": "arcade",
     "categoryLabel": "Arcade",
-    "name": "Beat Tap"
+    "name": "Mochi Snake"
   }
 };
 window.FEED_HIGHLIGHTS = [

@@ -14,10 +14,10 @@ export const CATEGORY_META = {
       "Fast reflex games for adrenaline breaks — lane runners, rhythm taps, star catchers, and timing stackers. No download, instant play in your browser.",
     blurb: "Reflex runs, rhythm taps, and arcade timing games.",
     editorial: [
-      "Arcade games on VibeVerse are built for the five-minute adrenaline loop: learn in one swipe, fail fast, retry instantly. Runners like Neon Rush and Starfall escalate speed without punishing you with long tutorials. Rhythm titles like Beat Tap reward headphones and focus — perfect when you want a score you can actually brag about.",
+      "Arcade games on VibeVerse are built for the five-minute adrenaline loop: learn in one swipe, fail fast, retry instantly. Runners like Neon Rush and Starfall escalate speed without punishing you with long tutorials. Score-chasers like Mochi Snake reward quick reflexes — perfect when you want a number worth bragging about.",
       "Our editors reach for arcade picks between tasks, on commutes, or when puzzle games feel too thoughtful. Each title includes a share card on the results screen so your personal best becomes a story, not just a number.",
     ],
-    topPickSlugs: ["neon-rush", "beat-tap"],
+    topPickSlugs: ["neon-rush", "snake-bite"],
   },
   puzzle: {
     id: "puzzle",
@@ -28,7 +28,7 @@ export const CATEGORY_META = {
       "Brain-warming puzzles without harsh timers — merge tiles, match pairs, stack blocks, and chase high scores at your own pace.",
     blurb: "Merge, match, and stack puzzles for thoughtful breaks.",
     editorial: [
-      "Puzzle games here skip the guilt of a hard timer. Number Merge and Memory Match let you think out loud — corner strategies, move counts, tile milestones — without a clock yelling at you. Cute Stack and Stack Rush split the difference: spatial depth with arcade timing when you want it.",
+      "Puzzle games here skip the guilt of a hard timer. 2248 Chain and Memory Match let you think out loud — chain links, move counts, tile milestones — without a clock yelling at you. Cute Stack and Stack Rush split the difference: spatial depth with arcade timing when you want it.",
       "We recommend puzzle picks when you need a mental reset that still feels productive. Pair a merge session with coffee, or challenge a friend to beat your Memory Match move count via share card.",
     ],
     topPickSlugs: ["number-merge", "memory-match"],
@@ -74,8 +74,8 @@ const CATEGORY_BY_ID = {
 const EMOJI_BY_ID = {
   fortune: "🌸", earth: "🌍", chick: "🐣", block: "🦌", shop: "🏪",
   leap: "🐸", run: "⚡", face: "💅", box: "🎁", sente: "✨",
-  pet: "🐾", spot: "🌈", mj: "🀄", star: "⭐", stack: "🧱",
-  match: "🃏", merge: "🔢", beat: "🎵",
+  pet: "🐾", spot: "🌈", mj: "🧠", star: "⭐", stack: "🧱",
+  match: "🃏", merge: "🔢", beat: "🐍",
 };
 
 const RAW_GUIDES = [
@@ -86,7 +86,7 @@ const RAW_GUIDES = [
     how: "Tap Start, then press the chick repeatedly. Each tap adds relief points and emote reactions. Switch Rubber, Balloon, and Clay skins for different bounce effects. Open Achievements to track milestones.",
     tips: ["Balloon skin pops after many taps — a fun milestone.", "Steady tapping builds relief faster than random spam.", "Use Fullscreen on the card for a distraction-free session."],
     faq: [["Is Squishy Chick free?", "Yes. It runs free in your browser on VibeVerse."], ["Do I need an account?", "No download or sign-up required."], ["Is progress saved?", "Relief and taps can persist locally in your browser for the session."], ["Does it work on mobile?", "Yes — fully touch-friendly."]],
-    related: [["neon-rush.html", "Neon Rush"], ["daily-fortune.html", "Daily Fortune"], ["tile-draw.html", "Tile Draw"]],
+    related: [["neon-rush.html", "Neon Rush"], ["daily-fortune.html", "Daily Fortune"], ["brain-sketch.html", "Brain Sketch"]],
   },
   {
     slug: "neon-rush", id: "run", name: "Neon Rush", tag: "#NeonRush",
@@ -95,7 +95,7 @@ const RAW_GUIDES = [
     how: "Tap Start Run, then use on-screen D-pad or arrow keys: left/right to change lanes, up to jump, down to slide. Avoid obstacles and survive as long as you can.",
     tips: ["Look ahead — obstacles telegraph early in each lane.", "Slide under low barriers instead of jumping late.", "Share your score from the Run Over screen."],
     faq: [["Is Neon Rush free?", "Yes, free in your browser."], ["Keyboard support?", "Arrow keys work on desktop."], ["Can I share scores?", "Yes — tap Share score after a run."], ["Mobile controls?", "On-screen D-pad buttons."]],
-    related: [["starfall.html", "Starfall"], ["lily-pad-leap.html", "Lily Pad Leap"], ["beat-tap.html", "Beat Tap"]],
+    related: [["starfall.html", "Starfall"], ["lily-pad-leap.html", "Lily Pad Leap"], ["snake-bite.html", "Mochi Snake"]],
   },
   {
     slug: "daily-fortune", id: "fortune", name: "Daily Fortune", tag: "#DailyFortune",
@@ -149,7 +149,7 @@ const RAW_GUIDES = [
     how: "Start the game, drag or tap to place falling blocks. Complete rows to clear them and earn points. Use power-ups like bomb and speed when unlocked. Game ends when no space remains.",
     tips: ["Keep the stack flat — holes are costly.", "Save bombs for emergency bottom rows.", "Share your final score on Game Over."],
     faq: [["Like Tetris?", "Inspired stacking mechanics with a cute forest theme."], ["Scores saved?", "Local score history in the Scores panel."], ["Share?", "Share score when Game Over appears."]],
-    related: [["stack-rush.html", "Stack Rush"], ["number-merge.html", "Number Merge"], ["memory-match.html", "Memory Match"]],
+    related: [["stack-rush.html", "Stack Rush"], ["number-merge.html", "2248 Chain"], ["memory-match.html", "Memory Match"]],
   },
   {
     slug: "runway-glow-up", id: "face", name: "Runway Glow-Up", tag: "#VibeVerseGlowUp",
@@ -158,7 +158,7 @@ const RAW_GUIDES = [
     how: "Start and tap when beat markers hit the zone. Complete stages to finish the full glow-up sequence. Use dedicated share buttons after success.",
     tips: ["Listen for the repeating beat before tapping.", "Perfect hits progress faster than early spam.", "Use built-in TikTok/IG share for styled cards."],
     faq: [["Share options?", "TikTok and Instagram share buttons after a full run."], ["Keyboard?", "Space/Enter to tap on desktop."], ["Free?", "Yes."]],
-    related: [["beat-tap.html", "Beat Tap"], ["neon-rush.html", "Neon Rush"], ["born-vs-forced.html", "Born To vs Forced To"]],
+    related: [["snake-bite.html", "Mochi Snake"], ["neon-rush.html", "Neon Rush"], ["born-vs-forced.html", "Born To vs Forced To"]],
   },
   {
     slug: "mystery-flavor-box", id: "box", name: "Mystery Flavor Box", tag: "#FlavorGuess",
@@ -167,7 +167,7 @@ const RAW_GUIDES = [
     how: "Tap to open boxes, read hints, and guess the flavor profile. Open all 10 for the daily complete screen. Share your flavor quest when finished.",
     tips: ["Read all three hints before guessing.", "Wild flavors are intentional — lean into the joke.", "Complete all 10 to unlock the share summary."],
     faq: [["Real products?", "Fictional flavor concepts for fun."], ["Daily limit?", "10 boxes per round — play Another Round freely."], ["Share?", "Share card after opening all boxes."]],
-    related: [["fresh-fruit-stand.html", "Fresh Fruit Stand"], ["born-vs-forced.html", "Born To vs Forced To"], ["tile-draw.html", "Tile Draw"]],
+    related: [["fresh-fruit-stand.html", "Fresh Fruit Stand"], ["born-vs-forced.html", "Born To vs Forced To"], ["brain-sketch.html", "Brain Sketch"]],
   },
   {
     slug: "office-pets", id: "pet", name: "Office Pets", tag: "#PetOffice",
@@ -188,13 +188,13 @@ const RAW_GUIDES = [
     related: [["blue-planet-diary.html", "Blue Planet Diary"], ["office-pets.html", "Office Pets"], ["daily-fortune.html", "Daily Fortune"]],
   },
   {
-    slug: "tile-draw", id: "mj", name: "Tile Draw", tag: "#TileZen",
-    lead: "Solo random tile draws with zero rules — tap the deck, reveal a tile, repeat. Digital ASMR for puzzle fans who want no pressure.",
-    forWho: "Players seeking pure chill with no fail state. Not for those wanting competitive scoring.",
-    how: "Tap the deck to reveal tiles one at a time. Counter tracks draws this session. Exit anytime — no penalty.",
-    tips: ["Use between intense arcade rounds to reset.", "Great one-handed mobile pastime.", "No timer — stop whenever you want."],
-    faq: [["Win condition?", "None — infinite draws."], ["Scoring?", "Only a draw counter, no leaderboard."], ["Share?", "Use feed Share or screenshot favorite tiles."]],
-    related: [["memory-match.html", "Memory Match"], ["squishy-chick.html", "Squishy Chick"], ["daily-fortune.html", "Daily Fortune"]],
+    slug: "brain-sketch", id: "mj", name: "Brain Sketch", tag: "#BrainSketch",
+    lead: "Draw lines and shapes on the canvas — they become real physics objects. Use gravity and collisions to roll the ball into the star. Short brain-teaser levels, zero download.",
+    forWho: "Fans of physics puzzlers like Brain It On. Quick levels, creative solutions, share-worthy aha moments.",
+    how: "Draw up to 3 strokes on the blue canvas, then tap Go. Your lines turn solid — the ball falls, rolls, and bounces. Clear the level when the ball hits the star.",
+    tips: ["Start with a gentle ramp — steep lines can launch the ball off-screen.", "Use two strokes on later levels: one ramp, one wall bounce.", "Tap Clear to erase and rethink without leaving the card."],
+    faq: [["How many draws?", "Up to 3 strokes per level."], ["Fail state?", "Ball falls off — tap Clear and try again."], ["Levels?", "5 puzzles, then loop from the start."]],
+    related: [["memory-match.html", "Memory Match"], ["number-merge.html", "2248 Chain"], ["cute-stack.html", "Cute Stack"]],
   },
   {
     slug: "starfall", id: "star", name: "Starfall", tag: "#Starfall",
@@ -203,7 +203,7 @@ const RAW_GUIDES = [
     how: "Start and move the basket left/right (D-pad or drag). Stars add score; meteors end the run. Share score on the pause screen.",
     tips: ["Stay centered until meteors telegraph a lane.", "Rhythm of stars speeds up — stay calm.", "Share every personal best from Star Pause."],
     faq: [["Controls?", "D-pad buttons or touch drag."], ["End condition?", "Meteor hit ends the run."], ["Share?", "Share score on Star Pause screen."]],
-    related: [["neon-rush.html", "Neon Rush"], ["stack-rush.html", "Stack Rush"], ["beat-tap.html", "Beat Tap"]],
+    related: [["neon-rush.html", "Neon Rush"], ["stack-rush.html", "Stack Rush"], ["snake-bite.html", "Mochi Snake"]],
   },
   {
     slug: "stack-rush", id: "stack", name: "Stack Rush", tag: "#StackRush",
@@ -221,25 +221,25 @@ const RAW_GUIDES = [
     how: "Tap cards to flip two at a time. Matching pairs stay revealed; mismatches flip back. Win when all pairs are found — share your move count.",
     tips: ["Memorize corners and edges first.", "Plan the second flip before revealing the first.", "Fewer moves means a better run — share to challenge friends."],
     faq: [["Time limit?", "No hard timer — focus on move efficiency."], ["Board size?", "6 pairs in standard mode."], ["Share?", "Share result on All pairs screen."]],
-    related: [["number-merge.html", "Number Merge"], ["tile-draw.html", "Tile Draw"], ["cute-stack.html", "Cute Stack"]],
+    related: [["number-merge.html", "2248 Chain"], ["brain-sketch.html", "Brain Sketch"], ["cute-stack.html", "Cute Stack"]],
   },
   {
-    slug: "number-merge", id: "merge", name: "Number Merge", tag: "#NumberMerge",
-    lead: "Swipe tiles to merge numbers toward 2048 and beyond — the classic merge puzzle in your feed, no app install.",
-    forWho: "Merge puzzle veterans and newcomers alike. Perfect for thoughtful breaks.",
-    how: "Swipe or use arrow keys to slide tiles. Equal numbers merge into doubles. Game ends when the grid is full — share your score and highest tile.",
-    tips: ["Anchor your largest tile in a corner.", "Avoid random up/down swipes — pick two primary directions.", "Share when you hit a new tile milestone."],
-    faq: [["Like 2048?", "Same core merge mechanics."], ["Undo?", "No undo — classic rules."], ["Share?", "Share score on Grid full screen."]],
+    slug: "number-merge", id: "merge", name: "2248 Chain", tag: "#2248Chain",
+    lead: "Link matching numbers on a 5×5 grid, merge ×2, chase 1024+ — no app install, zero ads.",
+    forWho: "Merge puzzle fans who want satisfying chains without a timer. Perfect for commutes and coffee breaks.",
+    how: "Drag through adjacent tiles with the same number (any angle). Link 2 or more, then release to merge ×2. A random 2 or 4 spawns after each merge. Game ends when no matches remain — share your score.",
+    tips: ["Build long chains before you release — every linked tile counts.", "Anchor your largest tile in a corner and grow toward it.", "Watch for milestone pops at 128, 256, 512, and 1024."],
+    faq: [["Like 2248?", "Same link-and-merge energy — drag chains on a 5×5 grid instead of swiping the whole board."], ["Undo?", "No undo — commit to your chain."], ["Share?", "Share score from the feed card or fullscreen view."]],
     related: [["memory-match.html", "Memory Match"], ["cute-stack.html", "Cute Stack"], ["fresh-fruit-stand.html", "Fresh Fruit Stand"]],
   },
   {
-    slug: "beat-tap", id: "beat", name: "Beat Tap", tag: "#BeatTap",
-    lead: "Four-lane rhythm taps — hit the zone when lights arrive, build combos, and chase high scores on the rails.",
-    forWho: "Rhythm game enthusiasts who want a quick beat-fix. Pairs well with Runway Glow-Up.",
-    how: "Start and tap the lane when its note hits the bottom target. Miss too many beats and the run ends. Share your score on Rhythm broken.",
-    tips: ["Assign each lane a finger on mobile.", "Watch the lead lane to predict patterns.", "Headphones help for timing precision."],
-    faq: [["Lanes?", "Four parallel rhythm lanes."], ["End condition?", "Too many missed beats breaks the run."], ["Share?", "Share score on Rhythm broken screen."]],
-    related: [["runway-glow-up.html", "Runway Glow-Up"], ["neon-rush.html", "Neon Rush"], ["starfall.html", "Starfall"]],
+    slug: "snake-bite", id: "beat", name: "Mochi Snake", tag: "#MochiSnake",
+    lead: "Cute mochi caterpillar snake — tap to steer through a watercolor meadow, eat snacks for 1/5/10 points, dodge rival snakes.",
+    forWho: "Classic snake fans who want cozy hand-drawn vibes. One-thumb tap steering — no D-pad needed.",
+    how: "Tap Start, then tap or drag on the meadow to steer toward food. Eat snacks to grow and score — higher values are rarer. Avoid walls, your tail, and rival snakes. Share your score from the game-over screen.",
+    tips: ["Early rounds stay calm — fewer snacks until you score more.", "Plan two moves ahead — speed increases as you score.", "Grab 10pt duck only when you have a safe escape route.", "Use Fullscreen for a taller meadow on small screens."],
+    faq: [["Food values?", "Common snacks 1pt, spring rolls and mooncakes 5pt, roast duck 10pt."], ["Controls?", "Tap or drag on the meadow — snake steers toward your finger."], ["Rivals?", "Colored rival snakes spawn over time — touching one ends your run."], ["Share?", "Share score on the game-over screen or via the feed button."]],
+    related: [["neon-rush.html", "Neon Rush"], ["starfall.html", "Starfall"], ["stack-rush.html", "Stack Rush"]],
   },
 ];
 
@@ -256,12 +256,12 @@ const EDITOR_PICK_BY_ID = {
   sente: "Editor's pick: instant meme lines for group chats.",
   pet: "Editor's pick: WFH pet moods — browse, screenshot, repeat.",
   spot: "Editor's pick: dreamy check-ins you'll want to screenshot.",
-  mj: "Editor's pick: ASMR tile draws — the palate cleanser between intense games.",
+  mj: "Editor's pick: draw shapes, watch physics solve the puzzle — short levels, big brain energy.",
   star: "Editor's pick: classic catch-and-dodge — easy start, hard stop.",
   stack: "Editor's pick: one button, one more try — pure stacker satisfaction.",
   match: "Editor's pick: calm memory training — no clock, just move count.",
-  merge: "Editor's pick: the 2048 fix with no app install required.",
-  beat: "Editor's pick: four-lane rhythm when you want a real score chase.",
+  merge: "Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.",
+  beat: "Editor's pick: cute pill snake — swipe, eat coins, chase high score.",
 };
 
 const HIGHLIGHT_BY_ID = {
@@ -281,8 +281,8 @@ const HIGHLIGHT_BY_ID = {
   star: "Catch stars, dodge meteors, share the high score.",
   stack: "Misaligned edges get sliced until the tower falls.",
   match: "Six pairs, your move count is the flex.",
-  merge: "Corner your biggest tile and swipe with intent.",
-  beat: "Hit the zone when the lights arrive — combo or bust.",
+  merge: "Longer chains = bigger merges. Corner your highest tile early.",
+  beat: "Swipe, eat coins, grow faster — five pill crew colors to meet.",
 };
 
 export const GUIDES = RAW_GUIDES.map((g) => ({
