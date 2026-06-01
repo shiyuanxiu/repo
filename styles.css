@@ -35,7 +35,7 @@ html, body {
 
 body {
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #faf5f9 0%, #f5f0fb 48%, #ede9f6 100%);
+  background: linear-gradient(180deg, #faf5ff 0%, #f5efff 100%);
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
   position: relative;
@@ -46,7 +46,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: var(--noise-svg);
-  opacity: 0.45;
+  opacity: 0.22;
   pointer-events: none;
   z-index: 0;
 }
@@ -61,12 +61,10 @@ body::before {
   top: 0;
   z-index: 200;
   width: 100%;
-  padding: 14px var(--page-gutter);
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
 }
 
 .navbar-inner {
@@ -75,7 +73,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 20px;
 }
 
 .nav-btn {
@@ -103,24 +101,22 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  background: var(--gradient-btn);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #9900ff, #cc66ff);
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.28);
+  box-shadow: 0 8px 24px rgba(153, 0, 255, 0.14);
 }
 
 .brand-name {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  background: var(--gradient-underline);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #222;
+  background: none;
 }
 
 .nav-btn svg {
@@ -130,15 +126,15 @@ body::before {
 
 .tabs {
   display: flex;
-  gap: 28px;
+  gap: 32px;
 }
 
 .tabs-wide {
-  gap: 12px;
+  gap: 24px;
 }
 
 .tabs-wide .tab {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .tab {
@@ -146,15 +142,15 @@ body::before {
   border: none;
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: #666;
   cursor: pointer;
   padding-bottom: 6px;
   position: relative;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 
 .tab.active {
-  color: var(--feed-accent);
+  color: #9900ff;
   font-weight: 600;
 }
 
@@ -165,7 +161,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 2px;
-  background: var(--gradient-underline);
+  background: #9900ff;
   border-radius: 1px;
 }
 
@@ -214,8 +210,52 @@ body::before {
 }
 
 .feed-item + .feed-item {
+  border-top: 1px solid rgba(15,23,42,0.04);
+  padding-top: 0.75rem;
+}
+
+/* Group game visual + metadata into a single card container */
+.feed-item > .game-card {
+  /* remove internal shadow/rounded top so outer feed-item can be the card */
+  box-shadow: none;
+  border-radius: 0 0 0 0;
+  width: 100%;
+  max-width: none;
+}
+
+.feed-item > .feed-meta {
+  width: 100%;
+  max-width: none;
+  padding: 12px 16px;
+  background: transparent;
+  border-top: 1px solid rgba(15,23,42,0.04);
+  border-radius: 0 0 12px 12px;
+}
+
+/* Outer card look for feed items that contain a .game-card */
+.feed-item:has(> .game-card) {
+  background: rgba(255,255,255,0.96);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15,23,42,0.06);
+  padding: 0.5rem;
+  margin-bottom: 1.25rem;
+  overflow: visible;
+}
+
+/* Make Squishy Chick appear as one unified card */
+.feed-item:has(> .game-card.chick-card) {
+  background: linear-gradient(180deg, #fffdf5 0%, #fff3d6 50%, #ffe8b0 100%);
+}
+
+.feed-item:has(> .game-card.chick-card) > .game-card.chick-card {
+  background: transparent;
+  box-shadow: none;
+}
+
+.feed-item:has(> .game-card.chick-card) > .feed-meta {
   border-top: none;
-  padding-top: 0.5rem;
+  background: transparent;
+  padding: 14px 18px;
 }
 
 .game-card {
@@ -5430,6 +5470,17 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   background: linear-gradient(165deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
 }
 
+.sente-scene {
+  min-height: auto;
+}
+
+.feed-item[data-game="sente"] {
+  min-height: auto;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+  padding-bottom: 0.75rem;
+}
+
 .sente-tag { background: linear-gradient(90deg, #f59e0b, #ea580c); }
 .sente-title { color: #92400e; }
 
@@ -6583,17 +6634,26 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   margin: 0;
 }
 
-.nav-saved {
+.nav-saved,
+.nav-guides,
+.navbar-help-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--feed-accent-soft);
+  background: #f5f5f5;
+  color: #222;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 15px;
   flex-shrink: 0;
+}
+
+.nav-saved:hover,
+.nav-guides:hover,
+.navbar-help-btn:hover {
+  background: #ece7ff;
 }
 
 .game-categories {

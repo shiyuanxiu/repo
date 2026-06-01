@@ -231,51 +231,55 @@
 
     .miniverse-hero {
       display: grid;
-      gap: 18px;
-      background: rgba(59,130,246,0.1);
-      border: 1px solid rgba(59,130,246,0.25);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 18px 45px rgba(15,23,42,0.12);
+      gap: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 22px;
+      padding: 24px 26px;
+      box-shadow: 0 20px 60px rgba(15,23,42,0.08);
+      align-items: start;
     }
 
     .miniverse-hero > div:first-child {
       display: grid;
-      gap: 10px;
+      gap: 6px;
       align-items: start;
     }
 
     .brand-title {
-      font-size: clamp(2rem, 5vw, 3rem);
+      font-size: clamp(1.5rem, 4.5vw, 2.25rem);
       font-weight: 800;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       color: #0f172a;
       margin: 0;
+      line-height: 1.05;
     }
 
     .brand-subtitle,
     .brand-cta,
     .brand-note {
-      font-size: clamp(1rem, 2.5vw, 1.1rem);
-      color: #334155;
+      font-size: clamp(0.95rem, 2.2vw, 0.98rem);
+      color: #374151;
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.45;
     }
 
     .brand-note {
-      opacity: 0.85;
-      margin-top: 10px;
+      opacity: 0.9;
+      margin-top: 8px;
+      font-size: 0.95rem;
     }
 
     /* Help button in navbar */
     .navbar-help-btn {
-      background: none;
-      border: none;
+      background: #f5f5f5;
+      border: 1px solid rgba(15,23,42,0.1);
+      border-radius: 999px;
       font-size: clamp(16px, 4vw, 20px);
       cursor: pointer;
-      padding: 8px;
-      transition: all 0.3s ease;
-      color: #3b82f6;
+      padding: 10px 12px;
+      transition: transform 0.25s ease, background 0.25s ease;
+      color: #111827;
     }
 
     .navbar-help-btn:hover {
@@ -406,6 +410,7 @@
               <p class="brand-subtitle">Play free casual games online • No download • No login</p>
               <p class="brand-cta">How to play: Tap or click to start.</p>
             </div>
+            
             </div>
           <p class="brand-note">Today’s picks are waiting in the feed below — tap a card to jump into instant fun.</p>
         </section>
