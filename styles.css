@@ -3939,8 +3939,7 @@ body::before {
   display: flex;
 }
 
-.feed-item.hidden,
-.ad-in-feed.hidden {
+.feed-item.hidden {
   display: none !important;
 }
 
@@ -6201,40 +6200,6 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   pointer-events: none;
 }
 
-/* ===== Ad slot ===== */
-.ad-slot {
-  width: 100%;
-  max-width: var(--shell-max);
-  margin: 0 auto;
-  padding: 0 var(--page-gutter) 1.5rem;
-}
-
-.ad-slot-inner {
-  max-width: var(--hero-max);
-  margin: 0 auto;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--feed-radius);
-  border: 1px dashed rgba(168, 85, 247, 0.25);
-  background: rgba(255, 255, 255, 0.45);
-  text-align: center;
-}
-
-.ad-slot-label {
-  display: inline-block;
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
-}
-
-.ad-slot-placeholder {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
 /* ===== Desktop layout polish ===== */
 @media (min-width: 768px) {
   :root {
@@ -6344,8 +6309,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   min-height: 0;
 }
 
-.feed-item,
-.ad-in-feed {
+.feed-item {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   min-height: min(calc(100dvh - 140px), 720px);
@@ -6357,9 +6321,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   margin-bottom: 0;
 }
 
-.feed-item + .feed-item,
-.ad-in-feed + .feed-item,
-.feed-item + .ad-in-feed {
+.feed-item + .feed-item {
   border-top: none;
   padding-top: 0.5rem;
 }
@@ -6755,66 +6717,6 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   background: var(--feed-accent);
 }
 
-.sidebar-ad {
-  display: none;
-}
-
-.sidebar-ad-inner,
-.ad-slot-inner,
-.ad-in-feed-inner {
-  border-radius: var(--feed-radius);
-  border: 1px dashed rgba(168, 85, 247, 0.22);
-  background: rgba(255, 255, 255, 0.5);
-  min-height: 90px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 1rem;
-}
-
-.sidebar-ad-inner {
-  min-height: 600px;
-  position: sticky;
-  top: 80px;
-}
-
-.ad-slot-label {
-  display: inline-block;
-  font-size: 0.625rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
-}
-
-.ad-slot-placeholder {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.ad-in-feed {
-  width: 100%;
-  max-width: var(--shell-max);
-}
-
-.ad-in-feed-inner {
-  width: 100%;
-  max-width: var(--hero-max);
-  min-height: 100px;
-}
-
-.ad-slot-bottom {
-  padding: 0 var(--page-gutter) 1rem;
-}
-
-.ad-slot-bottom .ad-slot-inner {
-  max-width: var(--hero-max);
-  margin: 0 auto;
-}
 
 .stat-btn.saved svg {
   fill: #fbbf24;
@@ -6834,19 +6736,6 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
     padding: 0 0.5rem;
   }
 
-  body.ads-enabled .app-shell {
-    grid-template-columns: 160px minmax(0, 640px) 160px;
-  }
-
-  .sidebar-ad {
-    display: none;
-    padding-top: 1rem;
-  }
-
-  body.ads-enabled .sidebar-ad {
-    display: block;
-  }
-
   .feed-progress {
     right: calc(50% - 340px);
   }
@@ -6861,8 +6750,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
     right: 6px;
   }
 
-  .feed-item,
-  .ad-in-feed {
+  .feed-item {
     min-height: min(calc(100dvh - 120px), 680px);
   }
 }

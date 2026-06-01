@@ -3068,7 +3068,6 @@ function applyFeedSearchFilter(q) {
     const match = !query || label.includes(query) || game.includes(query) || title.includes(query) || desc.includes(query);
     item.classList.toggle("hidden", !match);
   });
-  document.querySelectorAll(".ad-in-feed").forEach((ad) => ad.classList.add("hidden"));
   gameCategories?.classList.add("hidden");
   const count = document.querySelectorAll(".feed-item:not(.hidden)").length;
   feedEmpty?.classList.toggle("hidden", count > 0);
@@ -3086,9 +3085,6 @@ function applyFeedVisibility() {
     const cat = item.dataset.category || "chill";
     const catMatch = tab !== "games" || activeGameCategory === "all" || cat === activeGameCategory;
     item.classList.toggle("hidden", !(tabMatch && catMatch));
-  });
-  document.querySelectorAll(".ad-in-feed").forEach((ad) => {
-    ad.classList.toggle("hidden", ad.dataset.feedTab !== tab);
   });
   const count = document.querySelectorAll(`.feed-item[data-feed="${tab}"]:not(.hidden)`).length;
   feedEmpty?.classList.toggle("hidden", count > 0);
@@ -6371,12 +6367,11 @@ function hideAppLoader() {
   loader.setAttribute("aria-hidden", "true");
 }
 
-/* ===== Feed optimizations: reorder, ads, lazy init, streak ===== */
-const ADSENSE_CLIENT = "";
+/* ===== Feed optimizations: reorder, lazy init, streak ===== */
 
 const GAME_SHARE_META = {
-  home: { title: "VibeVerse", text: "Free mini games in a scroll feed!", tag: "#VibeVerse" },
-  fortune: { title: "Daily Fortune", text: "Draw today's fortune on VibeVerse", tag: "#DailyFortune" },
+  home: { title: "Miniverse", text: "Free mini games in a scroll feed!", tag: "#Miniverse" },
+  fortune: { title: "Daily Fortune", text: "Draw today's fortune on Miniverse", tag: "#DailyFortune" },
   earth: { title: "Blue Planet Diary", text: "Daily quests & good vibes", tag: "#BluePlanet" },
   chick: { title: "Squishy Chick", text: "Squeeze away the stress", tag: "#SquishyChick" },
   block: { title: "Cute Stack", text: "Stack blocks, chase high scores", tag: "#CuteStack" },
@@ -6410,8 +6405,7 @@ function initFeedOptimizations() {
   polishTrustSignals();
   tagFeedItems();
   reorderFeedItems();
-  injectInFeedAds();
-  renderAdUnits();
+  // Ad injection disabled for Miniverse
   initSavedGames();
   initStreakUI();
   initFeedLazyLoad();
@@ -6648,59 +6642,6 @@ function reorderFeedItems() {
   [...recommend, ...games].forEach((item) => feed.insertBefore(item, empty));
 }
 
-function createAdElement(tab, index) {
-  const ad = document.createElement("div");
-  ad.className = "ad-in-feed";
-  ad.dataset.feedTab = tab;
-  ad.dataset.adIndex = String(index);
-  ad.setAttribute("aria-label", "Advertisement");
-  ad.innerHTML = `<div class="ad-in-feed-inner" data-ad-unit="in-feed-${tab}-${index}"></div>`;
-  return ad;
-}
-
-function injectInFeedAds() {
-  const feed = document.getElementById("feed");
-  const empty = document.getElementById("feedEmpty");
-  if (!feed || !empty) return;
-
-  ["recommend", "games"].forEach((tab) => {
-    const items = [...feed.querySelectorAll(`.feed-item[data-feed="${tab}"]`)];
-    let adCount = 0;
-    items.forEach((item, idx) => {
-      if ((idx + 1) % 4 !== 0 || idx === items.length - 1) return;
-      adCount += 1;
-      const ad = createAdElement(tab, adCount);
-      item.after(ad);
-    });
-  });
-}
-
-function renderAdPlaceholder(container) {
-  container.innerHTML = `<span class="ad-slot-label">Sponsored</span>`;
-}
-
-function renderAdUnits() {
-  const hasAds = Boolean(ADSENSE_CLIENT);
-  document.body.classList.toggle("ads-enabled", hasAds);
-  if (!hasAds) {
-    document.querySelectorAll(".sidebar-ad, .ad-in-feed, .ad-slot").forEach((el) => {
-      el.hidden = true;
-    });
-    return;
-  }
-  document.querySelectorAll(".sidebar-ad, .ad-in-feed, .ad-slot").forEach((el) => {
-    el.hidden = false;
-  });
-  document.querySelectorAll("[data-ad-unit]").forEach((el) => {
-    const unit = el.dataset.adUnit;
-    if (typeof window.adsbygoogle !== "undefined") {
-      el.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-client="${ADSENSE_CLIENT}" data-ad-slot="${unit}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
-      try { window.adsbygoogle.push({}); } catch (_) { renderAdPlaceholder(el); }
-    } else {
-      renderAdPlaceholder(el);
-    }
-  });
-}
 
 function toggleSavedGame(gameId, saved) {
   const key = "vv_saved";
@@ -6847,7 +6788,7 @@ function initFeedProgress() {
     const tab = document.querySelector(".tab.active")?.dataset.tab || "recommend";
     const slides = [
       ...feed.querySelectorAll(
-        `.feed-item[data-feed="${tab}"]:not(.hidden):not(.learn-feed-skip), .ad-in-feed[data-feed-tab="${tab}"]:not(.hidden)`,
+        `.feed-item[data-feed="${tab}"]:not(.hidden):not(.learn-feed-skip)`,
       ),
     ];
     slides.forEach((_, i) => {
