@@ -231,25 +231,25 @@
 
     .miniverse-hero {
       display: grid;
-      gap: 16px;
+      gap: 8px;
       background: #ffffff;
-      border: 1px solid rgba(15,23,42,0.08);
-      border-radius: 22px;
-      padding: 24px 26px;
-      box-shadow: 0 20px 60px rgba(15,23,42,0.08);
+      border: 1px solid rgba(15,23,42,0.06);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.06);
       align-items: start;
     }
 
     .miniverse-hero > div:first-child {
       display: grid;
-      gap: 6px;
+      gap: 4px;
       align-items: start;
     }
 
     .brand-title {
-      font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+      font-size: clamp(1.125rem, 3.5vw, 1.6rem);
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       color: #0f172a;
       margin: 0;
       line-height: 1.05;
@@ -258,16 +258,16 @@
     .brand-subtitle,
     .brand-cta,
     .brand-note {
-      font-size: clamp(0.95rem, 2.2vw, 0.98rem);
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
       color: #374151;
       margin: 0;
-      line-height: 1.45;
+      line-height: 1.35;
     }
 
     .brand-note {
-      opacity: 0.9;
-      margin-top: 8px;
-      font-size: 0.95rem;
+      opacity: 0.95;
+      margin-top: 6px;
+      font-size: 0.92rem;
     }
 
     /* Help button in navbar */
@@ -1862,5 +1862,32 @@
       </div>
     </div>
   </div>
+  
+  <script>
+    // Make entire .feed-item clickable by delegating clicks to contained .play links
+    document.addEventListener('click', function(e){
+      var item = e.target.closest('.feed-item');
+      if (!item) return;
+      // if click landed on a control button or interactive element, ignore
+      if (e.target.closest('button, a, input, textarea, select')) return;
+      var play = item.querySelector('a.play-btn');
+      if (play && play.href) {
+        window.location = play.href;
+      }
+    });
+
+    // Improve touch targets on mobile: enlarge primary buttons where present
+    function enhanceTouchTargets(){
+      document.querySelectorAll('.btn, .play-btn, .control-btn, .stat-btn').forEach(function(b){
+        b.style.minHeight = '44px';
+        b.style.padding = b.style.padding || '12px 14px';
+      });
+      document.querySelectorAll('.feed-item').forEach(function(fi){
+        fi.style.marginBottom = '2rem';
+      });
+    }
+    enhanceTouchTargets();
+    window.addEventListener('resize', enhanceTouchTargets);
+  </script>
 </body>
 </html>
