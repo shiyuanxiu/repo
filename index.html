@@ -2,160 +2,1865 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Miniverse - Free Online Mini Games</title>
-  <meta name="description" content="Play free mini games online without downloads or login. The best casual games for instant fun on any device.">
-
-  <!-- Social / OG -->
-  <meta property="og:title" content="Miniverse - Free Online Mini Games">
-  <meta property="og:description" content="Play free mini games online without downloads or login.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Miniverse - Fun Casual Games</title>
+  <meta name="description" content="Play free casual games online • No download • No login. Miniverse brings simple fun and instant play.">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="canonical" href="https://miniverse.app/">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://miniverse.gg">
-  <meta property="og:image" content="https://miniverse.gg/preview.jpg">
-
-  <link rel="icon" href="assets/icon.svg">
-
+  <meta property="og:title" content="Miniverse - Fun Casual Games">
+  <meta property="og:description" content="Play free casual games online • No download • No login. Keep the game going at Miniverse.">
+  <meta property="og:url" content="https://miniverse.app/">
+  <meta property="og:image" content="https://miniverse.app/assets/og/og-default.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Miniverse - Fun Casual Games">
+  <meta name="twitter:description" content="Tap or click to play free casual games online. No download, no login.">
+  <meta name="twitter:image" content="https://miniverse.app/assets/og/og-default.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Miniverse",
+    "url": "https://miniverse.app/",
+    "description": "Free casual games online with instant play and no login.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://miniverse.app/index.html?game={game}",
+      "query-input": "required name=game"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Miniverse Games",
+    "description": "Free casual games online — fast, fun, mobile-first",
+    "numberOfItems": 18,
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"Squishy Chick","url":"https://miniverse.app/games/squishy-chick.html"},
+      {"@type":"ListItem","position":2,"name":"Neon Rush","url":"https://miniverse.app/games/neon-rush.html"},
+      {"@type":"ListItem","position":3,"name":"Daily Fortune","url":"https://miniverse.app/games/daily-fortune.html"},
+      {"@type":"ListItem","position":4,"name":"Blue Planet Diary","url":"https://miniverse.app/games/blue-planet-diary.html"},
+      {"@type":"ListItem","position":5,"name":"Fresh Fruit Stand","url":"https://miniverse.app/games/fresh-fruit-stand.html"},
+      {"@type":"ListItem","position":6,"name":"Born To vs Forced To","url":"https://miniverse.app/games/born-vs-forced.html"},
+      {"@type":"ListItem","position":7,"name":"Lily Pad Leap","url":"https://miniverse.app/games/lily-pad-leap.html"},
+      {"@type":"ListItem","position":8,"name":"Cute Stack","url":"https://miniverse.app/games/cute-stack.html"},
+      {"@type":"ListItem","position":9,"name":"Runway Glow-Up","url":"https://miniverse.app/games/runway-glow-up.html"},
+      {"@type":"ListItem","position":10,"name":"Mystery Flavor Box","url":"https://miniverse.app/games/mystery-flavor-box.html"},
+      {"@type":"ListItem","position":11,"name":"Office Pets","url":"https://miniverse.app/games/office-pets.html"},
+      {"@type":"ListItem","position":12,"name":"Rainbow Salt Lake","url":"https://miniverse.app/games/rainbow-salt-lake.html"},
+      {"@type":"ListItem","position":13,"name":"Tile Draw","url":"https://miniverse.app/games/tile-draw.html"},
+      {"@type":"ListItem","position":14,"name":"Starfall","url":"https://miniverse.app/games/starfall.html"},
+      {"@type":"ListItem","position":15,"name":"Stack Rush","url":"https://miniverse.app/games/stack-rush.html"},
+      {"@type":"ListItem","position":16,"name":"Memory Match","url":"https://miniverse.app/games/memory-match.html"},
+      {"@type":"ListItem","position":17,"name":"Number Merge","url":"https://miniverse.app/games/number-merge.html"},
+      {"@type":"ListItem","position":18,"name":"Beat Tap","url":"https://miniverse.app/games/beat-tap.html"}
+    ]
+  }
+  </script>
+  
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/legal.css">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif}
-    body{background:#0f172a;color:#f1f5f9;line-height:1.55}
-    .container{max-width:1180px;margin:0 auto;padding:0 20px}
-    nav{background:#1e293b;border-bottom:1px solid #334155;position:sticky;top:0;z-index:999}
-    .nav-wrap{display:flex;align-items:center;justify-content:space-between;height:65px}
-    .logo{font-size:22px;font-weight:700;color:#a5b4fc}
-    .nav-links{display:flex;gap:24px}
-    .nav-links a{color:#cbd5e1;text-decoration:none;font-size:15px;font-weight:500}
-    .nav-links a:hover{color:#a5b4fc}
-    .search{background:#334155;border:none;outline:none;padding:8px 14px;border-radius:8px;color:#fff;width:180px}
-    .search::placeholder{color:#94a3b8}
+    /* Enhanced loading overlay */
+    #appLoader {
+      background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      font-size: clamp(16px, 5vw, 24px);
+      color: #fff;
+      font-weight: 500;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
 
-    .hero{text-align:center;padding:55px 20px 40px}
-    .hero h1{font-size:36px;margin-bottom:10px;color:#f8fafc}
-    .hero p{font-size:16px;color:#94a3b8;max-width:620px;margin:0 auto}
+    #appLoader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-    .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:26px;padding:30px 0 70px}
+    .app-loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #a855f7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
 
-    .game-card{background:#1e293b;border-radius:16px;overflow:hidden;height:100%;display:flex;flex-direction:column;box-shadow:0 5px 18px rgba(0,0,0,0.25);transition:transform .22s ease,box-shadow .22s ease;position:relative}
-    .game-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,0.35)}
-    .tag{position:absolute;top:12px;left:12px;background:#4f46e5;color:#fff;font-size:12px;font-weight:600;padding:3px 8px;border-radius:6px;z-index:2}
-    .tag.new{background:#06b6d4}.tag.popular{background:#ef4444}
-    .game-thumb{width:100%;height:165px;background:#334155;display:grid;place-items:center;color:#cbd5e1;font-size:14px}
-    .game-body{padding:20px;flex:1;display:flex;flex-direction:column}
-    .game-title{font-size:17px;font-weight:600;margin-bottom:6px;color:#f1f5f9}
-    .game-desc{font-size:13px;color:#94a3b8;margin-bottom:16px;flex:1}
-    .play-btn{background:#4f46e5;color:#fff;text-align:center;padding:10px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block}
-    .play-btn:hover{background:#6366f1}
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-    footer{background:#1e293b;border-top:1px solid #334155;padding:40px 0 25px;text-align:center;color:#94a3b8}
-    .footer-links{display:flex;justify-content:center;gap:22px;margin-bottom:16px;flex-wrap:wrap}
-    .footer-links a{color:#cbd5e1;text-decoration:none;font-size:14px}
-    .footer-links a:hover{color:#a5b4fc}
-    .copyright{font-size:13px;color:#64748b}
+    /* Guide modal */
+    #guideModal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
+      color: white;
+      padding: clamp(20px, 5vw, 30px);
+      border-radius: 16px;
+      z-index: 998;
+      max-width: 90vw;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(168,85,247,0.2);
+      display: none;
+    }
 
-    @media (max-width:768px){.nav-wrap{flex-direction:column;height:auto;padding:14px 0;gap:12px}.hero h1{font-size:26px}.game-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}.search{width:100%;max-width:280px}}
+    #guideModal.show {
+      display: block;
+      animation: slideUp 0.4s ease;
+    }
+
+    #guideModal.hidden {
+      display: none;
+    }
+
+    @keyframes slideUp {
+      from { 
+        transform: translate(-50%, calc(-50% + 30px));
+        opacity: 0;
+      }
+      to { 
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+
+    #guideModal h3 {
+      font-size: clamp(20px, 6vw, 28px);
+      margin-bottom: 15px;
+      color: #a855f7;
+    }
+
+    #guideModal p {
+      font-size: clamp(14px, 4vw, 16px);
+      margin-bottom: 12px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    #guideModal button {
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      padding: clamp(10px, 2vw, 14px) clamp(20px, 4vw, 28px);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: clamp(14px, 4vw, 16px);
+      font-weight: 600;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    #guideModal button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(168,85,247,0.4);
+    }
+
+    #guideModal button:active {
+      transform: translateY(0);
+    }
+
+    #guideBackdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 997;
+      display: none;
+    }
+
+    #guideBackdrop.show {
+      display: block;
+    }
+
+    /* Restart button */
+    #restartBtn {
+      position: fixed;
+      bottom: clamp(15px, 3vw, 25px);
+      right: clamp(15px, 3vw, 25px);
+      background: linear-gradient(135deg, #ff4444 0%, #ff1744 100%);
+      color: white;
+      border: none;
+      padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 20px);
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 99;
+      font-size: clamp(12px, 3vw, 14px);
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255,68,68,0.3);
+    }
+
+    #restartBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,68,68,0.5);
+    }
+
+    #restartBtn:active {
+      transform: translateY(0);
+    }
+
+    .miniverse-hero {
+      display: grid;
+      gap: 16px;
+      background: #ffffff;
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 22px;
+      padding: 24px 26px;
+      box-shadow: 0 20px 60px rgba(15,23,42,0.08);
+      align-items: start;
+    }
+
+    .miniverse-hero > div:first-child {
+      display: grid;
+      gap: 6px;
+      align-items: start;
+    }
+
+    .brand-title {
+      font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    .brand-subtitle,
+    .brand-cta,
+    .brand-note {
+      font-size: clamp(0.95rem, 2.2vw, 0.98rem);
+      color: #374151;
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .brand-note {
+      opacity: 0.9;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    /* Help button in navbar */
+    .navbar-help-btn {
+      background: #f5f5f5;
+      border: 1px solid rgba(15,23,42,0.1);
+      border-radius: 999px;
+      font-size: clamp(16px, 4vw, 20px);
+      cursor: pointer;
+      padding: 10px 12px;
+      transition: transform 0.25s ease, background 0.25s ease;
+      color: #111827;
+    }
+
+    .navbar-help-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* Mobile optimization */
+    @media (max-width: 480px) {
+      #guideModal {
+        max-width: 95vw;
+        padding: 20px;
+      }
+
+      #restartBtn {
+        font-size: 12px;
+        padding: 10px 16px;
+      }
+    }
   </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <div class="container nav-wrap">
-    <div class="logo">Miniverse</div>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">New Games</a>
-      <a href="#">Popular</a>
-      <a href="#">Categories</a>
-    </div>
-    <input type="text" class="search" placeholder="Search games...">
+  <!-- Enhanced loading overlay with gradient and spinner -->
+  <div id="appLoader" role="status" aria-live="polite">
+    <div class="app-loader-spinner" aria-hidden="true"></div>
+    <p>Loading Miniverse...</p>
   </div>
-</nav>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>Welcome to Miniverse</h1>
-  <p>Thousands of free online games to play instantly. No downloads, no login, just fun.</p>
-</div>
+  <!-- Guide modal backdrop -->
+  <div id="guideBackdrop"></div>
 
-<!-- GAME LIST -->
-<div class="container">
-  <div class="game-grid">
-
-    <div class="game-card">
-      <div class="tag new">NEW</div>
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Squishy Chick</div>
-        <div class="game-desc">Relaxing casual game to squeeze stress away with one tap.</div>
-        <a class="play-btn" href="games/squishy-chick.html">Play Now</a>
-      </div>
-    </div>
-
-    <div class="game-card">
-      <div class="tag popular">POPULAR</div>
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Color Jump</div>
-        <div class="game-desc">Jump and match colors in this fast-paced arcade game.</div>
-        <a class="play-btn" href="#">Play Now</a>
-      </div>
-    </div>
-
-    <div class="game-card">
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Tile Match</div>
-        <div class="game-desc">Easy puzzle game to match tiles and clear the board.</div>
-        <a class="play-btn" href="#">Play Now</a>
-      </div>
-    </div>
-
-    <div class="game-card">
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Speed Tap</div>
-        <div class="game-desc">Test your reflexes and tap as fast as you can to score high.</div>
-        <a class="play-btn" href="#">Play Now</a>
-      </div>
-    </div>
-
-    <div class="game-card">
-      <div class="tag popular">POPULAR</div>
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Bounce Ball</div>
-        <div class="game-desc">Avoid obstacles and keep the ball bouncing as long as possible.</div>
-        <a class="play-btn" href="#">Play Now</a>
-      </div>
-    </div>
-
-    <div class="game-card">
-      <div class="tag new">NEW</div>
-      <div class="game-thumb">Game Cover</div>
-      <div class="game-body">
-        <div class="game-title">Star Catcher</div>
-        <div class="game-desc">Collect stars and avoid enemies in a fun adventure game.</div>
-        <a class="play-btn" href="#">Play Now</a>
-      </div>
-    </div>
-
+  <!-- Welcome guide modal -->
+  <div id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <h3 id="guideTitle">✦ Welcome to Miniverse</h3>
+    <p>Play free casual games online • No download • No login.</p>
+    <p>How to play: Tap or click to start.</p>
+    <p style="font-size: clamp(12px, 3vw, 14px); opacity: 0.7; margin-top: 15px;">Simple fun, quick sessions, memorable play.</p>
+    <br>
+    <button onclick="closeGuide()">Got it, let's play!</button>
   </div>
-</div>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-links">
-      <a href="#">Home</a>
-      <a href="#">New Games</a>
-      <a href="#">Popular</a>
-      <a href="#">Categories</a>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Contact</a>
+  <!-- Restart button (fixed position) -->
+  <button id="restartBtn" onclick="window.location.reload()" title="Refresh page" aria-label="Restart">
+    ↻ Restart
+  </button>
+
+  <!-- Guide helper scripts -->
+  <script>
+    function showGuide() {
+      document.getElementById('guideModal').classList.add('show');
+      document.getElementById('guideBackdrop').classList.add('show');
+    }
+
+    function closeGuide() {
+      document.getElementById('guideModal').classList.remove('show');
+      document.getElementById('guideBackdrop').classList.remove('show');
+    }
+
+    function shareMiniverse() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Miniverse - Fun Casual Games',
+          text: 'Play free casual games online • No download • No login.',
+          url: window.location.href
+        }).catch(() => {});
+        return;
+      }
+      window.prompt('Copy this link to share:', window.location.href);
+    }
+
+    function scrollToFeed() {
+      var target = document.getElementById('feed');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function loadMiniverseScores() {
+      var highScore = localStorage.getItem('miniverse_high_score') || 0;
+      var lastScore = localStorage.getItem('miniverse_last_score') || 0;
+      document.getElementById('miniHighScore').textContent = highScore;
+      document.getElementById('miniScore').textContent = lastScore;
+    }
+
+    // Close guide when clicking backdrop
+    document.getElementById('guideBackdrop').addEventListener('click', closeGuide);
+
+    // Auto-show guide on first visit only
+    window.addEventListener('load', function(){
+      document.getElementById('appLoader').classList.add('hidden');
+      loadMiniverseScores();
+      if (!localStorage.getItem('miniverse_guide_seen')) {
+        setTimeout(showGuide, 500);
+        localStorage.setItem('miniverse_guide_seen', 'true');
+      }
+    });
+  </script>
+
+  <a class="skip-link" href="#feed">Skip to games</a>
+
+  <div class="toast hidden" id="appToast" role="alert"></div>
+
+  <div class="app">
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a class="brand-logo" href="index.html" aria-label="Miniverse Home">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          <span class="brand-name">Miniverse</span>
+        </a>
+        <nav class="tabs tabs-wide">
+          <button class="tab active" data-tab="recommend" type="button">For You</button>
+          <button class="tab" data-tab="games" type="button">Games</button>
+        </nav>
+        <a class="nav-guides" href="games/index.html" aria-label="Game guides" title="Game guides">📖</a>
+        <a class="nav-saved" href="favorites.html" aria-label="Saved games">⭐</a>
+        <button class="navbar-help-btn" onclick="showGuide()" title="How to use Miniverse" aria-label="Help">ℹ</button>
+        <div class="avatar">
+          <span class="avatar-emoji" aria-hidden="true">✦</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <div class="feed-column">
+          <section class="feed-intro" aria-label="About Miniverse">
+          <div class="miniverse-hero">
+            <div>
+              <p class="brand-title">Miniverse</p>
+              <p class="brand-subtitle">Play free casual games online • No download • No login</p>
+              <p class="brand-cta">How to play: Tap or click to start.</p>
+            </div>
+            
+            </div>
+          <p class="brand-note">Today’s picks are waiting in the feed below — tap a card to jump into instant fun.</p>
+        </section>
+
+        <nav class="game-categories hidden" id="gameCategories" aria-label="Game categories">
+          <button type="button" class="game-cat active" data-cat="all">All</button>
+          <button type="button" class="game-cat" data-cat="arcade">Arcade</button>
+          <button type="button" class="game-cat" data-cat="puzzle">Puzzle</button>
+          <button type="button" class="game-cat" data-cat="chill">Chill</button>
+          <button type="button" class="game-cat" data-cat="social">Social</button>
+          <a class="game-cat-browse" href="categories/arcade.html">Browse hubs →</a>
+        </nav>
+
+        <nav class="feed-progress" id="feedProgress" aria-label="Feed progress"></nav>
+
+        <main class="feed" id="feed">
+
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card fortune-card" id="fortuneCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="fortune" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="fortuneCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          <h1 class="card-title">Daily Fortune</h1>
+
+          <div class="draw-scene" id="drawScene">
+            <p class="draw-hint">Tap the tube to draw today's fortune</p>
+            <button class="tube-area" id="tubeArea" aria-label="Draw fortune">
+              <div class="glow-outer"></div>
+              <div class="glow-inner"></div>
+              <div class="tube-wrapper" id="tubeWrapper">
+                <div class="fortune-stick" id="fortuneStick"></div>
+                <div class="tube-body">
+                  <div class="tube-rim"></div>
+                  <div class="tube-band"></div>
+                  <div class="tube-main"></div>
+                  <div class="tube-bottom"></div>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div class="result-scene hidden" id="resultScene">
+            <div class="scroll-container">
+              <div class="scroll-roller top"></div>
+              <div class="scroll-paper"><p class="fortune-text" id="fortuneText"></p></div>
+              <div class="scroll-roller bottom"></div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" id="drawAgainBtn">Draw Again</button>
+              <button class="btn btn-secondary" id="fortuneShareBtn" type="button">Share fortune</button>
+              <button class="btn btn-secondary" id="resetFortuneBtn">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Fortune Corner</p>
+            <p class="feed-desc">A little kindness for yourself each day</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🌸</span><span>Mia</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card earth-card" id="earthCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="earth" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="earthCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          
+          <div class="earth-scene earth-home" id="earthHome">
+            <div class="earth-stars" aria-hidden="true"></div>
+            <h2 class="earth-title">Blue Planet Diary</h2>
+            <p class="earth-subtitle">Daily quests & wishes</p>
+            <div class="earth-globe-wrap">
+              <div class="earth-orbit" aria-hidden="true">
+                <span class="orbit-dot"></span><span class="orbit-dot"></span><span class="orbit-dot"></span>
+                <span class="orbit-dot"></span><span class="orbit-dot"></span><span class="orbit-dot"></span>
+                <span class="orbit-dot"></span><span class="orbit-dot"></span><span class="orbit-dot"></span>
+                <span class="orbit-dot"></span><span class="orbit-dot"></span>
+              </div>
+              <div class="earth-globe">
+                <span class="continent c1"></span>
+                <span class="continent c2"></span>
+                <span class="continent c3"></span>
+                <span class="continent c4"></span>
+              </div>
+            </div>
+            <div class="earth-actions">
+              <button class="earth-btn-primary" id="earthRandomBtn" type="button">Random Quest</button>
+              <button class="earth-btn-history" id="earthHistoryBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                Quest Log
+              </button>
+            </div>
+          </div>
+
+          
+          <div class="earth-scene earth-task hidden" id="earthTask">
+            <div class="earth-stars" aria-hidden="true"></div>
+            <div class="task-card">
+              <p class="task-greet">Hey! Today's quest is here — ready? 🎁</p>
+              <h3 class="task-name" id="earthTaskName">Learn a nursery rhyme</h3>
+              <div class="task-sparkles" aria-hidden="true">✦ ✦ ✦</div>
+              <button class="task-done-btn" id="earthDoneBtn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                Complete
+              </button>
+            </div>
+          </div>
+
+          
+          <div class="earth-scene earth-reward hidden" id="earthReward">
+            <div class="earth-stars earth-stars-dense" aria-hidden="true"></div>
+            <ul class="reward-list" id="earthRewardList">
+              <li>✨✨ Karma +1</li>
+              <li>💖 Joy +999</li>
+              <li>🌟 Happiness maxed out</li>
+              <li>📝 Good deed logged</li>
+              <li>👍 The universe approves</li>
+              <li>💌 Warmth delivered</li>
+            </ul>
+            <div class="earth-reward-actions">
+              <button class="earth-btn-share" id="earthShareBtn" type="button">📤 Share quest</button>
+              <button class="earth-btn-back" id="earthBackBtn" type="button">Back to Earth</button>
+            </div>
+          </div>
+
+          
+          <div class="earth-history hidden" id="earthHistory">
+            <div class="history-panel">
+              <div class="history-header">
+                <h3>Quest Log</h3>
+                <button class="history-close" id="earthHistoryClose" type="button" aria-label="Close">×</button>
+              </div>
+              <ul class="history-list" id="earthHistoryList"></ul>
+              <p class="history-empty hidden" id="earthHistoryEmpty">No completed quests yet</p>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Blue Planet · Daily Quests</p>
+            <p class="feed-desc">Small wins, better mood</p>
+            <p class="feed-date" id="earthFeedDate"></p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🌍</span><span>Nova</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card chick-card" id="chickCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="chick" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="chickCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          
+          <div class="chick-scene chick-landing" id="chickLanding">
+            <span class="chick-deco chick-deco-1">🌸</span>
+            <span class="chick-deco chick-deco-2">🌼</span>
+            <span class="chick-deco chick-deco-3">🌺</span>
+            <button class="chick-hero" id="chickLandingHero" type="button" aria-label="Pet the chick">
+              <div class="landing-wrap">
+                <div class="landing-chick" id="landingChick">
+                  <div class="landing-body">
+                    <span class="landing-wing lw"></span>
+                    <span class="landing-wing rw"></span>
+                    <div class="landing-face">
+                      <span class="landing-eye le"><span class="landing-pupil"></span><span class="landing-shine"></span></span>
+                      <span class="landing-eye re"><span class="landing-pupil"></span><span class="landing-shine"></span></span>
+                      <span class="landing-beak"></span>
+                      <span class="landing-blush bl"></span>
+                      <span class="landing-blush br"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="landing-shell"></div>
+              </div>
+            </button>
+            <h2 class="chick-title">Squishy Chick</h2>
+            <p class="chick-tagline">Squeeze away the stress</p>
+            <div class="chick-landing-btns">
+              <button class="chick-btn-start" id="chickStartBtn" type="button">Start</button>
+              <button class="chick-btn-badge" id="chickBadgeBtn" type="button">Achievements</button>
+            </div>
+          </div>
+
+          
+          <div class="chick-scene chick-play hidden" id="chickPlay">
+            <div class="chick-toolbar">
+              <button class="chick-tool-btn" id="chickBackBtn" type="button">← Back</button>
+              <div class="chick-stats">
+                <div class="chick-stat"><span>Relief</span><strong id="chickDecompress">0</strong></div>
+                <div class="chick-stat"><span>Taps</span><strong id="chickClicks">0</strong></div>
+              </div>
+              <button class="chick-tool-btn" id="chickShareBtn" type="button">📤 Share</button>
+              <button class="chick-tool-btn" id="chickResetBtn" type="button">Reset</button>
+            </div>
+            <button class="chick-squish-area" id="chickSquishBtn" type="button" aria-label="Squish chick">
+              <div class="chick-blob" id="chickBlob" data-skin="balloon">
+                <span class="chick-wing left"></span>
+                <span class="chick-wing right"></span>
+                <span class="chick-face" id="chickFace">
+                  <span class="chick-eye eye-left"><span class="pupil"></span><span class="eye-shine"></span></span>
+                  <span class="chick-eye eye-right"><span class="pupil"></span><span class="eye-shine"></span></span>
+                  <span class="chick-beak"></span>
+                  <span class="chick-mouth"></span>
+                  <span class="chick-blush left"></span>
+                  <span class="chick-blush right"></span>
+                </span>
+              </div>
+              <div class="chick-emote-layer" id="chickEmoteLayer" aria-hidden="true"></div>
+              <div class="chick-pop hidden" id="chickPop" aria-hidden="true">💥</div>
+            </button>
+            <div class="chick-skins">
+              <button class="chick-skin-btn" data-skin="rubber" type="button">
+                <span class="skin-icon">🐥</span>
+                <span class="skin-label">Rubber</span>
+              </button>
+              <button class="chick-skin-btn active" data-skin="balloon" type="button">
+                <span class="skin-icon">🐣</span>
+                <span class="skin-label">Balloon</span>
+              </button>
+              <button class="chick-skin-btn" data-skin="clay" type="button">
+                <span class="skin-icon">🐤</span>
+                <span class="skin-label">Clay</span>
+              </button>
+            </div>
+          </div>
+
+          
+          <div class="chick-scene chick-badges hidden" id="chickBadges">
+            <div class="badge-header">
+              <button class="chick-tool-btn" id="chickBadgeBackBtn" type="button">← Back to Game</button>
+              <h2>Achievements</h2>
+            </div>
+            <ul class="badge-list">
+              <li class="badge-item" id="badgeDecompress">
+                <span class="badge-icon">🧘</span>
+                <div><strong>Relief Pro</strong><p>Reach 100 relief points</p></div>
+                <span class="badge-check hidden">✓</span>
+              </li>
+              <li class="badge-item" id="badgeClicks">
+                <span class="badge-icon">👆</span>
+                <div><strong>Tap Master</strong><p>Tap 50 times</p></div>
+                <span class="badge-check hidden">✓</span>
+              </li>
+              <li class="badge-item locked" id="badgeBalloon">
+                <span class="badge-icon">🎈</span>
+                <div><strong>Pop!</strong><p>Pop the balloon chick</p></div>
+                <span class="badge-check hidden">✓</span>
+              </li>
+            </ul>
+            <div class="badge-summary">
+              <div><span>Relief now</span><strong id="badgeDecompressVal">0</strong></div>
+              <div><span>Total taps</span><strong id="badgeClicksVal">0</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Squishy Chick</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🐣</span><span>Forest Nest</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card block-card" id="blockCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="block" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="blockCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          
+          <div class="block-scene block-landing" id="blockLanding">
+            <div class="block-forest-bg" aria-hidden="true">
+              <div class="block-trees"></div>
+            </div>
+            <div class="block-promo-stack" aria-hidden="true">
+              <span class="promo-cell c1"></span><span class="promo-cell c2"></span>
+              <span class="promo-cell c3"></span><span class="promo-cell c4"></span>
+              <span class="promo-cell c5"></span><span class="promo-cell c6"></span>
+            </div>
+            <h2 class="block-promo-title">Cute Stack</h2>
+            <p class="block-promo-sub">CUBIE STACK</p>
+            <button class="block-start-btn" id="blockStartBtn" type="button">Start</button>
+            <button class="block-history-btn" id="blockHistoryBtn" type="button">Scores</button>
+          </div>
+
+          
+          <div class="block-scene block-play hidden" id="blockPlay">
+            <div class="handheld">
+              <div class="handheld-screen-wrap">
+                <div class="handheld-score">
+                  Score <strong id="blockScore">0</strong>
+                  <button class="block-score-record" id="blockHistoryBtnPlay" type="button">Log</button>
+                </div>
+                <canvas id="blockCanvas" width="200" height="320" aria-label="Game area"></canvas>
+                <div class="handheld-trees" aria-hidden="true"></div>
+              </div>
+              <div class="handheld-pad">
+                <button class="block-back-btn" id="blockBackBtn" type="button">← Back</button>
+                <div class="dpad">
+                  <button class="dpad-btn up" data-dir="up" type="button" aria-label="Rotate">▲</button>
+                  <button class="dpad-btn left" data-dir="left" type="button" aria-label="Left">◀</button>
+                  <button class="dpad-btn down" data-dir="down" type="button" aria-label="Down">▼</button>
+                  <button class="dpad-btn right" data-dir="right" type="button" aria-label="Right">▶</button>
+                </div>
+                <div class="action-btns">
+                  <button class="action-btn action-bomb" id="blockBombBtn" type="button" title="Clear bottom row">💣</button>
+                  <button class="action-btn action-fast" id="blockFastBtn" type="button" title="Speed up">⚡</button>
+                  <button class="action-btn action-spin" id="blockRestartBtn" type="button" title="Restart">↻</button>
+                </div>
+              </div>
+            </div>
+            <p class="block-game-over hidden" id="blockGameOver" role="button" tabindex="0">Game Over · Tap to retry</p>
+            <button class="game-share-btn hidden" id="blockShareBtn" type="button">Share score</button>
+          </div>
+
+          
+          <div class="block-history hidden" id="blockHistory">
+            <div class="history-panel block-history-panel">
+              <div class="history-header">
+                <h3>Scores</h3>
+                <button class="history-close" id="blockHistoryClose" type="button" aria-label="Close">×</button>
+              </div>
+              <p class="block-history-best hidden" id="blockHistoryBest"></p>
+              <ul class="history-list" id="blockHistoryList"></ul>
+              <p class="history-empty hidden" id="blockHistoryEmpty">No scores yet</p>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Cute Stack · Forest</p>
+            <p class="feed-desc">Stack blocks clean, chase high scores</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🦌</span><span>Pixel Deer</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card shop-card" id="shopCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="shop" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="shopCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          
+          <div class="shop-scene shop-landing" id="shopLanding">
+            <div class="shop-grid-bg" aria-hidden="true"></div>
+            <div class="shop-stars" aria-hidden="true">
+              <span class="shop-star s1">★</span><span class="shop-star s2">★</span>
+              <span class="shop-star s3">★</span><span class="shop-star s4">★</span>
+            </div>
+            <div class="shop-store-icon" aria-hidden="true">
+              <div class="store-roof"></div>
+              <div class="store-body">
+                <span class="store-sign">OPEN</span>
+                <span class="store-window"></span>
+              </div>
+            </div>
+            <h2 class="shop-promo-title">Fresh Fruit Stand</h2>
+            <p class="shop-promo-sub">From corner stall to crowd favorite</p>
+            <button class="shop-start-btn" id="shopStartBtn" type="button">
+              <span class="shop-play-icon">▶</span> Open Shop
+            </button>
+            <div class="shop-promo-foods" aria-hidden="true">🍎 🍞 🥛 🥚 🧃</div>
+          </div>
+
+          
+          <div class="shop-scene shop-play hidden" id="shopPlay">
+            <div class="shop-hud">
+              <div class="shop-hud-row">
+                <span class="shop-stat">💰 <strong id="shopMoney">50</strong></span>
+                <span class="shop-stat">⭐ <strong id="shopRating">80</strong>%</span>
+                <span class="shop-stat shop-stat-mini">🏪</span>
+              </div>
+              <div class="shop-hud-row shop-hud-sub">
+                <span class="shop-stat-sm">📋 <span id="shopOrders">0</span>/10</span>
+                <span class="shop-stat-sm">💵 <span id="shopRoundEarn">0</span>/50</span>
+                <span class="shop-stat-sm">❤️ <span id="shopHearts">80</span>/90</span>
+                <span class="shop-timer" id="shopTimer">60s</span>
+              </div>
+            </div>
+
+            <div class="shop-floor" id="shopFloor">
+              <div class="shop-floor-inner">
+                <div class="shop-counter" id="shopCounter" data-shelf="0">
+                  <div class="counter-glow" aria-hidden="true"></div>
+                  <div class="counter-desk">
+                    <div class="counter-screen"></div>
+                    <div class="counter-belt"></div>
+                  </div>
+                  <span class="counter-sign">C<br>A<br>S<br>H</span>
+                  <div class="shop-clerk" aria-hidden="true">
+                    <div class="pixel-char shirt-orange">
+                      <div class="pixel-head">
+                        <div class="pixel-face expr-service">
+                          <span class="pixel-eye le"></span>
+                          <span class="pixel-eye re"></span>
+                          <span class="pixel-mouth"></span>
+                        </div>
+                      </div>
+                      <div class="pixel-torso"></div>
+                      <div class="pixel-legs"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="shop-shelves">
+                  <button class="shop-shelf" data-shelf="1" type="button"><span class="shelf-item"></span></button>
+                  <button class="shop-shelf" data-shelf="2" type="button"><span class="shelf-item"></span></button>
+                  <button class="shop-shelf" data-shelf="3" type="button"><span class="shelf-item"></span></button>
+                  <button class="shop-shelf" data-shelf="4" type="button"><span class="shelf-item"></span></button>
+                  <button class="shop-shelf" data-shelf="5" type="button"><span class="shelf-item"></span></button>
+                  <button class="shop-shelf" data-shelf="6" type="button"><span class="shelf-item"></span></button>
+                </div>
+              </div>
+              <div class="shop-customers" id="shopCustomers"></div>
+            </div>
+
+            <div class="shop-tray">
+              <p class="shop-tray-hint" id="shopTrayHint">Tap items to stock shelves</p>
+              <div class="shop-products" id="shopProducts"></div>
+            </div>
+
+            <button class="shop-back-btn" id="shopBackBtn" type="button">← Close</button>
+
+            
+            <div class="shop-tutorial" id="shopTutorial">
+              <div class="shop-tutorial-box">
+                <h3>Shop Guide</h3>
+                <ol>
+                  <li>Tap goods, then empty shelf to restock</li>
+                  <li>Wait for customers to browse</li>
+                  <li>Tap checkout when they reach the counter</li>
+                  <li>60 seconds per round — maximize sales</li>
+                </ol>
+                <button class="shop-tutorial-ok" id="shopTutorialOk" type="button">Got it!</button>
+              </div>
+            </div>
+
+            
+            <div class="shop-round-end hidden" id="shopRoundEnd">
+              <div class="shop-round-box">
+                <h3>Round Complete</h3>
+                <p>Revenue <strong id="shopRoundTotal">0</strong></p>
+                <p>Orders <strong id="shopRoundOrders">0</strong>  Solo</p>
+                <p>Rating <strong id="shopRoundRating">80</strong>%</p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="shopShareBtn" type="button">Share score</button>
+                  <button class="shop-round-btn" id="shopRoundAgain" type="button">Another Round</button>
+                  <button class="shop-round-btn secondary" id="shopRoundHome" type="button">Home</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Fresh Fruit Stand · Tycoon</p>
+            <p class="feed-desc">Stock shelves and welcome customers</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🏪</span><span>Woody</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card leap-card" id="leapCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="leap" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="leapCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          <div class="leap-scene leap-landing" id="leapLanding">
+            <div class="leap-cover-wrap">
+              <canvas id="leapCoverCanvas" width="360" height="400" aria-hidden="true"></canvas>
+              <div class="leap-cover-vignette" aria-hidden="true"></div>
+              <div class="leap-cover-content">
+                <div class="leap-cover-badge">Combo Jump</div>
+                <h2 class="leap-promo-title">Lily Pad Leap</h2>
+                <p class="leap-promo-sub">POND SKIP</p>
+                <button class="leap-start-btn" id="leapStartBtn" type="button">
+                  <span class="leap-start-icon">▶</span> Jump In
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="leap-scene leap-play hidden" id="leapPlay">
+            <div class="leap-hud">
+              <button class="leap-save-btn" id="leapSaveBtn" type="button">Save</button>
+              <button class="leap-save-btn leap-share-btn" id="leapShareBtn" type="button">Share</button>
+              <div class="leap-stat-pill leap-combo-pill">
+                Combo <strong id="leapCombo">0</strong>
+              </div>
+              <div class="leap-stat-pill leap-score-pill">
+                Score <strong id="leapScore">0</strong>
+              </div>
+              <div class="leap-stat-pill leap-coins-pill">
+                Coins <strong id="leapCoins">0</strong>
+              </div>
+              <div class="leap-events">
+                <span id="leapRain">Drizzle 5m</span>
+                <span id="leapDusk">Dusk 7m</span>
+              </div>
+            </div>
+            <div class="leap-canvas-wrap" id="leapCanvasWrap">
+              <canvas id="leapCanvas" width="320" height="400" aria-label="Pond jump"></canvas>
+              <div class="leap-combo-pop hidden" id="leapComboPop"></div>
+              <p class="leap-hint" id="leapHint">Hold to charge · bright pads · chain combos</p>
+            </div>
+            <button class="leap-back-btn" id="leapBackBtn" type="button">← Exit</button>
+
+            <div class="leap-shop hidden" id="leapShop">
+              <div class="leap-shop-box">
+                <h3>Floating Shop</h3>
+                <p class="leap-shop-tip">Double-tap island (bottom-right) to open</p>
+                <ul class="leap-shop-list" id="leapShopList"></ul>
+                <button class="leap-shop-close" id="leapShopClose" type="button">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Lily Pad Leap · Pond</p>
+            <p class="feed-desc">Charge, hop pads, collect coins for your frog</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🐸</span><span>Pond Dreamer</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="recommend">
+        <div class="game-card run-card" id="runCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="run" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="runCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          <div class="run-scene run-landing" id="runLanding">
+            <div class="run-cover-wrap">
+              <canvas id="runCoverCanvas" width="360" height="320" aria-hidden="true"></canvas>
+              <div class="run-cover-content">
+                <h2 class="run-title">Neon Rush</h2>
+                <p class="run-sub">NEON DASH</p>
+                <button class="run-start-btn" id="runStartBtn" type="button">▶ Start Run</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="run-scene run-play hidden" id="runPlay">
+            <div class="run-hud">
+              <div class="run-hud-box"><span>Score</span><strong id="runScore">0</strong></div>
+              <div class="run-hud-box coin"><span>Coins</span><strong id="runCoins">0</strong></div>
+              <div class="run-hud-box dist"><strong id="runDist">0</strong><span>m</span></div>
+            </div>
+            <div class="run-canvas-wrap" id="runCanvasWrap">
+              <canvas id="runCanvas" width="360" height="420" aria-label="Neon runner"></canvas>
+              <p class="run-hint" id="runHint">← → lane · ↑ jump · ↓ slide</p>
+            </div>
+            <div class="run-controls">
+              <button class="run-back-btn" id="runBackBtn" type="button">← Exit</button>
+              <div class="run-dpad">
+                <button class="run-dpad-btn up" data-run="up" type="button">▲</button>
+                <button class="run-dpad-btn left" data-run="left" type="button">◀</button>
+                <button class="run-dpad-btn down" data-run="down" type="button">▼</button>
+                <button class="run-dpad-btn right" data-run="right" type="button">▶</button>
+              </div>
+            </div>
+            <div class="run-over hidden" id="runOver">
+              <div class="run-over-box">
+                <h3>Run Over</h3>
+                <p>Score <strong id="runOverScore">0</strong></p>
+                <p>Distance <strong id="runOverDist">0</strong> m</p>
+                <div class="run-over-actions">
+                  <button class="run-over-btn share" id="runShareBtn" type="button">Share score</button>
+                  <button class="run-over-btn" id="runAgainBtn" type="button">Try Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Neon Rush · Cyber</p>
+            <p class="feed-desc">Three lanes — dodge and collect coins</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">⚡</span><span>Cyber K</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card face-card" id="faceCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="face" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="faceCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          <div class="face-scene face-landing" id="faceLanding">
+            <div class="face-deco face-deco-a" aria-hidden="true">✨</div>
+            <div class="face-deco face-deco-b" aria-hidden="true">💅</div>
+            <div class="face-hero-head">
+              <span class="face-cover-tag">#GlowUp</span>
+              <h2 class="face-title">Runway Glow-Up</h2>
+              <p class="face-sub">Couch mode → runway queen on the beat</p>
+            </div>
+            <div class="face-cover-wrap">
+              <canvas id="faceCoverCanvas" width="360" height="320" aria-hidden="true"></canvas>
+            </div>
+            <button class="face-start-btn" id="faceStartBtn" type="button"><span class="face-start-glow"></span>Start</button>
+            <div class="face-features">
+              <div class="face-feature-item">
+                <span class="face-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </span>
+                <span class="face-feature-label">Rhythm</span>
+                <span class="face-feature-desc">Hit beat 4</span>
+              </div>
+              <div class="face-feature-item">
+                <span class="face-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>
+                </span>
+                <span class="face-feature-label">Rounds</span>
+                <span class="face-feature-desc">5 rounds</span>
+              </div>
+              <div class="face-feature-item">
+                <span class="face-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h4l2-3 2 3h4v12H4V7z"/><circle cx="12" cy="13" r="3"/></svg>
+                </span>
+                <span class="face-feature-label">Replay</span>
+                <span class="face-feature-desc">Replay anytime</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="face-scene face-play hidden" id="facePlay">
+            <div class="face-hud">
+              <div class="face-hud-box"><span>ROUND</span><strong id="faceRound">01/05</strong></div>
+              <div class="face-hud-box mood"><span>MOOD</span><strong id="faceStateLabel">Couch mode</strong></div>
+            </div>
+            <div class="face-stage-wrap" id="faceStageWrap">
+              <canvas id="faceCanvas" width="360" height="360" aria-label="Face transform"></canvas>
+              <div class="face-flash hidden" id="faceFlash"></div>
+              <div class="face-sticker hidden" id="faceSticker">SLAY ✦</div>
+              <p class="face-beat-hint" id="faceBeatHint">Get ready… follow the beat</p>
+            </div>
+            <div class="face-beat-track" id="faceBeatTrack" aria-hidden="true">
+              <span class="face-beat-dot" data-idx="1">1</span>
+              <span class="face-beat-dot" data-idx="2">2</span>
+              <span class="face-beat-dot" data-idx="3">3</span>
+              <span class="face-beat-dot go" data-idx="4">Go!</span>
+            </div>
+            <div class="face-beat-zone">
+              <div class="face-beat-ring" id="faceBeatRing"></div>
+              <button class="face-beat-btn" id="faceBeatBtn" type="button">
+                <span class="face-beat-icon">✦</span>
+                <span class="face-beat-label">Go!</span>
+              </button>
+            </div>
+            <button class="face-back-btn" id="faceBackBtn" type="button">← Exit</button>
+            <div class="face-over face-win hidden" id="faceWin">
+              <div class="face-over-box win">
+                <p class="face-over-emoji">👑</p>
+                <h3>SLAYED!!</h3>
+                <p>5 runway transforms complete</p>
+                <p class="face-share-tag">#VibeVerseGlowUp</p>
+                <p class="face-over-tip">Share your glow-up — tag us for a feature</p>
+                <div class="face-share-row">
+                  <button class="face-share-btn" id="faceShareTikTok" type="button">Share to TikTok</button>
+                  <button class="face-share-btn face-share-btn--ig" id="faceShareIg" type="button">Share to Instagram</button>
+                </div>
+                <button class="face-over-btn" id="faceAgainBtn" type="button">Play Again</button>
+              </div>
+            </div>
+            <div class="face-over face-fail hidden" id="faceFail">
+              <div class="face-over-box">
+                <p class="face-over-emoji">😮‍💨</p>
+                <h3>Slightly off beat</h3>
+                <p id="faceFailMsg">Listen again and retry</p>
+                <button class="face-over-btn" id="faceRetryBtn" type="button">Retry</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Runway Glow-Up</p>
+            <p class="feed-desc">Instant couch-to-runway transformation</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">💅</span><span>Contrast Studio</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card box-card" id="boxCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="box" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="boxCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+
+          <div class="box-scene box-landing" id="boxLanding">
+            <canvas id="boxCoverCanvas" width="360" height="260" aria-hidden="true"></canvas>
+            <div class="box-landing-text">
+              <span class="box-tag">#FlavorGuess</span>
+              <h2 class="box-title">Mystery Flavor Box</h2>
+              <p class="box-sub">Guess wild drink & snack flavors</p>
+              <button class="box-start-btn" id="boxStartBtn" type="button">Start Unboxing</button>
+            </div>
+            <div class="box-preview-chips">
+              <span>🥒 Pickle</span><span>🥤 Soda mix</span><span>🍫 Chocolate</span><span>🌶️ Wild</span>
+            </div>
+          </div>
+
+          <div class="box-scene box-play hidden" id="boxPlay">
+            <div class="box-hud">
+              <div class="box-hud-box"><span>Picked</span><strong id="boxCount">0/10</strong></div>
+              <div class="box-hud-box"><span>Type</span><strong id="boxTypeHint">???</strong></div>
+            </div>
+            <div class="box-stage" id="boxStage">
+              <div class="box-mystery" id="boxMystery">
+                <canvas id="boxCanvas" width="360" height="280" aria-label="Mystery box"></canvas>
+                <p class="box-mystery-tip">Tap to draw — what's today's flavor?</p>
+              </div>
+              <div class="box-reveal hidden" id="boxReveal">
+                <div class="box-flavor-card" id="boxFlavorCard">
+                  <span class="box-flavor-emoji" id="boxFlavorEmoji">🥤</span>
+                  <p class="box-flavor-cat" id="boxFlavorCat">Drink Mystery</p>
+                  <h3 class="box-flavor-name" id="boxFlavorName">Rainbow Soda</h3>
+                  <p class="box-flavor-desc" id="boxFlavorDesc"></p>
+                </div>
+                <div class="box-guess-panel hidden" id="boxGuessPanel">
+                  <p class="box-guess-title">Guess the taste?</p>
+                  <div class="box-guess-btns" id="boxGuessBtns"></div>
+                  <p class="box-guess-result hidden" id="boxGuessResult"></p>
+                </div>
+              </div>
+            </div>
+            <div class="box-progress" id="boxProgress"></div>
+            <button class="box-draw-btn" id="boxDrawBtn" type="button">🎁 Draw Box</button>
+            <button class="box-next-btn hidden" id="boxNextBtn" type="button">Next →</button>
+            <button class="box-back-btn" id="boxBackBtn" type="button">← Exit</button>
+            <div class="box-over hidden" id="boxOver">
+              <div class="box-over-box">
+                <p class="box-over-emoji">🎉</p>
+                <h3>All 10 boxes opened!</h3>
+                <p>Daily wild flavor quest complete</p>
+                <ul class="box-over-list" id="boxOverList"></ul>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="boxShareBtn" type="button">Share quest</button>
+                  <button class="box-over-btn" id="boxAgainBtn" type="button">Another Round</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Mystery Flavor Box</p>
+            <p class="feed-desc">Wild flavors — guess the taste, instant chill</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🎁</span><span>Flavor Lab</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card sente-card" id="senteCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="sente" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="senteCard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>Full</button>
+          </div>
+          <div class="mini-scene sente-scene" id="senteScene">
+            <span class="mini-tag sente-tag">#MemeLines</span>
+            <h2 class="mini-title sente-title">Born To vs Forced To</h2>
+            <p class="mini-sub">Born to love XX, forced to do XX</p>
+            <div class="sente-text" id="senteText">Tap generate for today's line</div>
+            <div class="sente-actions">
+              <button class="sente-btn primary" id="senteGenBtn" type="button">✨ Random</button>
+              <button class="sente-btn" id="senteCopyBtn" type="button">📋 Copy</button>
+              <button class="sente-btn" id="senteShareBtn" type="button">📤 Share card</button>
+            </div>
+            <div class="sente-diy">
+              <p class="sente-diy-label">Write your own:</p>
+              <div class="sente-diy-row">
+                <span>Born to love </span><input id="senteLike" type="text" placeholder="scroll reels" maxlength="12">
+              </div>
+              <div class="sente-diy-row">
+                <span>forced to </span><input id="senteForce" type="text" placeholder="write reports" maxlength="12">
+              </div>
+              <button class="sente-btn diy" id="senteDiyBtn" type="button">Generate mine</button>
+            </div>
+            <ul class="sente-history" id="senteHistory"></ul>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Born To vs Forced To</p>
+            <p class="feed-desc">Random lines + DIY — solo meme relief</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">✨</span><span>Meme Lines</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card pet-card" id="petCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="pet" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="petCard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>Full</button>
+          </div>
+          <div class="mini-scene pet-scene" id="petScene">
+            <span class="mini-tag pet-tag">#PetOffice</span>
+            <h2 class="mini-title pet-title">Office Pets</h2>
+            <p class="pet-hook">Pets with feelings — copy their WFH vibes</p>
+            <div class="pet-stage">
+              <div class="pet-frame" id="petFrame">
+                <canvas id="petCanvas" width="360" height="300" aria-label="Office pets"></canvas>
+                <span class="pet-live">● OFFICE LIVE</span>
+                <p class="pet-mood" id="petMood">…</p>
+                <div class="pet-bubble hidden" id="petBubble"></div>
+                <div class="pet-overlay">
+                  <p class="pet-caption" id="petCaption">Waiting…</p>
+                  <p class="pet-action" id="petAction">Tap to switch scene</p>
+                </div>
+              </div>
+            </div>
+            <div class="pet-btns">
+              <button class="pet-imitate-btn" id="petImitateBtn" type="button">🎭 Copy Pose</button>
+              <button class="pet-switch-btn" id="petSwitchBtn" type="button">🐾 Switch Scene</button>
+            </div>
+            <p class="pet-count">Unlocked <strong id="petCount">0</strong> / 8  scenes</p>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Office Pet Impressions</p>
+            <p class="feed-desc">Dogs grind, cats slack — oddly healing</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🐾</span><span>Fur Desk</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card spot-card" id="spotCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="spot" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="spotCard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>Full</button>
+          </div>
+          <div class="mini-scene spot-scene" id="spotScene">
+            <span class="mini-tag spot-tag">#TravelCheckIn</span>
+            <h2 class="mini-title spot-title">Rainbow Salt Lake</h2>
+            <p class="spot-hook">Travel vibes without leaving home</p>
+            <div class="spot-stage" id="spotStage">
+              <div class="spot-frame-glow" aria-hidden="true"></div>
+              <canvas id="spotCanvas" width="360" height="320" aria-label="Salt lake"></canvas>
+              <div class="spot-viewfinder" id="spotViewfinder" aria-hidden="true">
+                <span class="spot-vf-corner tl"></span>
+                <span class="spot-vf-corner tr"></span>
+                <span class="spot-vf-corner bl"></span>
+                <span class="spot-vf-corner br"></span>
+                <span class="spot-rec-badge">● REC</span>
+                <span class="spot-cam-meta">4K · 24mm · HDR</span>
+                <span class="spot-golden-hour" id="spotGoldenHour">Golden Hour</span>
+              </div>
+              <span class="spot-loc" id="spotLoc">📍 Rainbow Lake</span>
+              <span class="spot-vibe" id="spotVibe">Dreamy</span>
+              <div class="spot-caption-wrap">
+                <p class="spot-caption" id="spotCaption">Tap to switch caption</p>
+              </div>
+              <div class="spot-shutter hidden" id="spotShutter" aria-hidden="true"></div>
+              <div class="spot-flash hidden" id="spotFlash">
+                <div class="spot-polaroid">
+                  <img class="spot-polaroid-img" id="spotPolaroidImg" alt="Check-in photo" width="200" height="148" />
+                  <p class="spot-polaroid-loc" id="spotPolaroidLoc">Rainbow Lake</p>
+                  <p class="spot-polaroid-date" id="spotPolaroidDate">2026.05.30</p>
+                  <p class="spot-flash-text">📸 Checked in!</p>
+                  <p class="spot-flash-sub">Saved to travel album</p>
+                  <button class="spot-share-btn" id="spotShareBtn" type="button">📤 Share check-in</button>
+                  <span class="spot-stamp">CLOUD TRIP ✓</span>
+                </div>
+              </div>
+            </div>
+            <div class="spot-btns">
+              <button class="spot-btn" id="spotSwitchBtn" type="button">🌈 Switch Scene</button>
+              <button class="spot-btn check" id="spotCheckBtn" type="button">📸 Snap & Check In</button>
+            </div>
+            <p class="spot-count">Checked in <strong id="spotCheckCount">0</strong>  times · Cloud Traveler</p>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Rainbow Salt Lake Check-in</p>
+            <p class="feed-desc">Iconic spots, immersive cloud travel</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🌈</span><span>Cloud Traveler</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card mj-card" id="mjCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="mj" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="mjCard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>Full</button>
+          </div>
+          <div class="mini-scene mj-scene" id="mjScene">
+            <span class="mini-tag mj-tag">#TileZen</span>
+            <h2 class="mini-title mj-title">Tile Draw</h2>
+            <p class="mini-sub"> Solo random draws, no rules</p>
+            <div class="mj-table">
+              <canvas id="mjCanvas" width="200" height="260" aria-label="Mahjong tile"></canvas>
+            </div>
+            <p class="mj-draw-count">Drawn <strong id="mjCount">0</strong>  tiles</p>
+            <div class="mj-hand" id="mjHand"></div>
+            <button class="mj-draw-btn" id="mjDrawBtn" type="button">🀄 Draw Tile</button>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Solo Tile Draw</p>
+            <p class="feed-desc">Quick tile draws for chill breaks</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🀄</span><span>Tile House</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card star-card" id="starCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="star" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="starCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+          <div class="star-scene star-landing" id="starLanding">
+            <div class="star-cover-wrap">
+              <canvas id="starCoverCanvas" width="360" height="280" aria-hidden="true"></canvas>
+              <div class="star-cover-content">
+                <h2 class="star-title">Starfall</h2>
+                <p class="star-sub">Catch stars, dodge meteors</p>
+                <button class="star-start-btn" id="starStartBtn" type="button">▶ Start</button>
+              </div>
+            </div>
+          </div>
+          <div class="star-scene star-play hidden" id="starPlay">
+            <div class="star-hud">
+              <div class="star-hud-box"><span>Score</span><strong id="starScore">0</strong></div>
+              <div class="star-hud-box"><span>Combo</span><strong id="starCombo">0</strong></div>
+            </div>
+            <div class="star-canvas-wrap" id="starCanvasWrap">
+              <canvas id="starCanvas" width="360" height="400" aria-label="Catch stars"></canvas>
+            </div>
+            <div class="star-controls">
+              <button class="star-back-btn" id="starBackBtn" type="button">← Exit</button>
+              <div class="star-dpad">
+                <button class="star-dpad-btn" data-star="left" type="button">◀</button>
+                <button class="star-dpad-btn" data-star="right" type="button">▶</button>
+              </div>
+            </div>
+            <div class="star-over hidden" id="starOver">
+              <div class="star-over-box">
+                <h3>Star Pause</h3>
+                <p>Score <strong id="starOverScore">0</strong></p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="starShareBtn" type="button">Share score</button>
+                  <button class="star-over-btn" id="starAgainBtn" type="button">Try Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Starfall · Night Sky</p>
+            <p class="feed-desc">Move the basket, catch falling stars</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">⭐</span><span>Night Breeze</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card stack-card" id="stackCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="stack" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="stackCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+          <div class="stack-scene stack-landing" id="stackLanding">
+            <h2 class="stack-title">Stack Rush</h2>
+            <p class="stack-sub">Time your drops, stack higher</p>
+            <canvas id="stackCoverCanvas" width="360" height="200" aria-hidden="true"></canvas>
+            <button class="stack-start-btn" id="stackStartBtn" type="button">▶ Start</button>
+          </div>
+          <div class="stack-scene stack-play hidden" id="stackPlay">
+            <div class="stack-hud">
+              <div class="stack-hud-box"><span>Level</span><strong id="stackLevel">0</strong></div>
+              <div class="stack-hud-box"><span>Score</span><strong id="stackScore">0</strong></div>
+            </div>
+            <div class="stack-canvas-wrap" id="stackCanvasWrap">
+              <canvas id="stackCanvas" width="360" height="420" aria-label="Stack blocks"></canvas>
+              <p class="stack-hint">Tap screen or press Space to drop</p>
+            </div>
+            <button class="stack-back-btn" id="stackBackBtn" type="button">← Exit</button>
+            <div class="stack-over hidden" id="stackOver">
+              <div class="stack-over-box">
+                <h3>Tower fell</h3>
+                <p>Stacked <strong id="stackOverLevel">0</strong> levels</p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="stackShareBtn" type="button">Share score</button>
+                  <button class="stack-over-btn" id="stackAgainBtn" type="button">Try Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Stack Rush</p>
+            <p class="feed-desc">Drop blocks on beat — stack higher</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🧱</span><span>Block Crafter</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card match-card" id="matchCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="match" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="matchCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+          <div class="match-scene match-landing" id="matchLanding">
+            <h2 class="match-title">Memory Match</h2>
+            <p class="match-sub">Flip matching pairs, clear the board</p>
+            <button class="match-start-btn" id="matchStartBtn" type="button">▶ Start</button>
+          </div>
+          <div class="match-scene match-play hidden" id="matchPlay">
+            <div class="match-hud">
+              <div class="match-hud-box"><span>Moves</span><strong id="matchMoves">0</strong></div>
+              <div class="match-hud-box"><span>Pairs</span><strong id="matchPairs">0/6</strong></div>
+              <div class="match-hud-box"><span>Time</span><strong id="matchTime">0s</strong></div>
+            </div>
+            <div class="match-grid" id="matchGrid"></div>
+            <button class="match-back-btn" id="matchBackBtn" type="button">← Exit</button>
+            <div class="match-win hidden" id="matchWin">
+              <div class="match-win-box">
+                <h3>All pairs!</h3>
+                <p><strong id="matchWinMoves">0</strong> moves</p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="matchShareBtn" type="button">Share result</button>
+                  <button class="match-win-btn" id="matchAgainBtn" type="button">Play Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Memory Match</p>
+            <p class="feed-desc">Find all matching pairs</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🃏</span><span>Memory Shop</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card merge-card" id="mergeCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="merge" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="mergeCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+          <div class="merge-scene merge-landing" id="mergeLanding">
+            <h2 class="merge-title">Number Merge</h2>
+            <p class="merge-sub">Swipe to merge numbers — chase 2048</p>
+            <button class="merge-start-btn" id="mergeStartBtn" type="button">▶ Start</button>
+          </div>
+          <div class="merge-scene merge-play hidden" id="mergePlay">
+            <div class="merge-hud">
+              <div class="merge-hud-box"><span>Score</span><strong id="mergeScore">0</strong></div>
+              <div class="merge-hud-box"><span>Best</span><strong id="mergeBest">0</strong></div>
+            </div>
+            <div class="merge-grid" id="mergeGrid"></div>
+            <p class="merge-hint">Swipe or use arrow keys to move tiles</p>
+            <button class="merge-back-btn" id="mergeBackBtn" type="button">← Exit</button>
+            <div class="merge-over hidden" id="mergeOver">
+              <div class="merge-over-box">
+                <h3 id="mergeOverTitle">Grid full</h3>
+                <p>Score <strong id="mergeOverScore">0</strong></p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="mergeShareBtn" type="button">Share score</button>
+                  <button class="merge-over-btn" id="mergeAgainBtn" type="button">Play Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Number Merge</p>
+            <p class="feed-desc">Classic merge puzzle — go bigger</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🔢</span><span>Logic Blocks</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      
+      <article class="feed-item" data-feed="games">
+        <div class="game-card beat-card" id="beatCard">
+          <div class="card-controls">
+            <button class="control-btn sound-toggle" data-game="beat" aria-label="Sound">
+              <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              <svg class="icon-off hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <button class="control-btn fullscreen-btn" data-target="beatCard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              Full
+            </button>
+          </div>
+          <div class="beat-scene beat-landing" id="beatLanding">
+            <h2 class="beat-title">Beat Tap</h2>
+            <p class="beat-sub">Tap when lights hit the zone — stay on rhythm</p>
+            <button class="beat-start-btn" id="beatStartBtn" type="button">▶ Start</button>
+          </div>
+          <div class="beat-scene beat-play hidden" id="beatPlay">
+            <div class="beat-hud">
+              <div class="beat-hud-box"><span>Score</span><strong id="beatScore">0</strong></div>
+              <div class="beat-hud-box"><span>Combo</span><strong id="beatCombo">0</strong></div>
+              <div class="beat-hud-box"><span>Lives</span><strong id="beatLife">3</strong></div>
+            </div>
+            <div class="beat-stage" id="beatStage">
+              <canvas id="beatCanvas" width="360" height="320" aria-label="Rhythm game"></canvas>
+              <div class="beat-lanes">
+                <button class="beat-lane-btn" data-beat="0" type="button"></button>
+                <button class="beat-lane-btn" data-beat="1" type="button"></button>
+                <button class="beat-lane-btn" data-beat="2" type="button"></button>
+                <button class="beat-lane-btn" data-beat="3" type="button"></button>
+              </div>
+            </div>
+            <button class="beat-back-btn" id="beatBackBtn" type="button">← Exit</button>
+            <div class="beat-over hidden" id="beatOver">
+              <div class="beat-over-box">
+                <h3>Rhythm broken</h3>
+                <p>Score <strong id="beatOverScore">0</strong></p>
+                <div class="game-over-actions">
+                  <button class="game-share-btn" id="beatShareBtn" type="button">Share score</button>
+                  <button class="beat-over-btn" id="beatAgainBtn" type="button">Try Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="feed-meta">
+          <div class="feed-meta-left">
+            <p class="feed-title">Beat Tap · Light Rails</p>
+            <p class="feed-desc">Four lanes — tap on beat for high scores</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🎵</span><span>Rhythm Lab</span></div>
+          </div>
+          <div class="feed-stats">
+            <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+            <button class="stat-btn" data-action="star" aria-label="Save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+            <button class="stat-btn" data-action="share" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+          </div>
+        </footer>
+      </article>
+
+      <div class="feed-empty hidden" id="feedEmpty">
+        <p class="feed-empty-icon">📭</p>
+        <p class="feed-empty-text">Nothing here yet</p>
+        <p class="feed-empty-sub">Try another tab</p>
+      </div>
+
+        </main>
+
+        <footer class="site-footer">
+          <p>© 2026 Miniverse Games · <a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+          <p class="site-footer-games">
+            <a href="games/squishy-chick.html">Squishy Chick</a> ·
+            <a href="games/neon-rush.html">Neon Rush</a> ·
+            <a href="games/daily-fortune.html">Daily Fortune</a> ·
+            <a href="games/fresh-fruit-stand.html">Fruit Stand</a> ·
+            <a href="games/blue-planet-diary.html">Blue Planet</a> ·
+            <a href="games/mystery-flavor-box.html">Flavor Box</a> ·
+            <a href="games/lily-pad-leap.html">Lily Pad</a> ·
+            <a href="games/memory-match.html">Memory Match</a> ·
+            <a href="games/rainbow-salt-lake.html">Salt Lake</a> ·
+            <a href="games/number-merge.html">Number Merge</a>
+          </p>
+          <p class="site-footer-games site-footer-games-sub">
+            <a href="games/index.html">All game guides →</a> ·
+            <a href="play-tips.html">Play tips</a> ·
+            <a href="how-it-works.html">How it works</a>
+          </p>
+          <p class="site-footer-updated">Content updated May 2026</p>
+        </footer>
+      </div>
     </div>
-    <div class="copyright">© 2026 Miniverse · All games are free to play</div>
   </div>
-</footer>
 
+  <script src="assets/chunk-loader.js"></script>
+  <script src="assets/chunks.js"></script>
+  <script src="assets/games-chunk.js"></script>
+  <script src="assets/learn-chunk.js"></script>
+  <script src="app.js"></script>
+
+  <div class="onboard-overlay hidden" id="onboardOverlay" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+    <div class="onboard-card">
+      <p class="onboard-badge">Welcome</p>
+      <h2 id="onboardTitle">Welcome to VibeVerse</h2>
+      <ol class="onboard-steps">
+        <li><strong>Swipe the feed</strong> — one mini game per screen.</li>
+        <li><strong>Tap to play</strong> — no download, instant fun.</li>
+        <li><strong>⭐ Save favorites</strong> — find them on your Saved page.</li>
+        <li><strong>Press / to search</strong> — jump to any game by name.</li>
+        <li><strong>📤 Share results</strong> — score cards after you play.</li>
+        <li><strong>Learn tab</strong> — swipe 3 screens: finance news, 2026 World Cup &amp; play wiki.</li>
+      </ol>
+      <button type="button" class="onboard-btn" id="onboardDismiss">Let's play →</button>
+    </div>
+  </div>
+
+  <div class="finance-sheet hidden" id="fnSheet" role="dialog" aria-modal="true" aria-labelledby="fnSheetTitle">
+    <div class="finance-sheet-backdrop" id="fnSheetBackdrop"></div>
+    <div class="finance-sheet-panel">
+      <button type="button" class="finance-sheet-close" id="fnSheetClose" aria-label="Close">×</button>
+      <div class="finance-sheet-head">
+        <div class="finance-sheet-source" id="fnSheetSource"></div>
+        <time class="finance-sheet-time" id="fnSheetTime"></time>
+      </div>
+      <h2 class="finance-sheet-title" id="fnSheetTitle"></h2>
+      <p class="finance-sheet-summary" id="fnSheetSummary"></p>
+      <p class="finance-sheet-excerpt-note" id="fnSheetExcerptNote"></p>
+      <p class="finance-sheet-body" id="fnSheetBody"></p>
+      <div class="finance-sheet-category">
+        <span class="finance-sheet-category-label">Topic</span>
+        <span class="finance-sheet-category-val" id="fnSheetTopic"></span>
+      </div>
+      <div class="finance-sheet-toolbar">
+        <button type="button" class="finance-toolbar-btn primary" id="fnSheetSave"><span aria-hidden="true">🔖</span> Save</button>
+        <button type="button" class="finance-toolbar-btn" id="fnSheetShare"><span aria-hidden="true">↗</span> Share</button>
+        <button type="button" class="finance-toolbar-btn" id="fnSheetCopy"><span aria-hidden="true">⎘</span> Copy</button>
+        <a class="finance-toolbar-btn accent" id="fnSheetLink" href="#" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Read full article</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie consent" hidden>
+    <div class="cookie-banner-inner">
+      <p>We use cookies for site features and advertising (including Google AdSense). See our <a href="privacy.html">Privacy Policy</a>.</p>
+      <div class="cookie-banner-actions">
+        <button type="button" class="cookie-btn primary" id="cookieAccept">Accept all</button>
+        <button type="button" class="cookie-btn" id="cookieEssential">Essential only</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
