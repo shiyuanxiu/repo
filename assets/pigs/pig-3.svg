@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="pig3Title">
+  <title id="pig3Title">Spinning happy pig</title>
+  <defs>
+    <linearGradient id="pigBodyGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffb1cf"/>
+      <stop offset="100%" stop-color="#f478a8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="44" fill="url(#pigBodyGrad3)"/>
+  <circle cx="46" cy="50" r="6" fill="#2f2f3c"/>
+  <circle cx="74" cy="50" r="6" fill="#2f2f3c"/>
+  <path d="M48 76c4 4 12 4 16 0" fill="none" stroke="#2f2f3c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M32 38c-6-10-14-14-22-10" fill="none" stroke="#fb7eb8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M90 38c6-10 14-14 22-10" fill="none" stroke="#fb7eb8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M24 82c10-10 20-18 34-22" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.65"/>
+  <path d="M96 82c-10-10-20-18-34-22" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.65"/>
+  <ellipse cx="60" cy="106" rx="30" ry="7" fill="#e280ab" opacity="0.8"/>
+</svg>

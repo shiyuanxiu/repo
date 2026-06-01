@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="pig4Title">
+  <title id="pig4Title">Shy pig with hand and sweet smile</title>
+  <defs>
+    <linearGradient id="pigBodyGrad4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffc7db"/>
+      <stop offset="100%" stop-color="#f87ea7"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="42" fill="url(#pigBodyGrad4)"/>
+  <circle cx="42" cy="52" r="6" fill="#2f2f3c"/>
+  <circle cx="78" cy="52" r="6" fill="#2f2f3c"/>
+  <path d="M48 78c4 4 12 4 16 0" fill="none" stroke="#2f2f3c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 38c-6-10-14-14-22-10" fill="none" stroke="#fa7fb7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M90 38c6-10 14-14 22-10" fill="none" stroke="#fa7fb7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M36 60c0 0 14-10 28-6" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.75"/>
+  <path d="M70 64c10-2 20-2 24 8" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.75"/>
+  <path d="M60 48c8 8 16 8 22 2" fill="none" stroke="#e61f6c" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="60" cy="108" rx="30" ry="6" fill="#e88ca8" opacity="0.8"/>
+</svg>

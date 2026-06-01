@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="pig2Title">
+  <title id="pig2Title">Shy pink pig covering face</title>
+  <defs>
+    <linearGradient id="pigBodyGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffcad4"/>
+      <stop offset="100%" stop-color="#f490b4"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="42" fill="url(#pigBodyGrad2)"/>
+  <path d="M34 42c-2-10 10-22 26-24s28 8 30 20" fill="none" stroke="#fb8cb7" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="42" cy="54" r="6" fill="#2f2f3c"/>
+  <circle cx="78" cy="54" r="6" fill="#2f2f3c"/>
+  <path d="M45 74c6 6 18 6 24 0" fill="none" stroke="#2f2f3c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M56 47c0 6 10 6 10 0" fill="none" stroke="#2f2f3c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 40c0 8-4 18-8 26" stroke="#f780b8" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M80 40c0 8 4 18 8 26" stroke="#f780b8" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <path d="M48 76l8-8" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <path d="M64 76l8-8" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <ellipse cx="60" cy="106" rx="28" ry="6" fill="#e49bb8" opacity="0.7"/>
+</svg>
