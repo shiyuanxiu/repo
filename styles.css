@@ -402,7 +402,7 @@ body::before {
 
 .card-controls {
   position: absolute;
-  top: 16px;
+  top: calc(env(safe-area-inset-top, 0) + 16px);
   right: 16px;
   display: flex;
   gap: 8px;
@@ -418,6 +418,8 @@ body::before {
   border: 1px solid rgba(168, 85, 247, 0.22);
   border-radius: 20px;
   padding: 6px 12px;
+  min-width: 54px;
+  white-space: nowrap;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
