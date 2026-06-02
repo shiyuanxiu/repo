@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="auth/github-config.js"></script>
+  <script src="auth/secrets.js"></script>
+  <script src="auth/github-auth.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -74,6 +77,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/social-feed.css">
   <link rel="stylesheet" href="assets/legal.css">
   <style>
     /* Enhanced loading overlay */
@@ -362,8 +366,10 @@
     function loadMiniverseScores() {
       var highScore = localStorage.getItem('miniverse_high_score') || 0;
       var lastScore = localStorage.getItem('miniverse_last_score') || 0;
-      document.getElementById('miniHighScore').textContent = highScore;
-      document.getElementById('miniScore').textContent = lastScore;
+      var highEl = document.getElementById('miniHighScore');
+      var lastEl = document.getElementById('miniScore');
+      if (highEl) highEl.textContent = highScore;
+      if (lastEl) lastEl.textContent = lastScore;
     }
 
     // Close guide when clicking backdrop
@@ -398,9 +404,10 @@
         <a class="nav-guides" href="games/index.html" aria-label="Game guides" title="Game guides">📖</a>
         <a class="nav-saved" href="favorites.html" aria-label="Saved games">⭐</a>
         <button class="navbar-help-btn" onclick="showGuide()" title="How to use Miniverse" aria-label="Help">ℹ</button>
-        <div class="avatar">
-          <span class="avatar-emoji" aria-hidden="true">✦</span>
-        </div>
+        <button class="avatar" id="userAvatarBtn" type="button" title="GitHub account" aria-label="GitHub account">
+          <img id="userAvatarImg" alt="" hidden>
+          <span class="avatar-emoji" id="userAvatarEmoji" aria-hidden="true">✦</span>
+        </button>
       </div>
     </header>
 
@@ -1965,6 +1972,8 @@
   <script src="assets/games-chunk.js"></script>
   <script src="assets/learn-chunk.js"></script>
   <script src="app.js?v=starfall-night-3"></script>
+  <script src="assets/comment-service.js?v=1"></script>
+  <script src="assets/social-feed.js?v=15"></script>
 
   <div class="onboard-overlay hidden" id="onboardOverlay" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
     <div class="onboard-card">
@@ -2042,6 +2051,26 @@
     }
     enhanceTouchTargets();
     window.addEventListener('resize', enhanceTouchTargets);
+
+    (function bindGitHubAvatar() {
+      var auth = window.MiniverseGitHubAuth && window.MiniverseGitHubAuth.readAuth();
+      if (!auth || !auth.user) return;
+      var btn = document.getElementById('userAvatarBtn');
+      var img = document.getElementById('userAvatarImg');
+      var emoji = document.getElementById('userAvatarEmoji');
+      if (auth.user.avatar_url && img) {
+        img.src = auth.user.avatar_url;
+        img.hidden = false;
+        if (emoji) emoji.hidden = true;
+      }
+      if (btn) {
+        btn.title = auth.user.name || auth.user.login;
+        btn.setAttribute('aria-label', btn.title);
+        btn.addEventListener('click', function () {
+          window.location.href = 'favorites.html';
+        });
+      }
+    })();
   </script>
 </body>
 </html>

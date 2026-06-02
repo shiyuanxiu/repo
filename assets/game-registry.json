@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "description": "Single source of truth for feed gameId. Add new cards here first — ids must be unique and stable (used in comments Gist + localStorage).",
+  "games": [
+    { "id": "chick", "name": "Squishy Chick", "slug": "squishy-chick", "gistKey": "SquishyChick", "tag": "#SquishyChick", "category": "chill", "feed": "recommend" },
+    { "id": "run", "name": "Neon Rush", "slug": "neon-rush", "gistKey": "NeonRush", "tag": "#NeonRush", "category": "arcade", "feed": "recommend" },
+    { "id": "shop", "name": "Fresh Fruit Stand", "slug": "fresh-fruit-stand", "gistKey": "FreshFruitStand", "tag": "#FruitStand", "category": "chill", "feed": "recommend" },
+    { "id": "sente", "name": "Born To vs Forced To", "slug": "born-vs-forced", "gistKey": "BornToVsForcedTo", "tag": "#MemeLines", "category": "social", "feed": "recommend" },
+    { "id": "fortune", "name": "Daily Fortune", "slug": "daily-fortune", "gistKey": "FortuneCorner", "tag": "#DailyFortune", "category": "chill", "feed": "recommend" },
+    { "id": "earth", "name": "Blue Planet Diary", "slug": "blue-planet-diary", "gistKey": "BluePlanetDiary", "tag": "#BluePlanet", "category": "chill", "feed": "recommend" },
+    { "id": "block", "name": "Cute Stack", "slug": "cute-stack", "gistKey": "CuteStack", "tag": "#CuteStack", "category": "puzzle", "feed": "recommend" },
+    { "id": "leap", "name": "Lily Pad Leap", "slug": "lily-pad-leap", "gistKey": "LilyPadLeap", "tag": "#LilyPadLeap", "category": "arcade", "feed": "recommend" },
+    { "id": "face", "name": "Runway Glow-Up", "slug": "runway-glow-up", "gistKey": "RunwayGlowUp", "tag": "#VibeVerseGlowUp", "category": "social", "feed": "games" },
+    { "id": "box", "name": "Mystery Flavor Box", "slug": "mystery-flavor-box", "gistKey": "MysteryFlavorBox", "tag": "#FlavorGuess", "category": "social", "feed": "games" },
+    { "id": "pet", "name": "Office Pets", "slug": "office-pets", "gistKey": "OfficePets", "tag": "#PetOffice", "category": "chill", "feed": "games" },
+    { "id": "spot", "name": "Rainbow Salt Lake", "slug": "rainbow-salt-lake", "gistKey": "RainbowSaltLake", "tag": "#TravelCheckIn", "category": "chill", "feed": "games" },
+    { "id": "mj", "name": "Brain Sketch", "slug": "brain-sketch", "gistKey": "BrainSketch", "tag": "#BrainSketch", "category": "chill", "feed": "games" },
+    { "id": "star", "name": "Starfall", "slug": "starfall", "gistKey": "Starfall", "tag": "#Starfall", "category": "arcade", "feed": "games" },
+    { "id": "stack", "name": "Piggy Catch", "slug": "stack-rush", "gistKey": "PiggyCatch", "tag": "#PiggyCatch", "category": "puzzle", "feed": "games" },
+    { "id": "match", "name": "Memory Match", "slug": "memory-match", "gistKey": "MemoryMatch", "tag": "#MemoryMatch", "category": "puzzle", "feed": "games" },
+    { "id": "merge", "name": "2248 Chain", "slug": "number-merge", "gistKey": "2248Chain", "tag": "#2248Chain", "category": "puzzle", "feed": "games" },
+    { "id": "beat", "name": "Mochi Snake", "slug": "snake-bite", "gistKey": "MochiSnake", "tag": "#MochiSnake", "category": "arcade", "feed": "games" }
+  ]
+}

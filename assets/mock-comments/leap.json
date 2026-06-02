@@ -1,0 +1,60 @@
+{
+  "gameId": "leap",
+  "totalLike": 88,
+  "comments": [
+    {
+      "commentId": "leap-m1-8933",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Frog jumps feel snappy and satisfying — great arcade vibe 🐸",
+      "createTime": "2026-06-01 09:06:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "leap-m1-8933-r1",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "Haptics yes — every perfect jump should buzz 😊",
+      "createTime": "2026-06-01 09:31:00",
+      "replyTo": "leap-m1-8933"
+    },
+    {
+      "commentId": "leap-m2-1528",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Endless mode with rising water level could be a fun challenge mode.",
+      "createTime": "2026-06-01 10:19:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "leap-m2-1528-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "That splash animation tho ✨",
+      "createTime": "2026-06-01 10:43:00",
+      "replyTo": "leap-m2-1528"
+    },
+    {
+      "commentId": "leap-m3-8215",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Frog jumps feel snappy and satisfying — great arcade vibe 🐸",
+      "createTime": "2026-06-01 11:35:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "leap-m3-8215-r1",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Haptics yes — every perfect jump should buzz 😊",
+      "createTime": "2026-06-01 12:06:00",
+      "replyTo": "leap-m3-8215"
+    }
+  ]
+}

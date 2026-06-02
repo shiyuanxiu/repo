@@ -1,0 +1,33 @@
+{
+  "gameId": "block",
+  "totalLike": 83,
+  "comments": [
+    {
+      "commentId": "block-m1-5085",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "Stacking blocks has never been this adorable — clean puzzle loop 🧱✨",
+      "createTime": "2026-06-01 10:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "block-m1-5085-r1",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "The block bounce sfx is so cute 😊",
+      "createTime": "2026-06-01 10:44:00",
+      "replyTo": "block-m1-5085"
+    },
+    {
+      "commentId": "block-m1-5085-r2",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "The block bounce sfx is so cute 😊",
+      "createTime": "2026-06-01 11:15:00",
+      "replyTo": "block-m1-5085"
+    }
+  ]
+}

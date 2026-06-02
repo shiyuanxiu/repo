@@ -1,0 +1,42 @@
+{
+  "gameId": "mj",
+  "totalLike": 91,
+  "comments": [
+    {
+      "commentId": "mj-m1-9245",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Quick brain teasers that don't feel like homework — love it 🧠",
+      "createTime": "2026-06-01 10:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "mj-m1-9245-r1",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Difficulty slider is a great idea for my niece ✨",
+      "createTime": "2026-06-01 10:40:00",
+      "replyTo": "mj-m1-9245"
+    },
+    {
+      "commentId": "mj-m1-9245-r2",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Got today's puzzle in two tries — feeling smart 😊",
+      "createTime": "2026-06-01 11:00:00",
+      "replyTo": "mj-m1-9245"
+    },
+    {
+      "commentId": "mj-m1-9245-r3",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Got today's puzzle in two tries — feeling smart 😊",
+      "createTime": "2026-06-01 11:36:00",
+      "replyTo": "mj-m1-9245"
+    }
+  ]
+}

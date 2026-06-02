@@ -1,0 +1,24 @@
+{
+  "gameId": "run",
+  "totalLike": 95,
+  "comments": [
+    {
+      "commentId": "run-m1-2195",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Neon visuals are fire — one more run always turns into ten 🔥",
+      "createTime": "2026-06-01 08:21:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "run-m1-2195-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "The combo streak sound is so satisfying 😊",
+      "createTime": "2026-06-01 08:36:00",
+      "replyTo": "run-m1-2195"
+    }
+  ]
+}

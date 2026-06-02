@@ -1,0 +1,60 @@
+{
+  "gameId": "earth",
+  "totalLike": 36,
+  "comments": [
+    {
+      "commentId": "earth-m1-8415",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Beautiful planet facts with a diary feel — learned something new 🌍",
+      "createTime": "2026-06-01 11:12:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "earth-m1-8415-r1",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "The ocean entry today was stunning 😊",
+      "createTime": "2026-06-01 11:27:00",
+      "replyTo": "earth-m1-8415"
+    },
+    {
+      "commentId": "earth-m2-5962",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "A map pin when a location is mentioned would deepen the immersion.",
+      "createTime": "2026-06-01 12:31:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "earth-m2-5962-r1",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "The ocean entry today was stunning 😊",
+      "createTime": "2026-06-01 13:01:00",
+      "replyTo": "earth-m2-5962"
+    },
+    {
+      "commentId": "earth-m2-5962-r2",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "The ocean entry today was stunning 😊",
+      "createTime": "2026-06-01 13:16:00",
+      "replyTo": "earth-m2-5962"
+    },
+    {
+      "commentId": "earth-m2-5962-r3",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "Map pin idea is brilliant for travel lovers ✨",
+      "createTime": "2026-06-01 13:41:00",
+      "replyTo": "earth-m2-5962"
+    }
+  ]
+}

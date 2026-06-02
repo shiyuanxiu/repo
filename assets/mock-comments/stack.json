@@ -1,0 +1,42 @@
+{
+  "gameId": "stack",
+  "totalLike": 61,
+  "comments": [
+    {
+      "commentId": "stack-m1-5920",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "Co-op local high score could be fun for siblings.",
+      "createTime": "2026-06-01 09:10:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "stack-m1-5920-r1",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Near-miss slo-mo would be cinematic ✨",
+      "createTime": "2026-06-01 09:26:00",
+      "replyTo": "stack-m1-5920"
+    },
+    {
+      "commentId": "stack-m1-5920-r2",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "The pig oink when you catch one 😊 perfection",
+      "createTime": "2026-06-01 09:54:00",
+      "replyTo": "stack-m1-5920"
+    },
+    {
+      "commentId": "stack-m1-5920-r3",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "My kid and I compete every night 🥰",
+      "createTime": "2026-06-01 10:29:00",
+      "replyTo": "stack-m1-5920"
+    }
+  ]
+}

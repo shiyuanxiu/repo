@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · Miniverse</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      color: #e2e8f0;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; text-align: center; }
+    .sub { margin: 0 0 18px; color: #94a3b8; font-size: 14px; line-height: 1.5; text-align: center; }
+    .warn {
+      margin: 0 0 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      color: #fde68a;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .ok {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #bbf7d0;
+    }
+    .steps {
+      margin: 0 0 16px;
+      padding-left: 18px;
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 999px;
+      background: #24292f;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .btn:hover:not(:disabled) { background: #32383f; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #94a3b8;
+      font-size: 13px;
+      padding: 10px;
+    }
+    code { font-size: 12px; background: rgba(0,0,0,0.35); padding: 2px 6px; border-radius: 4px; }
+    #serverStatus { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 8px; }
+  </style>
+  <script src="auth/github-config.js"></script>
+  <script src="auth/github-auth.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Miniverse</h1>
+    <p class="sub">Sign in with GitHub to continue</p>
+
+    <div class="warn" id="fileWarn" hidden>
+      Do not open <code>file://</code> directly. Use the dev server below.
+    </div>
+
+    <div class="warn" id="serverWarn" hidden></div>
+
+    <ol class="steps">
+      <li>Double-click <code>start-dev-server.bat</code> in the project folder</li>
+      <li>Open <code>http://localhost:8765/login.html</code> (use <code>http://</code>, not https)</li>
+      <li>If GitHub times out: add lines from <code>auth/hosts.example</code> to Windows hosts (Admin), then <code>ipconfig /flushdns</code></li>
+      <li>OAuth callback must be <code>http://localhost:8765/github-callback.html</code> in GitHub App settings</li>
+    </ol>
+
+    <button class="btn" id="githubLoginBtn" type="button">Continue with GitHub</button>
+    <p id="oauthFallback" hidden style="margin:8px 0 0;font-size:13px;text-align:center">
+      <a id="oauthLink" href="#" style="color:#7dd3fc">Open GitHub login manually</a>
+    </p>
+    <button class="btn btn-ghost" id="retryCheckBtn" type="button">Check dev server again</button>
+    <p id="serverStatus">Checking dev server…</p>
+  </div>
+  <script>
+    (function () {
+      var loginBtn = document.getElementById("githubLoginBtn");
+      var statusEl = document.getElementById("serverStatus");
+      var serverWarn = document.getElementById("serverWarn");
+      var oauthFallback = document.getElementById("oauthFallback");
+      var oauthLink = document.getElementById("oauthLink");
+
+      if (new URLSearchParams(location.search).get("reason") === "file") {
+        document.getElementById("fileWarn").hidden = false;
+        statusEl.textContent = "file:// cannot complete OAuth.";
+        return;
+      }
+
+      if (window.MiniverseGitHubAuth?.isAuthed?.()) {
+        location.replace("index.html");
+        return;
+      }
+
+      function refreshOAuthLink() {
+        if (!window.MiniverseGitHubAuth?.buildAuthorizeUrl) return;
+        try {
+          var url = MiniverseGitHubAuth.buildAuthorizeUrl();
+          oauthLink.href = url;
+          oauthFallback.hidden = false;
+        } catch (e) {
+          oauthFallback.hidden = true;
+        }
+      }
+
+      async function checkServer() {
+        statusEl.textContent = "Checking dev server…";
+        serverWarn.hidden = true;
+        try {
+          var res = await fetch("/auth/health", { cache: "no-store" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          await res.json();
+          serverWarn.className = "warn ok";
+          serverWarn.textContent = "Dev server OK — you can sign in with GitHub.";
+          serverWarn.hidden = false;
+          loginBtn.disabled = false;
+          statusEl.textContent = "Ready. Callback: " + window.MiniverseGitHubAuth.redirectUri();
+          refreshOAuthLink();
+        } catch (e) {
+          loginBtn.disabled = false;
+          serverWarn.className = "warn";
+          serverWarn.innerHTML =
+            "Dev server not ready. Run <code>start-dev-server.bat</code> (not py -m http.server).<br>" +
+            String(e.message || e) +
+            "<br>You can still try GitHub login — callback needs the dev server.";
+          serverWarn.hidden = false;
+          statusEl.textContent = "Fix the server for callback, or click login to try GitHub.";
+          refreshOAuthLink();
+        }
+      }
+
+      loginBtn.addEventListener("click", function () {
+        try {
+          if (!window.MiniverseGitHubAuth?.startLogin) {
+            statusEl.textContent = "Auth script failed to load — refresh the page.";
+            return;
+          }
+          statusEl.textContent = "Opening GitHub… (if nothing happens, use the link below)";
+          var url = MiniverseGitHubAuth.startLogin();
+          oauthLink.href = url;
+          oauthFallback.hidden = false;
+        } catch (e) {
+          statusEl.textContent = "Login error: " + (e.message || e);
+          refreshOAuthLink();
+        }
+      });
+      document.getElementById("retryCheckBtn").addEventListener("click", checkServer);
+      checkServer();
+    })();
+  </script>
+</body>
+</html>

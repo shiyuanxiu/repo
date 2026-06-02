@@ -1,0 +1,60 @@
+{
+  "gameId": "sente",
+  "totalLike": 16,
+  "comments": [
+    {
+      "commentId": "sente-m1-8982",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Hilarious pick-your-vibe format — perfect scroll-stopper.",
+      "createTime": "2026-06-01 10:29:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "sente-m1-8982-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "Save-image would make this instantly viral material ✨",
+      "createTime": "2026-06-01 10:47:00",
+      "replyTo": "sente-m1-8982"
+    },
+    {
+      "commentId": "sente-m1-8982-r2",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "Office pack when?? 🥰",
+      "createTime": "2026-06-01 11:14:00",
+      "replyTo": "sente-m1-8982"
+    },
+    {
+      "commentId": "sente-m2-8554",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "More line packs (office vs weekend) would keep it fresh.",
+      "createTime": "2026-06-01 11:23:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "sente-m2-8554-r1",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Save-image would make this instantly viral material ✨",
+      "createTime": "2026-06-01 11:57:00",
+      "replyTo": "sente-m2-8554"
+    },
+    {
+      "commentId": "sente-m2-8554-r2",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "Office pack when?? 🥰",
+      "createTime": "2026-06-01 12:32:00",
+      "replyTo": "sente-m2-8554"
+    }
+  ]
+}

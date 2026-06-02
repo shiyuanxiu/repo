@@ -1,0 +1,78 @@
+{
+  "gameId": "spot",
+  "totalLike": 13,
+  "comments": [
+    {
+      "commentId": "spot-m1-3383",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Stunning colors — feels like a mini travel postcard 🌈",
+      "createTime": "2026-06-01 11:00:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "spot-m1-3383-r1",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "This is digital vacation energy 🥰",
+      "createTime": "2026-06-01 11:19:00",
+      "replyTo": "spot-m1-3383"
+    },
+    {
+      "commentId": "spot-m2-1618",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Light weather variations (sunset vs midday) could change the palette.",
+      "createTime": "2026-06-01 12:35:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "spot-m2-1618-r1",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "Screenshot gallery already full on my phone ✨",
+      "createTime": "2026-06-01 13:05:00",
+      "replyTo": "spot-m2-1618"
+    },
+    {
+      "commentId": "spot-m2-1618-r2",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "This is digital vacation energy 🥰",
+      "createTime": "2026-06-01 13:20:00",
+      "replyTo": "spot-m2-1618"
+    },
+    {
+      "commentId": "spot-m3-6494",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "Calm exploration with gorgeous photo spots.",
+      "createTime": "2026-06-01 13:45:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "spot-m3-6494-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "This is digital vacation energy 🥰",
+      "createTime": "2026-06-01 14:11:00",
+      "replyTo": "spot-m3-6494"
+    },
+    {
+      "commentId": "spot-m3-6494-r2",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "This is digital vacation energy 🥰",
+      "createTime": "2026-06-01 14:25:00",
+      "replyTo": "spot-m3-6494"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "gameId": "match",
+  "totalLike": 86,
+  "comments": [
+    {
+      "commentId": "match-m1-1406",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Clean UI and satisfying flip animations.",
+      "createTime": "2026-06-01 10:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "match-m1-1406-r1",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Food themed cards when?? ✨",
+      "createTime": "2026-06-01 10:49:00",
+      "replyTo": "match-m1-1406"
+    },
+    {
+      "commentId": "match-m1-1406-r2",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Food themed cards when?? ✨",
+      "createTime": "2026-06-01 11:16:00",
+      "replyTo": "match-m1-1406"
+    },
+    {
+      "commentId": "match-m1-1406-r3",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Beat my best time by 4 seconds — hooked 😊",
+      "createTime": "2026-06-01 11:35:00",
+      "replyTo": "match-m1-1406"
+    },
+    {
+      "commentId": "match-m2-6851",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Timer optional mode for speedrunners would add replay value.",
+      "createTime": "2026-06-01 11:21:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "match-m2-6851-r1",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Flip sound is ASMR level 🥰",
+      "createTime": "2026-06-01 11:40:00",
+      "replyTo": "match-m2-6851"
+    }
+  ]
+}

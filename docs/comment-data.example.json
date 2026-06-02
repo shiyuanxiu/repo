@@ -1,0 +1,26 @@
+{
+  "version": 3,
+  "cards": {
+    "chick::chick": [
+      {
+        "commentId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "userId": "42633308",
+        "username": "alice_dev",
+        "avatar": "https://avatars.githubusercontent.com/u/42633308?v=4",
+        "content": "Squishy Chick is so relaxing — love the physics!",
+        "createTime": "2026-06-01 14:32:05",
+        "replyTo": null
+      },
+      {
+        "commentId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "userId": "99112233",
+        "username": "bob_dev",
+        "avatar": "https://avatars.githubusercontent.com/u/99112233?v=4",
+        "content": "Same here! The squish sound is perfect.",
+        "createTime": "2026-06-01 15:10:22",
+        "replyTo": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      }
+    ],
+    "merge::merge": []
+  }
+}

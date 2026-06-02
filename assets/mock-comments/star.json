@@ -1,0 +1,69 @@
+{
+  "gameId": "star",
+  "totalLike": 14,
+  "comments": [
+    {
+      "commentId": "star-m1-9015",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Catch the stars — simple arcade bliss with a dreamy sky ✨",
+      "createTime": "2026-06-01 11:12:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "star-m1-9015-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "Star trail effects are chef's kiss ✨",
+      "createTime": "2026-06-01 11:43:00",
+      "replyTo": "star-m1-9015"
+    },
+    {
+      "commentId": "star-m1-9015-r2",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Bigger combo text yes — I squint on phone 🥰",
+      "createTime": "2026-06-01 12:07:00",
+      "replyTo": "star-m1-9015"
+    },
+    {
+      "commentId": "star-m2-2859",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "Power-up descriptions on first pickup would clarify mechanics faster.",
+      "createTime": "2026-06-01 12:11:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "star-m2-2859-r1",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Bigger combo text yes — I squint on phone 🥰",
+      "createTime": "2026-06-01 12:38:00",
+      "replyTo": "star-m2-2859"
+    },
+    {
+      "commentId": "star-m3-4558",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Night theme and particle effects are gorgeous.",
+      "createTime": "2026-06-01 13:14:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "star-m3-4558-r1",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "Bigger combo text yes — I squint on phone 🥰",
+      "createTime": "2026-06-01 13:40:00",
+      "replyTo": "star-m3-4558"
+    }
+  ]
+}

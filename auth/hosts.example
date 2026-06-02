@@ -1,0 +1,9 @@
+# GitHub hosts (Windows: C:\Windows\System32\drivers\etc\hosts)
+# Edit as Administrator, then run: ipconfig /flushdns
+#
+# IPs change over time — if login still fails, search "GitHub hosts 2026" for updates.
+
+140.82.121.4    github.com
+140.82.112.5    alive.github.com
+140.82.121.6    api.github.com
+140.82.121.6    gist.github.com

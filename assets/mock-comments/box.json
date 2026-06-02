@@ -1,0 +1,60 @@
+{
+  "gameId": "box",
+  "totalLike": 25,
+  "comments": [
+    {
+      "commentId": "box-m1-9668",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Fun party-game energy in a solo scroll card.",
+      "createTime": "2026-06-01 08:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "box-m1-9668-r1",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Seasonal packs sound delicious ngl ✨",
+      "createTime": "2026-06-01 08:43:00",
+      "replyTo": "box-m1-9668"
+    },
+    {
+      "commentId": "box-m1-9668-r2",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "The reveal animation is top tier 🥰",
+      "createTime": "2026-06-01 09:05:00",
+      "replyTo": "box-m1-9668"
+    },
+    {
+      "commentId": "box-m2-2800",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Seasonal flavor packs (summer fruits, holiday spices) would be great.",
+      "createTime": "2026-06-01 09:35:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "box-m2-2800-r1",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "The reveal animation is top tier 🥰",
+      "createTime": "2026-06-01 09:55:00",
+      "replyTo": "box-m2-2800"
+    },
+    {
+      "commentId": "box-m2-2800-r2",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "I guessed wrong three times and still had fun 😊",
+      "createTime": "2026-06-01 10:15:00",
+      "replyTo": "box-m2-2800"
+    }
+  ]
+}

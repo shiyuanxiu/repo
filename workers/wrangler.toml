@@ -1,0 +1,9 @@
+name = "social-community"
+main = "social-community.js"
+compatibility_date = "2024-01-01"
+
+# Create: wrangler kv namespace create SOCIAL_KV
+# Paste the id below (not preview_id)
+[[kv_namespaces]]
+binding = "SOCIAL_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

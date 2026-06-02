@@ -1,0 +1,51 @@
+{
+  "gameId": "shop",
+  "totalLike": 34,
+  "comments": [
+    {
+      "commentId": "shop-m1-4379",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Wholesome and chill — sorting fruit feels weirdly therapeutic 🍎",
+      "createTime": "2026-06-01 11:18:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "shop-m1-4379-r1",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Timer idea is good — adds stakes without stress.",
+      "createTime": "2026-06-01 11:37:00",
+      "replyTo": "shop-m1-4379"
+    },
+    {
+      "commentId": "shop-m1-4379-r2",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "The watermelon slice animation made me smile 🥰",
+      "createTime": "2026-06-01 12:04:00",
+      "replyTo": "shop-m1-4379"
+    },
+    {
+      "commentId": "shop-m2-5903",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Fun loop — would be nice to save high scores per fruit type.",
+      "createTime": "2026-06-01 12:17:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "shop-m2-5903-r1",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "Therapeutic is the word — my go-to unwind game ✨",
+      "createTime": "2026-06-01 12:36:00",
+      "replyTo": "shop-m2-5903"
+    }
+  ]
+}

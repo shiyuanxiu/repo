@@ -1,0 +1,69 @@
+{
+  "gameId": "face",
+  "totalLike": 25,
+  "comments": [
+    {
+      "commentId": "face-m1-5686",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Creative and lighthearted — perfect share-with-friends content.",
+      "createTime": "2026-06-01 10:29:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "face-m1-5686-r1",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "More accessories please — need extra sparkle ✨",
+      "createTime": "2026-06-01 10:47:00",
+      "replyTo": "face-m1-5686"
+    },
+    {
+      "commentId": "face-m1-5686-r2",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "I made the most chaotic outfit and I'm proud 😊",
+      "createTime": "2026-06-01 11:00:00",
+      "replyTo": "face-m1-5686"
+    },
+    {
+      "commentId": "face-m1-5686-r3",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "I made the most chaotic outfit and I'm proud 😊",
+      "createTime": "2026-06-01 11:15:00",
+      "replyTo": "face-m1-5686"
+    },
+    {
+      "commentId": "face-m2-6843",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "More accessory slots would unlock crazier runway looks.",
+      "createTime": "2026-06-01 11:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "face-m2-6843-r1",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "More accessories please — need extra sparkle ✨",
+      "createTime": "2026-06-01 11:38:00",
+      "replyTo": "face-m2-6843"
+    },
+    {
+      "commentId": "face-m2-6843-r2",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "PNG export = instant Instagram story 🥰",
+      "createTime": "2026-06-01 12:08:00",
+      "replyTo": "face-m2-6843"
+    }
+  ]
+}

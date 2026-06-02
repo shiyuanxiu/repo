@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Miniverse">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Saved Games — My Vibes | VibeVerse</title>
-  <meta name="description" content="Your saved VibeVerse mini games. Star games in the feed to build your personal favorites list.">
-  <link rel="canonical" href="https://vibeverse.app/favorites.html">
+  <title>My Profile — Saved & Liked | VibeVerse</title>
+  <meta name="description" content="Your saved and liked VibeVerse mini games, synced from GitHub.">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="assets/legal.css">
 </head>
@@ -24,20 +22,46 @@
     </div>
   </header>
 
-  <main class="content-page">
-    <h1>Saved games</h1>
-    <p>Games you starred in the feed appear here. Tap ⭐ on any card in the feed to add favorites.</p>
-    <div id="favoritesGrid" class="favorites-grid" aria-live="polite"></div>
-    <div id="favoritesEmpty" class="favorites-empty hidden">
-      <p>No saved games yet.</p>
-      <a class="play-cta" href="index.html">Browse the feed</a>
+  <main class="content-page profile-page">
+    <div id="profileHeader" class="profile-header hidden">
+      <img id="profileAvatar" class="profile-avatar" alt="" width="56" height="56">
+      <div>
+        <h1 id="profileName">My games</h1>
+        <p id="profileSync" class="profile-sync">Synced from GitHub Gist</p>
+      </div>
     </div>
+    <div id="profileGuest" class="favorites-empty">
+      <p>Sign in on the feed to sync your saved and liked games.</p>
+      <a class="play-cta" href="login.html">Sign in with GitHub</a>
+    </div>
+
+    <section id="savedSection" class="profile-section hidden">
+      <h2>⭐ Saved</h2>
+      <p class="profile-hint">Personal favorites — no public count, toggle only.</p>
+      <div id="favoritesGrid" class="favorites-grid" aria-live="polite"></div>
+      <div id="favoritesEmpty" class="favorites-empty hidden">
+        <p>No saved games yet.</p>
+        <a class="play-cta" href="index.html">Browse the feed</a>
+      </div>
+    </section>
+
+    <section id="likedSection" class="profile-section hidden">
+      <h2>❤️ Liked</h2>
+      <p class="profile-hint">Games you liked — each account counts once toward the heart total.</p>
+      <div id="likedGrid" class="favorites-grid" aria-live="polite"></div>
+      <div id="likedEmpty" class="favorites-empty hidden">
+        <p>No liked games yet.</p>
+        <a class="play-cta" href="index.html">Browse the feed</a>
+      </div>
+    </section>
   </main>
 
   <footer class="site-chrome-footer">
     <p>© 2026 VibeVerse · <a href="about.html">About</a> · <a href="privacy.html">Privacy</a></p>
   </footer>
 
+  <script src="auth/github-config.js"></script>
+  <script src="auth/github-auth.js"></script>
   <script>
     const CATALOG = {
       chick: { name: "Squishy Chick", emoji: "🐣", play: "index.html?game=chick", guide: "games/squishy-chick.html" },
@@ -54,33 +78,96 @@
       spot: { name: "Rainbow Salt Lake", emoji: "🌈", play: "index.html?game=spot", guide: "games/rainbow-salt-lake.html" },
       mj: { name: "Brain Sketch", emoji: "🧠", play: "index.html?game=mj", guide: "games/brain-sketch.html" },
       star: { name: "Starfall", emoji: "⭐", play: "index.html?game=star", guide: "games/starfall.html" },
-      stack: { name: "Stack Rush", emoji: "🧱", play: "index.html?game=stack", guide: "games/stack-rush.html" },
+      stack: { name: "Piggy Catch", emoji: "🧱", play: "index.html?game=stack", guide: "games/stack-rush.html" },
       match: { name: "Memory Match", emoji: "🃏", play: "index.html?game=match", guide: "games/memory-match.html" },
       merge: { name: "2248 Chain", emoji: "✨", play: "index.html?game=merge", guide: "games/number-merge.html" },
       beat: { name: "Mochi Snake", emoji: "🐍", play: "index.html?game=beat", guide: "games/snake-bite.html" },
     };
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem("vv_saved") || "[]"); } catch (_) {}
-    const grid = document.getElementById("favoritesGrid");
-    const empty = document.getElementById("favoritesEmpty");
-    if (!saved.length) {
-      empty.classList.remove("hidden");
-    } else {
-      saved.forEach((id) => {
+
+    let communityLikes = {};
+
+    function renderGrid(gridEl, emptyEl, ids, showLikeCount) {
+      gridEl.innerHTML = "";
+      const list = (ids || []).filter((id) => CATALOG[id]);
+      emptyEl.classList.toggle("hidden", list.length > 0);
+      list.forEach((id) => {
         const g = CATALOG[id];
-        if (!g) return;
         const wrap = document.createElement("div");
         wrap.className = "favorite-card-wrap";
+        const likeBadge = showLikeCount
+          ? `<span class="profile-like-badge">${(communityLikes[id] || []).length} ♥</span>`
+          : "";
         wrap.innerHTML = `
           <a class="favorite-card" href="${g.play}">
             <span class="favorite-card-emoji">${g.emoji}</span>
             <span class="favorite-card-name">${g.name}</span>
+            ${likeBadge}
           </a>
           ${g.guide ? `<a class="favorite-guide-link" href="${g.guide}">Guide</a>` : ""}
         `;
-        grid.appendChild(wrap);
+        gridEl.appendChild(wrap);
       });
     }
+
+    async function loadProfile() {
+      const auth = window.MiniverseGitHubAuth?.readAuth?.();
+      const guest = document.getElementById("profileGuest");
+      const header = document.getElementById("profileHeader");
+      const savedSection = document.getElementById("savedSection");
+      const likedSection = document.getElementById("likedSection");
+
+      if (!auth?.user) {
+        guest.classList.remove("hidden");
+        return;
+      }
+
+      guest.classList.add("hidden");
+      header.classList.remove("hidden");
+      savedSection.classList.remove("hidden");
+      likedSection.classList.remove("hidden");
+
+      const nameEl = document.getElementById("profileName");
+      const avatarEl = document.getElementById("profileAvatar");
+      nameEl.textContent = auth.user.name || auth.user.login;
+      if (auth.user.avatar_url) {
+        avatarEl.src = auth.user.avatar_url;
+        avatarEl.hidden = false;
+      }
+
+      let favorites = [];
+      let likes = [];
+      try {
+        const res = await fetch("/auth/social/community", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          communityLikes = data.likes || {};
+          const row = data.users?.[auth.user.login] || {};
+          favorites = row.favorites || [];
+          likes = row.likes || [];
+          document.getElementById("profileSync").textContent = "Synced from GitHub Gist · global-users.json";
+        }
+      } catch {
+        document.getElementById("profileSync").textContent = "Offline — start start-dev-server.bat to sync";
+      }
+
+      if (!favorites.length) {
+        try {
+          favorites = JSON.parse(localStorage.getItem("vv_saved") || "[]");
+        } catch {
+          favorites = [];
+        }
+      }
+
+      renderGrid(
+        document.getElementById("favoritesGrid"),
+        document.getElementById("favoritesEmpty"),
+        favorites,
+        false
+      );
+      renderGrid(document.getElementById("likedGrid"), document.getElementById("likedEmpty"), likes, true);
+    }
+
+    loadProfile();
   </script>
 </body>
 </html>

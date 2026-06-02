@@ -1,0 +1,42 @@
+{
+  "gameId": "merge",
+  "totalLike": 27,
+  "comments": [
+    {
+      "commentId": "merge-m1-4736",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Color contrast on high tiles could improve readability.",
+      "createTime": "2026-06-01 09:24:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "merge-m1-4736-r1",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Diagonal merges saved my run twice 🥰",
+      "createTime": "2026-06-01 09:48:00",
+      "replyTo": "merge-m1-4736"
+    },
+    {
+      "commentId": "merge-m1-4736-r2",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Hit 512 chain and screamed quietly 😊",
+      "createTime": "2026-06-01 10:18:00",
+      "replyTo": "merge-m1-4736"
+    },
+    {
+      "commentId": "merge-m1-4736-r3",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Hit 512 chain and screamed quietly 😊",
+      "createTime": "2026-06-01 10:51:00",
+      "replyTo": "merge-m1-4736"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "gameId": "beat",
+  "totalLike": 93,
+  "comments": [
+    {
+      "commentId": "beat-m1-4955",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Mochi snake is adorable and plays smooth — retro done cute 🍡",
+      "createTime": "2026-06-01 11:02:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "beat-m1-4955-r1",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Delightful is understating it 🥰",
+      "createTime": "2026-06-01 11:21:00",
+      "replyTo": "beat-m1-4955"
+    },
+    {
+      "commentId": "beat-m1-4955-r2",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Wrap mode for old-school fans please ✨",
+      "createTime": "2026-06-01 11:48:00",
+      "replyTo": "beat-m1-4955"
+    },
+    {
+      "commentId": "beat-m2-4135",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "Wall-wrap toggle for casual mode would welcome classic players.",
+      "createTime": "2026-06-01 12:09:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "beat-m2-4135-r1",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Wrap mode for old-school fans please ✨",
+      "createTime": "2026-06-01 12:36:00",
+      "replyTo": "beat-m2-4135"
+    },
+    {
+      "commentId": "beat-m2-4135-r2",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Delightful is understating it 🥰",
+      "createTime": "2026-06-01 12:58:00",
+      "replyTo": "beat-m2-4135"
+    },
+    {
+      "commentId": "beat-m3-3614",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Snake with personality — the munch sfx are delightful.",
+      "createTime": "2026-06-01 13:20:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "beat-m3-3614-r1",
+      "userId": "39102847",
+      "username": "SarahDev",
+      "avatar": "https://avatars.githubusercontent.com/u/39102847?v=4",
+      "content": "Mochi head bobbing while moving 😊 I can't",
+      "createTime": "2026-06-01 13:38:00",
+      "replyTo": "beat-m3-3614"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "description": "Local mock comments by feed gameId — no GitHub API",
+  "feeds": {
+    "recommend": {
+      "label": "For You",
+      "gameIds": [
+        "chick",
+        "run",
+        "shop",
+        "sente",
+        "fortune",
+        "earth",
+        "block",
+        "leap"
+      ]
+    },
+    "games": {
+      "label": "Games",
+      "gameIds": [
+        "face",
+        "box",
+        "pet",
+        "spot",
+        "mj",
+        "star",
+        "stack",
+        "match",
+        "merge",
+        "beat"
+      ]
+    }
+  },
+  "files": {
+    "chick": {
+      "file": "chick.json",
+      "name": "Squishy Chick",
+      "gistKey": "SquishyChick",
+      "feed": "recommend",
+      "commentCount": 4,
+      "totalLike": 50
+    },
+    "run": {
+      "file": "run.json",
+      "name": "Neon Rush",
+      "gistKey": "NeonRush",
+      "feed": "recommend",
+      "commentCount": 2,
+      "totalLike": 95
+    },
+    "shop": {
+      "file": "shop.json",
+      "name": "Fresh Fruit Stand",
+      "gistKey": "FreshFruitStand",
+      "feed": "recommend",
+      "commentCount": 5,
+      "totalLike": 34
+    },
+    "sente": {
+      "file": "sente.json",
+      "name": "Born To vs Forced To",
+      "gistKey": "BornToVsForcedTo",
+      "feed": "recommend",
+      "commentCount": 6,
+      "totalLike": 16
+    },
+    "fortune": {
+      "file": "fortune.json",
+      "name": "Daily Fortune",
+      "gistKey": "FortuneCorner",
+      "feed": "recommend",
+      "commentCount": 5,
+      "totalLike": 98
+    },
+    "earth": {
+      "file": "earth.json",
+      "name": "Blue Planet Diary",
+      "gistKey": "BluePlanetDiary",
+      "feed": "recommend",
+      "commentCount": 6,
+      "totalLike": 36
+    },
+    "block": {
+      "file": "block.json",
+      "name": "Cute Stack",
+      "gistKey": "CuteStack",
+      "feed": "recommend",
+      "commentCount": 3,
+      "totalLike": 83
+    },
+    "leap": {
+      "file": "leap.json",
+      "name": "Lily Pad Leap",
+      "gistKey": "LilyPadLeap",
+      "feed": "recommend",
+      "commentCount": 6,
+      "totalLike": 88
+    },
+    "face": {
+      "file": "face.json",
+      "name": "Runway Glow-Up",
+      "gistKey": "RunwayGlowUp",
+      "feed": "games",
+      "commentCount": 7,
+      "totalLike": 25
+    },
+    "box": {
+      "file": "box.json",
+      "name": "Mystery Flavor Box",
+      "gistKey": "MysteryFlavorBox",
+      "feed": "games",
+      "commentCount": 6,
+      "totalLike": 25
+    },
+    "pet": {
+      "file": "pet.json",
+      "name": "Office Pets",
+      "gistKey": "OfficePets",
+      "feed": "games",
+      "commentCount": 2,
+      "totalLike": 56
+    },
+    "spot": {
+      "file": "spot.json",
+      "name": "Rainbow Salt Lake",
+      "gistKey": "RainbowSaltLake",
+      "feed": "games",
+      "commentCount": 8,
+      "totalLike": 13
+    },
+    "mj": {
+      "file": "mj.json",
+      "name": "Brain Sketch",
+      "gistKey": "BrainSketch",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 91
+    },
+    "star": {
+      "file": "star.json",
+      "name": "Starfall",
+      "gistKey": "Starfall",
+      "feed": "games",
+      "commentCount": 7,
+      "totalLike": 14
+    },
+    "stack": {
+      "file": "stack.json",
+      "name": "Piggy Catch",
+      "gistKey": "PiggyCatch",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 61
+    },
+    "match": {
+      "file": "match.json",
+      "name": "Memory Match",
+      "gistKey": "MemoryMatch",
+      "feed": "games",
+      "commentCount": 6,
+      "totalLike": 86
+    },
+    "merge": {
+      "file": "merge.json",
+      "name": "2248 Chain",
+      "gistKey": "2248Chain",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 27
+    },
+    "beat": {
+      "file": "beat.json",
+      "name": "Mochi Snake",
+      "gistKey": "MochiSnake",
+      "feed": "games",
+      "commentCount": 8,
+      "totalLike": 93
+    }
+  }
+}

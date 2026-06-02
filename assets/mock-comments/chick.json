@@ -1,0 +1,42 @@
+{
+  "gameId": "chick",
+  "totalLike": 50,
+  "comments": [
+    {
+      "commentId": "chick-m1-5628",
+      "userId": "44210588",
+      "username": "devMindset",
+      "avatar": "https://avatars.githubusercontent.com/u/44210588?v=4",
+      "content": "Would love a pastel pink chick skin alongside the classic yellow one ✨",
+      "createTime": "2026-06-01 09:10:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "chick-m1-5628-r1",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Good call — a quick mute toggle would be perfect for commute play.",
+      "createTime": "2026-06-01 09:38:00",
+      "replyTo": "chick-m1-5628"
+    },
+    {
+      "commentId": "chick-m1-5628-r2",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "You get it — best little break game on the feed 🥰",
+      "createTime": "2026-06-01 10:08:00",
+      "replyTo": "chick-m1-5628"
+    },
+    {
+      "commentId": "chick-m1-5628-r3",
+      "userId": "71290456",
+      "username": "AlexInSF",
+      "avatar": "https://avatars.githubusercontent.com/u/71290456?v=4",
+      "content": "You get it — best little break game on the feed 🥰",
+      "createTime": "2026-06-01 10:20:00",
+      "replyTo": "chick-m1-5628"
+    }
+  ]
+}

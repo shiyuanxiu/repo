@@ -1,0 +1,24 @@
+{
+  "gameId": "pet",
+  "totalLike": 56,
+  "comments": [
+    {
+      "commentId": "pet-m1-2647",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "Office pets cheering me on during the workday — instant serotonin 🐾",
+      "createTime": "2026-06-01 08:23:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "pet-m1-2647-r1",
+      "userId": "87410293",
+      "username": "MorganRivers",
+      "avatar": "https://avatars.githubusercontent.com/u/87410293?v=4",
+      "content": "Decoration tree — take my engagement ✨",
+      "createTime": "2026-06-01 08:50:00",
+      "replyTo": "pet-m1-2647"
+    }
+  ]
+}

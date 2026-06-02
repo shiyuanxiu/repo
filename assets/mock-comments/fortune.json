@@ -1,0 +1,51 @@
+{
+  "gameId": "fortune",
+  "totalLike": 98,
+  "comments": [
+    {
+      "commentId": "fortune-m1-1914",
+      "userId": "28471963",
+      "username": "PixelPenguin",
+      "avatar": "https://avatars.githubusercontent.com/u/28471963?v=4",
+      "content": "Cozy daily ritual. Love the soft colors and calm vibe.",
+      "createTime": "2026-06-01 10:25:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "fortune-m1-1914-r1",
+      "userId": "33659281",
+      "username": "TylerBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/33659281?v=4",
+      "content": "Same — mine said 'take a break' and I needed that 😊",
+      "createTime": "2026-06-01 10:43:00",
+      "replyTo": "fortune-m1-1914"
+    },
+    {
+      "commentId": "fortune-m1-1914-r2",
+      "userId": "15783920",
+      "username": "noodleFan",
+      "avatar": "https://avatars.githubusercontent.com/u/15783920?v=4",
+      "content": "History tab would make this a keeper app 🥰",
+      "createTime": "2026-06-01 11:14:00",
+      "replyTo": "fortune-m1-1914"
+    },
+    {
+      "commentId": "fortune-m2-2646",
+      "userId": "22847190",
+      "username": "jake_plays",
+      "avatar": "https://avatars.githubusercontent.com/u/22847190?v=4",
+      "content": "Optional notification for daily draw could boost return visits.",
+      "createTime": "2026-06-01 11:43:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "fortune-m2-2646-r1",
+      "userId": "90384712",
+      "username": "ChrisBuilds",
+      "avatar": "https://avatars.githubusercontent.com/u/90384712?v=4",
+      "content": "Same — mine said 'take a break' and I needed that 😊",
+      "createTime": "2026-06-01 12:09:00",
+      "replyTo": "fortune-m2-2646"
+    }
+  ]
+}
