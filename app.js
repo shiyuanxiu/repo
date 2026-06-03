@@ -10875,6 +10875,16 @@ function lazyInitGame(gameId) {
   LAZY_GAME_INIT[gameId]?.();
 }
 
+function resetFeedSceneScroll() {
+  document
+    .querySelectorAll(
+      ".feed-item:not(.hidden) [class*='-scene']:not(.hidden), .feed-item:not(.hidden) .draw-scene:not(.hidden), .feed-item:not(.hidden) .mini-scene:not(.hidden)",
+    )
+    .forEach((el) => {
+      el.scrollTop = 0;
+    });
+}
+
 function feedLazyOnTabSwitch(tabName) {
   if (tabName === "knowledge") {
     window.vvOnLearnTabActive?.();
@@ -10887,6 +10897,7 @@ function feedLazyOnTabSwitch(tabName) {
     document.querySelectorAll(`.feed-item[data-feed="${tabName}"]:not(.hidden)`).forEach((item) => {
       if (item.dataset.game) lazyInitGame(item.dataset.game);
     });
+    resetFeedSceneScroll();
     window.MiniverseSocial?.refresh?.();
   });
 }
@@ -10914,6 +10925,11 @@ function initFeedLazyLoad() {
         if (!entry.isIntersecting) return;
         const item = entry.target.closest?.(".feed-item") || entry.target;
         if (item?.dataset?.game) lazyInitGame(item.dataset.game);
+        item
+          .querySelectorAll?.("[class*='-scene']:not(.hidden), .draw-scene:not(.hidden), .mini-scene:not(.hidden)")
+          .forEach((el) => {
+            el.scrollTop = 0;
+          });
       });
     },
     { root: feed, rootMargin: "120px 0px", threshold: 0.15 }

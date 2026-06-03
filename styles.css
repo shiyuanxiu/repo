@@ -9029,7 +9029,26 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card.beat-card,
 .feed-item > .game-card.snake-card,
 .feed-item > .game-card.brain-card,
-.feed-item > .game-card.fortune-card {
+.feed-item > .game-card.fortune-card,
+.feed-item > .game-card.face-card,
+.feed-item > .game-card.box-card,
+.feed-item > .game-card.pet-card,
+.feed-item > .game-card.spot-card,
+.feed-item > .game-card.run-card,
+.feed-item > .game-card.leap-card,
+.feed-item > .game-card.block-card,
+.feed-item > .game-card.shop-card,
+.feed-item > .game-card.sente-card,
+.feed-item > .game-card.earth-card,
+.feed-item > .game-card.chick-card {
+  min-height: 0 !important;
+}
+
+.feed-item > .game-card .face-scene,
+.feed-item > .game-card .box-scene,
+.feed-item > .game-card .star-scene,
+.feed-item > .game-card .pet-scene,
+.feed-item > .game-card .spot-scene {
   min-height: 0 !important;
 }
 
@@ -9039,13 +9058,15 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card:not(.fullscreen) > .draw-scene:not(.hidden),
 .feed-item > .game-card:not(.fullscreen) > .snake-landing:not(.hidden),
 .feed-item > .game-card:not(.fullscreen) > .brain-landing:not(.hidden) {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0 !important;
+  max-height: 100%;
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   align-self: stretch;
+  justify-content: flex-start;
 }
 
 .feed-item:has(> .game-card) > .feed-meta {
@@ -9070,11 +9091,13 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 }
 
 .feed-item > .game-card > [class*="-scene"]:not(.hidden):not([class*="-play"]) {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0 !important;
-  height: auto;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -9083,9 +9106,9 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
 .feed-item > .game-card > [class*="-scene"]:not(.hidden)[class*="-play"],
 .feed-item > .game-card > .shop-play:not(.hidden) {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0 !important;
-  height: auto;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -9095,8 +9118,9 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card > .draw-scene:not(.hidden),
 .feed-item > .game-card > .result-scene:not(.hidden),
 .feed-item > .game-card > .mini-scene:not(.hidden) {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0 !important;
+  max-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -9279,6 +9303,64 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   .game-categories {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+  }
+
+  /* Promo landing cards (Runway Glow-Up, Flavor Box, …) — compact, scroll from top */
+  .feed-item > .game-card.face-card > .face-scene.face-landing:not(.hidden),
+  .feed-item > .game-card.box-card > .box-scene:not(.hidden) {
+    flex: 1 1 0;
+    min-height: 0 !important;
+    max-height: 100%;
+    justify-content: flex-start;
+    padding: 2.75rem 0.85rem 0.75rem;
+    gap: 0.35rem;
+  }
+
+  .feed-item > .game-card.face-card .face-hero-head {
+    margin-bottom: 0.35rem;
+  }
+
+  .feed-item > .game-card.face-card .face-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .feed-item > .game-card.face-card .face-sub {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  .feed-item > .game-card.face-card .face-cover-wrap {
+    max-width: min(100%, 260px);
+    margin-bottom: 0.5rem;
+  }
+
+  .feed-item > .game-card.face-card .face-start-btn {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.9375rem;
+    width: min(70%, 210px);
+  }
+
+  .feed-item > .game-card.face-card .face-features {
+    margin-top: 0.5rem;
+    gap: 0.45rem;
+    max-width: 100%;
+  }
+
+  .feed-item > .game-card.face-card .face-feature-item {
+    padding: 0.45rem 0.3rem;
+  }
+
+  .feed-item > .game-card.face-card .face-feature-label {
+    font-size: 0.6875rem;
+  }
+
+  .feed-item > .game-card.face-card .face-feature-desc {
+    font-size: 0.625rem;
+  }
+
+  .feed-item > .game-card.box-card > .box-scene:not(.hidden) {
+    padding: 2.75rem 0.85rem 0.75rem;
   }
 }
 
