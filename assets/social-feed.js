@@ -630,9 +630,13 @@
   }
 
   function getLikeCount(gameId) {
+    const mockBase = mockLikeByGame[gameId];
+    if (isProductionMock() && mockBase != null) {
+      return mockBase + (userHas(gameId, "likes") ? 1 : 0);
+    }
     const live = (cache.community?.likes?.[gameId] || []).length;
     if (live > 0) return live;
-    if (mockLikeByGame[gameId] != null) return mockLikeByGame[gameId];
+    if (mockBase != null) return mockBase;
     return 0;
   }
 
@@ -755,12 +759,6 @@
     const input = panel?.querySelector(".social-comment-input");
     const send = panel?.querySelector(".social-comment-send");
     if (!input || !send) return;
-    if (isProductionMock()) {
-      input.disabled = true;
-      send.disabled = true;
-      input.placeholder = "Demo mode — view mock comments only";
-      return;
-    }
     const replyTo = panel.querySelector(".social-comment-form")?.dataset.replyTo;
     const hasMain = svc && authed && svc.hasMainComment(getCommentsForCard(gameId), myUserId());
     if (!authed) {
@@ -814,7 +812,6 @@
   }
 
   function commentPanelHint() {
-    if (isProductionMock()) return "";
     if (!isAuthed()) return "Sign in to comment.";
     return "";
   }
@@ -867,7 +864,7 @@
     setUserList(gameId, "likes", willLike);
     btn.classList.toggle("is-on", willLike);
     if (willLike) btn.classList.add("pop"), setTimeout(() => btn.classList.remove("pop"), 400);
-    setCountEl(btn, getLikeCount(gameId) + (willLike ? 1 : -1));
+    setCountEl(btn, getLikeCount(gameId));
     toast(willLike ? "Liked!" : "Like removed");
     if (isProductionMock()) {
       ensureCacheShape();
@@ -967,10 +964,6 @@
   }
 
   async function handleCommentPost(item, gameId, text) {
-    if (isProductionMock()) {
-      toast("Demo mode — mock comments are read-only.");
-      return;
-    }
     if (!isAuthed()) return lockedToast();
     const trimmed = text.trim();
     if (!trimmed) return;

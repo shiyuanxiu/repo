@@ -209,33 +209,6 @@
       display: block;
     }
 
-    /* Restart button */
-    #restartBtn {
-      position: fixed;
-      bottom: clamp(15px, 3vw, 25px);
-      right: clamp(15px, 3vw, 25px);
-      background: linear-gradient(135deg, #ff4444 0%, #ff1744 100%);
-      color: white;
-      border: none;
-      padding: clamp(10px, 2vw, 12px) clamp(16px, 3vw, 20px);
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 99;
-      font-size: clamp(12px, 3vw, 14px);
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(255,68,68,0.3);
-    }
-
-    #restartBtn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255,68,68,0.5);
-    }
-
-    #restartBtn:active {
-      transform: translateY(0);
-    }
-
     .miniverse-hero {
       display: grid;
       gap: 8px;
@@ -299,11 +272,6 @@
         max-width: 95vw;
         padding: 20px;
       }
-
-      #restartBtn {
-        font-size: 12px;
-        padding: 10px 16px;
-      }
     }
   </style>
 </head>
@@ -326,11 +294,6 @@
     <br>
     <button onclick="closeGuide()">Got it, let's play!</button>
   </div>
-
-  <!-- Restart button (fixed position) -->
-  <button id="restartBtn" onclick="window.location.reload()" title="Refresh page" aria-label="Restart">
-    ↻ Restart
-  </button>
 
   <!-- Guide helper scripts -->
   <script>
@@ -1973,7 +1936,7 @@
   <script src="assets/learn-chunk.js"></script>
   <script src="app.js?v=starfall-night-3"></script>
   <script src="assets/comment-service.js?v=1"></script>
-  <script src="assets/social-feed.js?v=20"></script>
+  <script src="assets/social-feed.js?v=21"></script>
 
   <div class="onboard-overlay hidden" id="onboardOverlay" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
     <div class="onboard-card">

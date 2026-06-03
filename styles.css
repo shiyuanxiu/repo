@@ -3046,7 +3046,6 @@ body.game-fullscreen:has(> .game-card.fullscreen) .app {
   pointer-events: none;
 }
 
-body.game-fullscreen:has(> .game-card.fullscreen) #restartBtn,
 body.game-fullscreen:has(> .game-card.fullscreen) #guideModal,
 body.game-fullscreen:has(> .game-card.fullscreen) #guideBackdrop,
 body.game-fullscreen:has(> .game-card.fullscreen) #appLoader,
