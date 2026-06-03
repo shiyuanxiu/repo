@@ -8794,18 +8794,70 @@ function mergeAdj(a, b) {
   return dr <= 1 && dc <= 1 && dr + dc > 0;
 }
 
-function mergeCanPlay() {
+function mergeHasLinkableMove() {
   for (let r = 0; r < MERGE_N; r++) {
     for (let c = 0; c < MERGE_N; c++) {
       const v = mergeBoard[r][c];
-      if (!v) return true;
+      if (!v) continue;
       for (const [dr, dc] of [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
-        const nr = r + dr, nc = c + dc;
+        const nr = r + dr;
+        const nc = c + dc;
         if (nr >= 0 && nr < MERGE_N && nc >= 0 && nc < MERGE_N && mergeBoard[nr][nc] === v) return true;
       }
     }
   }
   return false;
+}
+
+function mergeHasEmpty() {
+  for (let r = 0; r < MERGE_N; r++) {
+    for (let c = 0; c < MERGE_N; c++) {
+      if (!mergeBoard[r][c]) return true;
+    }
+  }
+  return false;
+}
+
+function mergeCanPlay() {
+  return mergeHasLinkableMove() || mergeHasEmpty();
+}
+
+function mergeEnsurePlayable() {
+  if (mergeHasLinkableMove()) return;
+  const filled = [];
+  for (let r = 0; r < MERGE_N; r++) {
+    for (let c = 0; c < MERGE_N; c++) {
+      if (mergeBoard[r][c]) filled.push({ r, c, v: mergeBoard[r][c] });
+    }
+  }
+  for (let attempt = 0; attempt < 48; attempt++) {
+    if (!filled.length) break;
+    const src = filled[Math.floor(Math.random() * filled.length)];
+    const slots = mergeNeighborsOf(src.r, src.c).filter(({ r, c }) => !mergeBoard[r][c]);
+    if (!slots.length) continue;
+    const slot = slots[Math.floor(Math.random() * slots.length)];
+    mergeBoard[slot.r][slot.c] = src.v;
+    if (mergeHasLinkableMove()) {
+      mergeSpawnPop = { r: slot.r, c: slot.c, t: 0 };
+      mergePlayFx("spawn");
+      return;
+    }
+    mergeBoard[slot.r][slot.c] = 0;
+  }
+  for (let attempt = 0; attempt < 48; attempt++) {
+    const a = { r: Math.floor(Math.random() * MERGE_N), c: Math.floor(Math.random() * MERGE_N) };
+    if (mergeBoard[a.r][a.c]) continue;
+    const slots = mergeNeighborsOf(a.r, a.c).filter(({ r, c }) => !mergeBoard[r][c]);
+    if (!slots.length) continue;
+    const b = slots[Math.floor(Math.random() * slots.length)];
+    const val = Math.random() < 0.85 ? 2 : 4;
+    mergeBoard[a.r][a.c] = val;
+    mergeBoard[b.r][b.c] = val;
+    mergeSpawnPop = { r: b.r, c: b.c, t: 0 };
+    mergePlayFx("spawn");
+    return;
+  }
+  mergeSpawnOne();
 }
 
 function mergeSpawnOne() {
@@ -8926,12 +8978,15 @@ function mergeDoMerge(chain) {
   }
   mergePlayFx("merge", merged);
   mergeSpawnOne();
+  mergeEnsurePlayable();
   mergeUpdateHud();
-  if (!mergeCanPlay()) {
+  if (!mergeHasLinkableMove() && !mergeHasEmpty()) {
     mergeOver = true;
     mergeActive = false;
     mergePlayFx("over");
-    if (mergeHintEl) mergeHintEl.textContent = `No moves · Score ${mergeScore} · Tap board to restart`;
+    if (mergeHintEl) mergeHintEl.textContent = `No moves · Score ${mergeScore} · Tap ↺ Restart`;
+  } else if (!mergeHasLinkableMove() && mergeHintEl) {
+    mergeHintEl.textContent = "Shuffling a link… drag matching neighbors";
   }
 }
 
@@ -9029,7 +9084,7 @@ function mergeDrawBoard(c, w, h, opts = {}) {
     c.fillText("Out of moves", w / 2, h / 2 - 16);
     c.fillStyle = "#e9d5ff";
     c.font = "600 14px system-ui,sans-serif";
-    c.fillText(`Score ${sc} · tap to run it back`, w / 2, h / 2 + 12);
+    c.fillText(`Score ${sc} · Tap ↺ Restart`, w / 2, h / 2 + 12);
   }
 }
 
@@ -9252,7 +9307,7 @@ function initNumberMerge() {
 
   const onDown = (e) => {
     e.stopPropagation();
-    if (mergeOver) { startMerge(); return; }
+    if (mergeOver) return;
     if (!mergeActive) return;
     e.preventDefault();
     mergeSetFeedLock(true);

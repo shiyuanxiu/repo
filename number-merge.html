@@ -127,7 +127,7 @@ footer{display:flex;gap:10px;width:100%;max-width:390px}
 (() => {
 "use strict";
 
-const N = 5, PAD = 10, GAP = 8, HIT = 6;
+const N = 5, PAD = 10, GAP = 8, HIT = 14;
 const BEST_KEY = "number-merge-2248-best", MUTE_KEY = "number-merge-2248-mute";
 const CV = document.getElementById("cv"), ctx = CV.getContext("2d"), W = CV.width;
 const CELL = (W - PAD * 2 - GAP * (N - 1)) / N;
@@ -186,11 +186,15 @@ function cellRect(r, c) {
   return { x, y, w: CELL, h: CELL, cx: x + CELL / 2, cy: y + CELL / 2 };
 }
 
-function ptFromEvent(e, canvas) {
+function ptFromClient(clientX, clientY, canvas) {
   const rect = canvas.getBoundingClientRect();
   const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
-  const t = e.changedTouches?.[0] ?? e.touches?.[0] ?? e;
-  return { x: (t.clientX - rect.left) * sx, y: (t.clientY - rect.top) * sy };
+  return { x: (clientX - rect.left) * sx, y: (clientY - rect.top) * sy };
+}
+
+function ptFromEvent(e, canvas) {
+  const t = e.touches?.[0] ?? e;
+  return ptFromClient(t.clientX, t.clientY, canvas);
 }
 
 function cellAt(x, y) {
@@ -199,6 +203,34 @@ function cellAt(x, y) {
     if (x >= cx - HIT && x <= cx + CELL + HIT && y >= cy - HIT && y <= cy + CELL + HIT) return { r, c };
   }
   return null;
+}
+
+function neighborsOf(r, c) {
+  const out = [];
+  for (const [dr, dc] of [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+    const nr = r + dr, nc = c + dc;
+    if (nr >= 0 && nr < N && nc >= 0 && nc < N) out.push({ r: nr, c: nc });
+  }
+  return out;
+}
+
+function cellAtDrag(x, y) {
+  const hit = cellAt(x, y);
+  if (hit) return hit;
+  if (!path.length) return null;
+  const last = path[path.length - 1];
+  const base = board[path[0].r][path[0].c];
+  let best = null, bestDist = Infinity;
+  const reach = CELL + GAP + HIT * 2;
+  for (const nb of neighborsOf(last.r, last.c)) {
+    const v = board[nb.r][nb.c];
+    if (!v || v !== base) continue;
+    if (path.some((p) => p.r === nb.r && p.c === nb.c)) continue;
+    const { cx, cy } = cellRect(nb.r, nb.c);
+    const d = Math.hypot(x - cx, y - cy);
+    if (d < bestDist && d <= reach) { bestDist = d; best = nb; }
+  }
+  return best;
 }
 
 function adj(a, b) {
@@ -219,16 +251,83 @@ function spawnRandomTile() {
   return true;
 }
 
-function canPlay() {
+function hasLinkableMove() {
   for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
     const v = board[r][c];
-    if (v === 0) return true;
-    for (const [dr, dc] of [[0,1],[1,0],[0,-1],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]) {
-      const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < N && nc >= 0 && nc < N && board[nr][nc] === v) return true;
+    if (!v) continue;
+    for (const nb of neighborsOf(r, c)) {
+      if (board[nb.r][nb.c] === v) return true;
     }
   }
   return false;
+}
+
+function hasEmpty() {
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    if (!board[r][c]) return true;
+  }
+  return false;
+}
+
+function ensurePlayable() {
+  if (hasLinkableMove()) return;
+  const filled = [];
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    if (board[r][c]) filled.push({ r, c, v: board[r][c] });
+  }
+  for (let attempt = 0; attempt < 48; attempt++) {
+    if (!filled.length) break;
+    const src = filled[Math.floor(Math.random() * filled.length)];
+    const slots = neighborsOf(src.r, src.c).filter(({ r, c }) => !board[r][c]);
+    if (!slots.length) continue;
+    const slot = slots[Math.floor(Math.random() * slots.length)];
+    board[slot.r][slot.c] = src.v;
+    if (hasLinkableMove()) {
+      spawnPop = { r: slot.r, c: slot.c, t: 0 };
+      sfx("spawn");
+      return;
+    }
+    board[slot.r][slot.c] = 0;
+  }
+  for (let attempt = 0; attempt < 48; attempt++) {
+    const a = { r: Math.floor(Math.random() * N), c: Math.floor(Math.random() * N) };
+    if (board[a.r][a.c]) continue;
+    const slots = neighborsOf(a.r, a.c).filter(({ r, c }) => !board[r][c]);
+    if (!slots.length) continue;
+    const b = slots[Math.floor(Math.random() * slots.length)];
+    const val = Math.random() < 0.85 ? 2 : 4;
+    board[a.r][a.c] = val;
+    board[b.r][b.c] = val;
+    spawnPop = { r: b.r, c: b.c, t: 0 };
+    sfx("spawn");
+    return;
+  }
+  spawnRandomTile();
+}
+
+function spawnInitialBoard() {
+  board = emptyBoard();
+  for (let attempt = 0; attempt < 96; attempt++) {
+    board = emptyBoard();
+    const a = { r: Math.floor(Math.random() * N), c: Math.floor(Math.random() * N) };
+    const nbs = neighborsOf(a.r, a.c);
+    if (!nbs.length) continue;
+    const b = nbs[Math.floor(Math.random() * nbs.length)];
+    const val = Math.random() < 0.85 ? 2 : 4;
+    board[a.r][a.c] = val;
+    board[b.r][b.c] = val;
+    spawnPop = { r: b.r, c: b.c, t: 0 };
+    if (Math.random() < 0.35) spawnRandomTile();
+    if (hasLinkableMove()) return;
+  }
+  board = emptyBoard();
+  board[2][2] = 2;
+  board[2][3] = 2;
+  spawnPop = { r: 2, c: 3, t: 0 };
+}
+
+function canPlay() {
+  return hasLinkableMove() || hasEmpty();
 }
 
 function sfx(kind, merged) {
@@ -290,7 +389,14 @@ function applyMerge(chain) {
   }
   sfx("merge", merged);
   spawnRandomTile();
-  if (!canPlay()) { over = true; sfx("over"); }
+  ensurePlayable();
+  if (!hasLinkableMove() && !hasEmpty()) {
+    over = true;
+    sfx("over");
+    $("hint").textContent = `No moves · Score ${score} · Tap ↺ Restart`;
+  } else if (!hasLinkableMove()) {
+    $("hint").textContent = "Shuffling a link… drag matching neighbors";
+  }
 }
 
 function rr(c, x, y, w, h, rad) {
@@ -371,7 +477,7 @@ function drawBoard(c, w, h, opts = {}) {
     c.fillStyle = "#fde68a"; c.font = "800 20px system-ui,sans-serif"; c.textAlign = "center";
     c.fillText("Out of moves", w / 2, h / 2 - 16);
     c.fillStyle = "#e9d5ff"; c.font = "600 14px system-ui,sans-serif";
-    c.fillText(`Score ${sc} · tap to run it back`, w / 2, h / 2 + 12);
+    c.fillText(`Score ${sc} · Tap ↺ Restart`, w / 2, h / 2 + 12);
   }
 }
 
@@ -428,7 +534,7 @@ function resetGame() {
   path = []; pops = []; sparks = []; spawnPop = null;
   dragging = false; pointerId = null; lastLinkLen = 0;
   $("scoreEl").textContent = "0";
-  spawnRandomTile(); spawnRandomTile();
+  spawnInitialBoard();
   $("hint").textContent = "Drag to link same numbers · release to merge ×2";
 }
 
@@ -441,22 +547,26 @@ function startGame() {
   if (!loopId) loopId = requestAnimationFrame(loop);
 }
 
-function onDown(e) {
-  if (over) { resetGame(); return; }
-  e.preventDefault();
-  pointerId = e.pointerId ?? 0;
-  dragging = true; path = []; lastLinkLen = 0;
-  try { CV.setPointerCapture(e.pointerId); } catch (_) {}
-  const p = ptFromEvent(e, CV);
-  const cell = cellAt(p.x, p.y);
-  if (cell && board[cell.r][cell.c]) path = [cell];
+const peOpts = { passive: false };
+let docBound = false;
+
+function unbindDocDrag() {
+  if (!docBound) return;
+  docBound = false;
+  document.removeEventListener("pointermove", onMove, peOpts);
+  document.removeEventListener("pointerup", onUp, peOpts);
+  document.removeEventListener("pointercancel", onUp, peOpts);
 }
 
-function onMove(e) {
-  if (!dragging || (e.pointerId != null && e.pointerId !== pointerId)) return;
-  e.preventDefault();
-  const p = ptFromEvent(e, CV);
-  const cell = cellAt(p.x, p.y);
+function bindDocDrag() {
+  if (docBound) return;
+  docBound = true;
+  document.addEventListener("pointermove", onMove, peOpts);
+  document.addEventListener("pointerup", onUp, peOpts);
+  document.addEventListener("pointercancel", onUp, peOpts);
+}
+
+function tryExtendPath(cell) {
   if (!cell || !path.length) return;
   const last = path[path.length - 1];
   if (cell.r === last.r && cell.c === last.c) return;
@@ -468,19 +578,51 @@ function onMove(e) {
   if (path.length > lastLinkLen) { sfx("link"); lastLinkLen = path.length; }
 }
 
-function onUp(e) {
-  if (!dragging || (e.pointerId != null && pointerId != null && e.pointerId !== pointerId)) return;
+function finishDrag() {
+  if (!dragging) return;
   dragging = false;
-  try { if (CV.hasPointerCapture(e.pointerId)) CV.releasePointerCapture(e.pointerId); } catch (_) {}
+  unbindDocDrag();
   pointerId = null;
-  const chain = path.slice(); path = [];
+  const chain = path.slice();
+  path = [];
   if (chain.length >= 2) applyMerge(chain);
+  else if (chain.length === 1) {
+    $("hint").textContent = "Link adjacent same numbers — drag through each tile";
+  }
 }
 
-CV.addEventListener("pointerdown", onDown);
-CV.addEventListener("pointermove", onMove);
-CV.addEventListener("pointerup", onUp);
-CV.addEventListener("pointercancel", onUp);
+function onDown(e) {
+  if (over) return;
+  e.preventDefault();
+  e.stopPropagation();
+  pointerId = e.pointerId ?? 0;
+  dragging = true; path = []; lastLinkLen = 0;
+  bindDocDrag();
+  try { CV.setPointerCapture(e.pointerId); } catch (_) {}
+  const p = ptFromEvent(e, CV);
+  const cell = cellAt(p.x, p.y);
+  if (cell && board[cell.r][cell.c]) path = [cell];
+}
+
+function onMove(e) {
+  if (!dragging || (e.pointerId != null && pointerId != null && e.pointerId !== pointerId)) return;
+  e.preventDefault();
+  const p = ptFromEvent(e, CV);
+  tryExtendPath(cellAtDrag(p.x, p.y));
+}
+
+function onUp(e) {
+  if (!dragging || (e.pointerId != null && pointerId != null && e.pointerId !== pointerId)) return;
+  e.preventDefault();
+  try { if (CV.hasPointerCapture(e.pointerId)) CV.releasePointerCapture(e.pointerId); } catch (_) {}
+  finishDrag();
+}
+
+CV.addEventListener("pointerdown", onDown, peOpts);
+CV.addEventListener("pointermove", onMove, peOpts);
+CV.addEventListener("pointerup", onUp, peOpts);
+CV.addEventListener("pointercancel", onUp, peOpts);
+CV.addEventListener("lostpointercapture", () => { if (dragging) finishDrag(); });
 CV.addEventListener("contextmenu", (e) => e.preventDefault());
 
 $("playBtn").addEventListener("click", startGame);
