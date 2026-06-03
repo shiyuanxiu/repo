@@ -552,6 +552,15 @@ body::before {
   text-decoration: underline;
 }
 
+/* Buy Me a Coffee floating widget — keep above feed UI on mobile */
+#bmc-wbtn {
+  z-index: 10000 !important;
+}
+
+.feed-support-chip {
+  display: none;
+}
+
 .site-footer-games {
   margin-top: 0.5rem;
   font-size: 0.75rem;
@@ -6495,6 +6504,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
 .merge-scene.merge-play {
   position: relative;
+  touch-action: none;
 }
 
 .beat-card {
@@ -6781,6 +6791,11 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 }
 
 .feed.snake-interacting {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.feed.merge-interacting {
   overflow: hidden !important;
   touch-action: none;
 }
@@ -9492,6 +9507,29 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
     display: none;
   }
 
+  .feed-support-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    bottom: calc(var(--feed-social-bar-h, 52px) + 10px + env(safe-area-inset-bottom, 0px));
+    z-index: 9998;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(189, 95, 255, 0.95);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  #bmc-wbtn {
+    margin-bottom: calc(var(--feed-social-bar-h, 52px) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
   .feed-intro .brand-note {
     display: none;
   }
@@ -9964,6 +10002,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
 .nav-saved,
 .nav-guides,
+.nav-support,
 .navbar-help-btn {
   display: flex;
   align-items: center;
@@ -9980,6 +10019,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
 .nav-saved:hover,
 .nav-guides:hover,
+.nav-support:hover,
 .navbar-help-btn:hover {
   background: #ece7ff;
 }

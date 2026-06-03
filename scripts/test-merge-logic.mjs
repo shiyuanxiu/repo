@@ -208,4 +208,21 @@ test("demo cover path stops at first number mismatch", () => {
   assert(chain.length === 1, "cover path stops at first mismatch (2 then 4)");
 });
 
+test("initial board always has a mergeable pair", () => {
+  for (let i = 0; i < 40; i++) {
+    const board = emptyBoard();
+    const a = { r: Math.floor(Math.random() * N), c: Math.floor(Math.random() * N) };
+    const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+    const neighbors = dirs
+      .map(([dr, dc]) => ({ r: a.r + dr, c: a.c + dc }))
+      .filter(({ r, c }) => r >= 0 && r < N && c >= 0 && c < N);
+    if (!neighbors.length) continue;
+    const b = neighbors[Math.floor(Math.random() * neighbors.length)];
+    board[a.r][a.c] = 2;
+    board[b.r][b.c] = 2;
+    assert(canPlay(board), "adjacent pair is playable");
+    break;
+  }
+});
+
 console.log(`\n${passed} tests passed`);

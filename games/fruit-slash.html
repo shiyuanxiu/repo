@@ -456,7 +456,7 @@
 
     /* ── Audio ── */
     const Audio = (function () {
-      let ctxA, master, bgmG, sfxG, muted = false, bgmT = null, step = 0;
+      let ctxA, master, bgmG, sfxG, muted = true, bgmT = null, step = 0;
       const scale = [261.63, 293.66, 329.63, 392, 440, 523.25];
       const mel = [0, 2, 4, 3, 4, 2, 0, 1, 2, 4, 3, 2];
 
@@ -1205,6 +1205,8 @@
     document.getElementById("shareBtn").addEventListener("click", shareScore);
     document.getElementById("goShareBtn").addEventListener("click", shareScore);
     document.getElementById("muteBtn").addEventListener("click", () => Audio.toggle());
+    Audio.setMuted(true);
+    document.getElementById("muteBtn").textContent = "🔇";
     document.getElementById("histBtn").addEventListener("click", openHist);
     document.getElementById("histEndBtn").addEventListener("click", openHist);
     document.getElementById("goHistBtn").addEventListener("click", openHist);

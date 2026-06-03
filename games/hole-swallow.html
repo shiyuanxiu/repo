@@ -1519,7 +1519,7 @@
       let master = null;
       let bgmGain = null;
       let sfxGain = null;
-      let muted = false;
+      let muted = true;
       let bgmTimer = null;
       let bgmStep = 0;
       let bgmLevel = 1;
@@ -1530,7 +1530,7 @@
         if (ctxA) return ctxA;
         ctxA = new (window.AudioContext || window.webkitAudioContext)();
         master = ctxA.createGain();
-        master.gain.value = 1;
+        master.gain.value = muted ? 0 : 1;
         master.connect(ctxA.destination);
         bgmGain = ctxA.createGain();
         bgmGain.gain.value = 0.2;
@@ -1740,6 +1740,8 @@
         },
       };
     })();
+
+    Audio.setMuted(true);
 
     function loop(ts) {
       const dt = lastTs ? Math.min(48, ts - lastTs) : 16;

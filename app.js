@@ -56,7 +56,7 @@ let lastEarthTaskIndex = -1;
 let currentEarthQuest = null;
 let lastCompletedEarthTask = "";
 
-const soundState = { fortune: true, earth: true, chick: true, block: true, shop: true, leap: true, run: true, face: true, box: true, sente: true, pet: true, spot: true, mj: true, star: true, stack: true, match: true, merge: true, beat: true, hole: true, slash: true };
+const soundState = { fortune: false, earth: false, chick: false, block: false, shop: false, leap: false, run: false, face: false, box: false, sente: false, pet: false, spot: false, mj: false, star: false, stack: false, match: false, merge: false, beat: false, hole: false, slash: false };
 
 /* ===== DOM ===== */
 const drawScene = document.getElementById("drawScene");
@@ -8581,7 +8581,7 @@ function initMemoryMatch() {
 const MERGE_N = 5;
 const MERGE_PAD = 10;
 const MERGE_GAP = 8;
-const MERGE_HIT = 6;
+const MERGE_HIT = 14;
 const MERGE_BEST_KEY = "number-merge-2248-best";
 const MERGE_PALETTE = {
   2: { bg: "#ddd6fe", fg: "#5b21b6", glow: "#a78bfa" },
@@ -8761,6 +8761,38 @@ function mergeSpawnOne() {
   mergeSpawnPop = { r: slot.r, c: slot.c, t: 0 };
   mergePlayFx("spawn");
   return true;
+}
+
+function mergeNeighborsOf(r, c) {
+  const out = [];
+  for (const [dr, dc] of [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+    const nr = r + dr;
+    const nc = c + dc;
+    if (nr >= 0 && nr < MERGE_N && nc >= 0 && nc < MERGE_N) out.push({ r: nr, c: nc });
+  }
+  return out;
+}
+
+/** Always start with at least one mergeable adjacent pair. */
+function mergeSpawnInitialBoard() {
+  mergeBoard = mergeEmptyBoard();
+  for (let attempt = 0; attempt < 96; attempt++) {
+    mergeBoard = mergeEmptyBoard();
+    const a = { r: Math.floor(Math.random() * MERGE_N), c: Math.floor(Math.random() * MERGE_N) };
+    const neighbors = mergeNeighborsOf(a.r, a.c);
+    if (!neighbors.length) continue;
+    const b = neighbors[Math.floor(Math.random() * neighbors.length)];
+    const val = Math.random() < 0.85 ? 2 : 4;
+    mergeBoard[a.r][a.c] = val;
+    mergeBoard[b.r][b.c] = val;
+    mergeSpawnPop = { r: b.r, c: b.c, t: 0 };
+    if (Math.random() < 0.35) mergeSpawnOne();
+    if (mergeCanPlay()) return;
+  }
+  mergeBoard = mergeEmptyBoard();
+  mergeBoard[2][2] = 2;
+  mergeBoard[2][3] = 2;
+  mergeSpawnPop = { r: 2, c: 3, t: 0 };
 }
 
 function mergeRoundRectOn(c, x, y, w, h, rad) {
@@ -9039,7 +9071,6 @@ function startMergeLoop() {
 }
 
 function startMerge() {
-  mergeBoard = mergeEmptyBoard();
   mergeScore = 0;
   mergeOver = false;
   mergeActive = true;
@@ -9051,12 +9082,17 @@ function startMerge() {
   mergeLastLinkLen = 0;
   mergeBeatShown = false;
   mergeCell = (mergeCanvas.width - MERGE_PAD * 2 - MERGE_GAP * (MERGE_N - 1)) / MERGE_N;
-  mergeSpawnOne();
-  mergeSpawnOne();
+  mergeSpawnInitialBoard();
   mergeUpdateHud();
   if (mergeHintEl) mergeHintEl.textContent = "Drag to link same numbers · merge ×2";
   mergeDraw();
   startMergeLoop();
+}
+
+const mergeFeed = document.getElementById("feed");
+
+function mergeSetFeedLock(on) {
+  mergeFeed?.classList.toggle("merge-interacting", on);
 }
 
 function initNumberMerge() {
@@ -9104,8 +9140,9 @@ function initNumberMerge() {
     if (mergeOver) { startMerge(); return; }
     if (!mergeActive) return;
     e.preventDefault();
-    mergePointerId = e.pointerId ?? 0;
+    mergePointerId = e.pointerId;
     mergeDragging = true;
+    mergeSetFeedLock(true);
     mergePath = [];
     mergeLastLinkLen = 0;
     try { mergeCanvas.setPointerCapture(e.pointerId); } catch (_) { /* noop */ }
@@ -9134,6 +9171,7 @@ function initNumberMerge() {
   const onUp = (e) => {
     if (!mergeDragging || (e.pointerId != null && mergePointerId != null && e.pointerId !== mergePointerId)) return;
     mergeDragging = false;
+    mergeSetFeedLock(false);
     try {
       if (mergeCanvas.hasPointerCapture(e.pointerId)) mergeCanvas.releasePointerCapture(e.pointerId);
     } catch (_) { /* noop */ }
@@ -9141,12 +9179,21 @@ function initNumberMerge() {
     const chain = mergePath.slice();
     mergePath = [];
     if (chain.length >= 2) mergeDoMerge(chain);
+    else if (chain.length === 1 && mergeHintEl) {
+      mergeHintEl.textContent = "Link adjacent same numbers — drag through each tile";
+    }
   };
 
   mergeCanvas.addEventListener("pointerdown", onDown);
   mergeCanvas.addEventListener("pointermove", onMove);
   mergeCanvas.addEventListener("pointerup", onUp);
   mergeCanvas.addEventListener("pointercancel", onUp);
+  mergeCanvas.addEventListener("lostpointercapture", () => {
+    mergeDragging = false;
+    mergePointerId = null;
+    mergeSetFeedLock(false);
+    mergePath = [];
+  });
   mergeCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
 }
 
@@ -10321,7 +10368,7 @@ function snakeSetFeedLock(on) {
 function loadIframeGame(game) {
   const map = {
     slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=iframe-scroll-fix" },
-    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=iframe-scroll-fix" },
+    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=hole-audio-fix" },
   };
   const cfg = map[game];
   if (!cfg) return false;
@@ -10520,6 +10567,19 @@ function initSnakeGame() {
 }
 
 /* ===== 通用交互 ===== */
+function syncSoundToggleUI() {
+  document.querySelectorAll(".sound-toggle").forEach((btn) => {
+    const game = btn.dataset.game;
+    if (!game || !(game in soundState)) return;
+    const on = !!soundState[game];
+    btn.querySelector(".icon-on")?.classList.toggle("hidden", !on);
+    btn.querySelector(".icon-off")?.classList.toggle("hidden", on);
+    btn.classList.toggle("muted", !on);
+  });
+  syncHoleFeedSound();
+  syncSlashFeedSound();
+}
+
 document.querySelectorAll(".sound-toggle").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -10547,6 +10607,7 @@ document.querySelectorAll(".sound-toggle").forEach((btn) => {
     }
   });
 });
+syncSoundToggleUI();
 
 document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
   btn.addEventListener("click", (e) => {
