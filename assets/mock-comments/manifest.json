@@ -164,8 +164,8 @@
     },
     "merge": {
       "file": "merge.json",
-      "name": "2248 Chain",
-      "gistKey": "2248Chain",
+      "name": "2048",
+      "gistKey": "#2048",
       "feed": "games",
       "commentCount": 4,
       "totalLike": 27

@@ -330,26 +330,32 @@ body::before {
 }
 
 .feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen),
-.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) {
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen),
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) {
   pointer-events: none;
 }
 
 .feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
 .feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
 .feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
 .feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
 .feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .card-controls,
-.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .card-controls {
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .card-controls,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .card-controls {
   pointer-events: auto;
 }
 
 .feed-item:has(> .game-card.hole-card:not(.iframe-active):not(.fullscreen)),
-.feed-item:has(> .game-card.slash-card:not(.iframe-active):not(.fullscreen)) {
+.feed-item:has(> .game-card.slash-card:not(.iframe-active):not(.fullscreen)),
+.feed-item:has(> .game-card.pacman-card:not(.iframe-active):not(.fullscreen)) {
   scroll-snap-stop: normal;
 }
 
 .feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .hole-frame,
-.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .slash-frame {
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .slash-frame,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .pacman-frame {
   pointer-events: none;
   touch-action: pan-y;
 }
@@ -437,6 +443,71 @@ body::before {
   height: calc(100dvh - 48px);
   min-height: 0;
   border-radius: 0;
+}
+
+.feed-item:has(> .game-card.pacman-card) {
+  background: linear-gradient(180deg, #0a0a12 0%, #12121f 42%, #1a1a2e 100%);
+}
+
+.feed-item:has(> .game-card.pacman-card) > .game-card.pacman-card {
+  background: transparent;
+  box-shadow: none;
+  min-height: 0 !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.feed-item:has(> .game-card.pacman-card) > .feed-meta {
+  border-top: none;
+  background: transparent;
+  padding: 14px 18px;
+  color: #e2e8f0;
+}
+
+.feed-item:has(> .game-card.pacman-card) .feed-title { color: #f8fafc; }
+.feed-item:has(> .game-card.pacman-card) .feed-desc { color: #94a3b8; }
+
+.pacman-card .pacman-frame {
+  display: block;
+  flex: 1 1 0;
+  width: 100%;
+  height: 100%;
+  min-height: min(52vh, 420px);
+  border: none;
+  border-radius: 16px;
+  background: #000;
+  touch-action: none;
+}
+
+.game-card.pacman-card.fullscreen .pacman-frame {
+  height: calc(100dvh - 48px);
+  min-height: 0;
+  border-radius: 0;
+}
+
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) {
+  pointer-events: none;
+}
+
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .card-controls {
+  pointer-events: auto;
+}
+
+.feed-item:has(> .game-card.pacman-card:not(.iframe-active):not(.fullscreen)) {
+  scroll-snap-stop: normal;
+}
+
+.feed-item > .game-card.pacman-card:not(.iframe-active):not(.fullscreen) .pacman-frame {
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+.game-card.pacman-card.iframe-active .iframe-feed-shield,
+.game-card.pacman-card.fullscreen .iframe-feed-shield {
+  display: none;
 }
 
 .feed-item:has(> .game-card.jump-card) {
@@ -9577,6 +9648,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card.chick-card,
 .feed-item > .game-card.hole-card,
 .feed-item > .game-card.slash-card,
+.feed-item > .game-card.pacman-card,
 .feed-item > .game-card.jump-card {
   min-height: 0 !important;
 }
@@ -9899,6 +9971,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
   .feed-item > .game-card.hole-card > .hole-frame,
   .feed-item > .game-card.slash-card > .slash-frame,
+  .feed-item > .game-card.pacman-card > .pacman-frame,
   .feed-item > .game-card.jump-card > .jump-frame {
     flex: 1 1 0;
     min-height: min(52vh, 52dvh, 460px) !important;
@@ -9909,6 +9982,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
   .feed-item > .game-card.hole-card,
   .feed-item > .game-card.slash-card,
+  .feed-item > .game-card.pacman-card,
   .feed-item > .game-card.jump-card {
     min-height: 0 !important;
   }

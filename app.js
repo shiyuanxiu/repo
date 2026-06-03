@@ -56,7 +56,7 @@ let lastEarthTaskIndex = -1;
 let currentEarthQuest = null;
 let lastCompletedEarthTask = "";
 
-const soundState = { fortune: false, earth: false, chick: false, block: false, shop: false, leap: false, run: false, face: false, box: false, sente: false, pet: false, spot: false, mj: false, star: false, stack: false, match: false, merge: false, beat: false, hole: false, slash: false };
+const soundState = { fortune: false, earth: false, chick: false, block: false, shop: false, leap: false, run: false, face: false, box: false, sente: false, pet: false, spot: false, mj: false, star: false, stack: false, match: false, merge: false, beat: false, hole: false, slash: false, pacman: false };
 
 /* ===== DOM ===== */
 const drawScene = document.getElementById("drawScene");
@@ -3138,7 +3138,7 @@ const GAME_CATEGORIES = {
   fortune: "chill", earth: "chill", block: "puzzle", leap: "arcade",
   face: "social", box: "social", pet: "chill", spot: "chill",
   mj: "puzzle", star: "arcade", stack: "puzzle", match: "puzzle",
-  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade",
+  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade", pacman: "arcade",
 };
 
 const TODAY_PICKS = [
@@ -3179,7 +3179,7 @@ const GAME_LABELS = {
   run: "Neon Rush", face: "Runway Glow-Up", box: "Mystery Flavor Box",
   sente: "Born To vs Forced To", pet: "Office Pets", spot: "Rainbow Salt Lake",
   mj: "Brain Sketch", star: "Starfall", stack: "Piggy Catch", match: "Memory Match",
-  merge: "2048", beat: "Mochi Snake", hole: "Sushi Black Hole", slash: "Fruit Slash",
+  merge: "2048", beat: "Mochi Snake", hole: "Sushi Black Hole", slash: "Fruit Slash", pacman: "Pac-Man Classic",
 };
 
 let feedSearchQuery = "";
@@ -9787,6 +9787,7 @@ function loadIframeGame(game) {
   const map = {
     slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=ios-audio-unlock" },
     hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=ios-audio-unlock" },
+    pacman: { id: "pacmanFrame", src: "games/pacman.html?embed=1&v=pacman-v6" },
   };
   const cfg = map[game];
   if (!cfg) return false;
@@ -9844,15 +9845,32 @@ function initHoleFeed() {
   loadIframeGame("hole");
 }
 
+function syncPacmanFeedSound() {
+  const frame = document.getElementById("pacmanFrame");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.pacman);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "pacman-sound", enabled: soundState.pacman }, "*");
+}
+
+function initPacmanFeed() {
+  loadIframeGame("pacman");
+}
+
 function ensureVisibleIframeGames() {
   document.querySelectorAll(".feed-item[data-feed='games']:not(.hidden)").forEach((item) => {
     const game = item.dataset.game;
-    if (game === "hole" || game === "slash") loadIframeGame(game);
+    if (game === "hole" || game === "slash" || game === "pacman") loadIframeGame(game);
   });
 }
 
 function initIframeFeedRetry() {
-  const iframeGames = ["hole", "slash"];
+  const iframeGames = ["hole", "slash", "pacman"];
   const feed = document.getElementById("feed");
   if (!feed) return;
 
@@ -9902,7 +9920,7 @@ function initIframeFeedRetry() {
     if (!document.hidden) retryVisible();
   });
 
-  ["holeCard", "slashCard"].forEach((id) => {
+  ["holeCard", "slashCard", "pacmanCard"].forEach((id) => {
     const card = document.getElementById(id);
     if (!card) return;
     const game = id.replace(/Card$/, "").toLowerCase();
@@ -9911,12 +9929,32 @@ function initIframeFeedRetry() {
       loadIframeGame(game);
       card.classList.add("iframe-active");
       unlockIframeGameAudio(game);
+      document.getElementById(`${game}Frame`)?.focus();
     });
   });
+
+  document.addEventListener("keydown", (e) => {
+    const card = document.getElementById("pacmanCard");
+    if (!card?.classList.contains("iframe-active")) return;
+    const dirMap = { ArrowLeft: 2, ArrowRight: 0, ArrowUp: 3, ArrowDown: 1 };
+    if (dirMap[e.key] === undefined) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const frame = document.getElementById("pacmanFrame");
+    const win = frame?.contentWindow;
+    if (!win) return;
+    try {
+      if (typeof win.__pacmanSetDir === "function") win.__pacmanSetDir(dirMap[e.key]);
+      else win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
+    } catch (_) {
+      win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
+    }
+    frame?.focus();
+  }, true);
 }
 
 function deactivateIframeCards() {
-  document.querySelectorAll(".hole-card.iframe-active, .slash-card.iframe-active").forEach((card) => {
+  document.querySelectorAll(".hole-card.iframe-active, .slash-card.iframe-active, .pacman-card.iframe-active").forEach((card) => {
     card.classList.remove("iframe-active");
   });
 }
@@ -10052,6 +10090,8 @@ document.querySelectorAll(".sound-toggle").forEach((btn) => {
       syncHoleFeedSound();
     } else if (game === "slash") {
       syncSlashFeedSound();
+    } else if (game === "pacman") {
+      syncPacmanFeedSound();
     }
   });
 });
@@ -10177,10 +10217,11 @@ const GAME_SHARE_META = {
   beat: { title: "Mochi Snake", text: "Swipe, eat food, chase high score", tag: "#MochiSnake" },
   hole: { title: "Sushi Black Hole", text: "Drag, combo, FEVER mode — swallow everything", tag: "#HoleSwallow" },
   slash: { title: "Fruit Slash", text: "Swipe fruit, dodge bombs, clear levels", tag: "#FruitSlash" },
+  pacman: { title: "Pac-Man Classic", text: "Eat pellets, power up, dodge ghosts — 12 mazes", tag: "#PacMan" },
 };
 
 const RECOMMEND_ORDER = ["chick", "run", "shop", "sente", "fortune", "earth", "block", "leap"];
-const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "slash", "hole", "beat"];
+const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "pacman", "slash", "hole", "beat"];
 
 const lazyInited = new Set();
 let feedProgressObserver = null;
@@ -10202,11 +10243,15 @@ function initFeedOptimizations() {
   window.addEventListener("message", (e) => {
     if (e.data?.type === "hole-ready") syncHoleFeedSound();
     if (e.data?.type === "slash-ready") syncSlashFeedSound();
+    if (e.data?.type === "pacman-ready") syncPacmanFeedSound();
     if (e.data?.type === "hole-interact") {
       document.getElementById("holeCard")?.classList.toggle("iframe-active", !!e.data.active);
     }
     if (e.data?.type === "slash-interact") {
       document.getElementById("slashCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "pacman-interact") {
+      document.getElementById("pacmanCard")?.classList.toggle("iframe-active", !!e.data.active);
     }
   });
   initFeedProgress();
@@ -10254,7 +10299,7 @@ const CREATOR_EMOJI = {
   fortune: "🌸", earth: "🌍", chick: "🐣", block: "🦌", shop: "🏪",
   leap: "🐸", run: "⚡", face: "💅", box: "🎁", sente: "✨",
   pet: "🐾", spot: "🌈", mj: "🧠", star: "⭐", stack: "🐷",
-  match: "🃏", merge: "🎯", beat: "🐍", hole: "🕳️", slash: "🍉",
+  match: "🃏", merge: "🎯", beat: "🐍", hole: "🕳️", slash: "🍉", pacman: "👾",
 };
 
 function polishTrustSignals() {
@@ -10535,6 +10580,7 @@ const LAZY_GAME_INIT = {
   beat: () => { if (!lazyInited.has("beat")) { initSnakeGame(); lazyInited.add("beat"); } },
   hole: () => { if (!lazyInited.has("hole")) { initHoleFeed(); lazyInited.add("hole"); } },
   slash: () => { if (!lazyInited.has("slash")) { initSlashFeed(); lazyInited.add("slash"); } },
+  pacman: () => { if (!lazyInited.has("pacman")) { initPacmanFeed(); lazyInited.add("pacman"); } },
   merge: () => { if (!lazyInited.has("merge")) { initNumberMerge(); lazyInited.add("merge"); } },
   match: () => { if (!lazyInited.has("match")) { initMemoryMatch(); lazyInited.add("match"); } },
 };
