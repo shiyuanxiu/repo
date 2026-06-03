@@ -56,7 +56,7 @@ let lastEarthTaskIndex = -1;
 let currentEarthQuest = null;
 let lastCompletedEarthTask = "";
 
-const soundState = { fortune: true, earth: true, chick: true, block: true, shop: true, leap: true, run: true, face: true, box: true, sente: true, pet: true, spot: true, mj: true, star: true, stack: true, match: true, merge: true, beat: true };
+const soundState = { fortune: true, earth: true, chick: true, block: true, shop: true, leap: true, run: true, face: true, box: true, sente: true, pet: true, spot: true, mj: true, star: true, stack: true, match: true, merge: true, beat: true, hole: true, slash: true };
 
 /* ===== DOM ===== */
 const drawScene = document.getElementById("drawScene");
@@ -3078,7 +3078,7 @@ runShareBtn?.addEventListener("click", () => {
     scoreLine: `Score: ${lastRunScore}\nDistance: ${lastRunDist} m`,
     tag: "#NeonRush",
     filename: "vibeverse-neon-rush.png",
-    caption: `Scored ${lastRunScore} pts · ${lastRunDist}m on Neon Rush #NeonRush — VibeVerse`,
+    caption: `Scored ${lastRunScore} pts · ${lastRunDist}m on Neon Rush #NeonRush — Miniverse`,
   });
 });
 
@@ -3110,7 +3110,7 @@ const GAME_CATEGORIES = {
   fortune: "chill", earth: "chill", block: "puzzle", leap: "arcade",
   face: "social", box: "social", pet: "chill", spot: "chill",
   mj: "puzzle", star: "arcade", stack: "puzzle", match: "puzzle",
-  merge: "puzzle", beat: "arcade",
+  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade",
 };
 
 const TODAY_PICKS = [
@@ -3151,7 +3151,7 @@ const GAME_LABELS = {
   run: "Neon Rush", face: "Runway Glow-Up", box: "Mystery Flavor Box",
   sente: "Born To vs Forced To", pet: "Office Pets", spot: "Rainbow Salt Lake",
   mj: "Brain Sketch", star: "Starfall", stack: "Piggy Catch", match: "Memory Match",
-  merge: "2248 Chain", beat: "Mochi Snake",
+  merge: "2248 Chain", beat: "Mochi Snake", hole: "Sushi Black Hole", slash: "Fruit Slash",
 };
 
 let feedSearchQuery = "";
@@ -3773,7 +3773,7 @@ function buildFaceShareCanvas(platform) {
 
   ctx.fillStyle = "#a855f7";
   ctx.font = "bold 44px Inter, sans-serif";
-  ctx.fillText("✦ VibeVerse", w / 2, h * 0.935);
+  ctx.fillText("✦ Miniverse", w / 2, h * 0.935);
   ctx.fillStyle = "#9ca3af";
   ctx.font = "24px Inter, sans-serif";
   ctx.fillText(`Made for ${platform}`, w / 2, h * 0.975);
@@ -3782,7 +3782,7 @@ function buildFaceShareCanvas(platform) {
 
 function shareFaceGlowUp(platform) {
   const canvas = buildFaceShareCanvas(platform);
-  const caption = `Just slayed my Runway Glow-Up! ${SHARE_HASHTAG} — play on VibeVerse`;
+  const caption = `Just slayed my Runway Glow-Up! ${SHARE_HASHTAG} — play on Miniverse`;
   canvas.toBlob(async (blob) => {
     if (!blob) {
       showAppToast("Couldn't create share card. Try again.");
@@ -3893,10 +3893,10 @@ function buildTextShareCanvas({ title, subtitle, body, tag, accent = ["#ec4899",
 
   ctx.fillStyle = accent[1];
   ctx.font = "bold 40px Inter, sans-serif";
-  ctx.fillText("✦ VibeVerse", w / 2, h * 0.925);
+  ctx.fillText("✦ Miniverse", w / 2, h * 0.925);
   ctx.fillStyle = "#9ca3af";
   ctx.font = "22px Inter, sans-serif";
-  ctx.fillText("vibeverse.app", w / 2, h * 0.965);
+  ctx.fillText("miniverse.gg", w / 2, h * 0.965);
   return c;
 }
 
@@ -3995,7 +3995,7 @@ function buildSpotShareCanvas() {
 
   ctx.fillStyle = "#a855f7";
   ctx.font = "bold 36px Inter, sans-serif";
-  ctx.fillText("✦ VibeVerse", w / 2, h * 0.975);
+  ctx.fillText("✦ Miniverse", w / 2, h * 0.975);
   return c;
 }
 
@@ -4006,7 +4006,7 @@ function shareSpotCheckIn() {
   }
   captureSpotPhoto();
   const loc = spotScene.loc;
-  const caption = `Checked in at ${loc} #TravelCheckIn — VibeVerse`;
+  const caption = `Checked in at ${loc} #TravelCheckIn — Miniverse`;
   shareImageFile(buildSpotShareCanvas(), {
     filename: "vibeverse-checkin.png",
     title: "Rainbow Salt Lake",
@@ -4017,7 +4017,7 @@ function shareSpotCheckIn() {
 function shareStreakCard(days, gamesToday) {
   const body = gamesToday > 0
     ? `${days}-day vibe streak!\nPlayed ${gamesToday} game${gamesToday === 1 ? "" : "s"} today.`
-    : `${days}-day vibe streak!\nKeep the vibes going on VibeVerse.`;
+    : `${days}-day vibe streak!\nKeep the vibes going on Miniverse.`;
   shareTextCard({
     title: "Vibe Streak",
     subtitle: "Daily mini game habit",
@@ -4025,7 +4025,7 @@ function shareStreakCard(days, gamesToday) {
     tag: "#VibeVerse",
     accent: ["#f97316", "#ec4899"],
     filename: "vibeverse-streak.png",
-    caption: `🔥 ${days}-day vibe streak on VibeVerse! #VibeVerse`,
+    caption: `🔥 ${days}-day vibe streak on Miniverse! #VibeVerse`,
   });
 }
 
@@ -4052,7 +4052,7 @@ function initGameShareButtons() {
       scoreLine: `Decompress: ${chickState.decompress}\nClicks: ${chickState.clicks}`,
       tag: "#SquishyChick",
       filename: "vibeverse-squishy-chick.png",
-      caption: `Squished ${chickState.decompress} stress away on Squishy Chick #SquishyChick — VibeVerse`,
+      caption: `Squished ${chickState.decompress} stress away on Squishy Chick #SquishyChick — Miniverse`,
     });
   });
 
@@ -4063,7 +4063,7 @@ function initGameShareButtons() {
       scoreLine: `Score: ${blockScore}`,
       tag: "#CuteStack",
       filename: "vibeverse-cute-stack.png",
-      caption: `Scored ${blockScore} on Cute Stack #CuteStack — VibeVerse`,
+      caption: `Scored ${blockScore} on Cute Stack #CuteStack — Miniverse`,
     });
   });
 
@@ -4073,7 +4073,7 @@ function initGameShareButtons() {
       scoreLine: `Earned: $${shopRoundEarn}\nOrders: ${shopOrders}\nRating: ${shopRating}%`,
       tag: "#FruitStand",
       filename: "vibeverse-fruit-stand.png",
-      caption: `Made $${shopRoundEarn} in one round at Fresh Fruit Stand #FruitStand — VibeVerse`,
+      caption: `Made $${shopRoundEarn} in one round at Fresh Fruit Stand #FruitStand — Miniverse`,
     });
   });
 
@@ -4083,7 +4083,7 @@ function initGameShareButtons() {
       scoreLine: `Score: ${leapScore}\nBest combo: ${leapBestCombo}x`,
       tag: "#LilyPadLeap",
       filename: "vibeverse-lily-pad.png",
-      caption: `Scored ${leapScore} · ${leapBestCombo}x combo on Lily Pad Leap #LilyPadLeap — VibeVerse`,
+      caption: `Scored ${leapScore} · ${leapBestCombo}x combo on Lily Pad Leap #LilyPadLeap — Miniverse`,
     });
   });
 
@@ -4094,7 +4094,7 @@ function initGameShareButtons() {
       scoreLine: picks || "Completed a flavor quest!",
       tag: "#FlavorBox",
       filename: "vibeverse-flavor-box.png",
-      caption: "Completed my Mystery Flavor quest #FlavorBox — VibeVerse",
+      caption: "Completed my Mystery Flavor quest #FlavorBox — Miniverse",
     });
   });
 
@@ -4104,7 +4104,7 @@ function initGameShareButtons() {
       scoreLine: `Score: ${starScore}`,
       tag: "#Starfall",
       filename: "vibeverse-starfall.png",
-      caption: `Scored ${starScore} on Starfall #Starfall — VibeVerse`,
+      caption: `Scored ${starScore} on Starfall #Starfall — Miniverse`,
     });
   });
 
@@ -4114,7 +4114,7 @@ function initGameShareButtons() {
       scoreLine: fishShareWon ? `Level ${fishShareLevel} cleared · Score ${fishScore}` : `Level ${fishShareLevel} · Score ${fishScore}`,
       tag: "#PiggyCatch",
       filename: "vibeverse-piggy-catch.png",
-      caption: `${fishShareWon ? "Cleared" : "Played"} level ${fishShareLevel} (score ${fishScore}) on Piggy Catch #PiggyCatch — VibeVerse`,
+      caption: `${fishShareWon ? "Cleared" : "Played"} level ${fishShareLevel} (score ${fishScore}) on Piggy Catch #PiggyCatch — Miniverse`,
     });
   });
 
@@ -4124,7 +4124,7 @@ function initGameShareButtons() {
       scoreLine: `${matchShareDiff} · ${matchMoves} moves${matchTimerOn ? ` · ${matchSeconds}s` : ""}`,
       tag: "#SeasideMemory",
       filename: "vibeverse-seaside-memory.png",
-      caption: `Matched all pairs in ${matchMoves} moves (${matchShareDiff}) #SeasideMemory — VibeVerse`,
+      caption: `Matched all pairs in ${matchMoves} moves (${matchShareDiff}) #SeasideMemory — Miniverse`,
     });
   });
 
@@ -4135,7 +4135,7 @@ function initGameShareButtons() {
       scoreLine: `Score: ${mergeScore}\nHighest tile: ${maxTile || 2}`,
       tag: "#NumberMerge",
       filename: "vibeverse-number-merge.png",
-      caption: `Scored ${mergeScore} · tile ${maxTile || 2} on 2248 Chain #2248Chain — VibeVerse`,
+      caption: `Scored ${mergeScore} · tile ${maxTile || 2} on 2248 Chain #2248Chain — Miniverse`,
     });
   });
 
@@ -4145,7 +4145,7 @@ function initGameShareButtons() {
       scoreLine: `Score: ${snakeScore}\nHigh Score: ${snakeBest}`,
       tag: "#MochiSnake",
       filename: "vibeverse-mochi-snake.png",
-      caption: `Scored ${snakeScore} on Mochi Snake #MochiSnake — VibeVerse`,
+      caption: `Scored ${snakeScore} on Mochi Snake #MochiSnake — Miniverse`,
     });
   });
 }
@@ -4159,7 +4159,7 @@ function shareEarthQuest(task) {
     tag: "#BluePlanet",
     accent: ["#22c55e", "#3b82f6"],
     filename: "vibeverse-quest.png",
-    caption: `Completed today's quest: ${body} #BluePlanet — VibeVerse`,
+    caption: `Completed today's quest: ${body} #BluePlanet — Miniverse`,
   });
 }
 
@@ -4176,7 +4176,7 @@ fortuneShareBtn?.addEventListener("click", () => {
     tag: "#DailyFortune",
     accent: ["#f472b6", "#a855f7"],
     filename: "vibeverse-fortune.png",
-    caption: `My fortune today: ${body} #DailyFortune — play on VibeVerse`,
+    caption: `My fortune today: ${body} #DailyFortune — play on Miniverse`,
   });
 });
 
@@ -4559,7 +4559,7 @@ senteShareBtn?.addEventListener("click", () => {
     tag: "#MemeLines",
     accent: ["#6366f1", "#ec4899"],
     filename: "vibeverse-meme.png",
-    caption: `${body.replace(/\n/g, " ")} #MemeLines — VibeVerse`,
+    caption: `${body.replace(/\n/g, " ")} #MemeLines — Miniverse`,
   });
   playGameFx("sente", "good");
 });
@@ -10318,6 +10318,30 @@ function snakeSetFeedLock(on) {
   snakeFeed?.classList.toggle("snake-interacting", on);
 }
 
+function syncSlashFeedSound() {
+  const frame = document.getElementById("slashFrame");
+  frame?.contentWindow?.postMessage({ type: "slash-sound", enabled: soundState.slash }, "*");
+}
+
+function initSlashFeed() {
+  const frame = document.getElementById("slashFrame");
+  if (!frame || frame.dataset.loaded === "1") return;
+  frame.dataset.loaded = "1";
+  frame.src = frame.dataset.src || "games/fruit-slash.html?embed=1";
+}
+
+function syncHoleFeedSound() {
+  const frame = document.getElementById("holeFrame");
+  frame?.contentWindow?.postMessage({ type: "hole-sound", enabled: soundState.hole }, "*");
+}
+
+function initHoleFeed() {
+  const frame = document.getElementById("holeFrame");
+  if (!frame || frame.dataset.loaded === "1") return;
+  frame.dataset.loaded = "1";
+  frame.src = frame.dataset.src || "games/hole-swallow.html?embed=1";
+}
+
 function initSnakeGame() {
   if (!snakeCanvas || !snakeCtx) return;
   if (!snakeBound) {
@@ -10401,6 +10425,10 @@ document.querySelectorAll(".sound-toggle").forEach((btn) => {
       soundState.run ? startRunBGM() : stopRunBGM();
     } else if (game === "beat") {
       soundState.beat ? startSnakeBGM() : stopSnakeBGM();
+    } else if (game === "hole") {
+      syncHoleFeedSound();
+    } else if (game === "slash") {
+      syncSlashFeedSound();
     }
   });
 });
@@ -10523,10 +10551,12 @@ const GAME_SHARE_META = {
   match: { title: "Memory Match", text: "Flip matching pairs", tag: "#MemoryMatch" },
       merge: { title: "2248 Chain", text: "Link same numbers on 5×5 — merge ×2", tag: "#2248Chain" },
   beat: { title: "Mochi Snake", text: "Swipe, eat food, chase high score", tag: "#MochiSnake" },
+  hole: { title: "Sushi Black Hole", text: "Drag, combo, FEVER mode — swallow everything", tag: "#HoleSwallow" },
+  slash: { title: "Fruit Slash", text: "Swipe fruit, dodge bombs, clear levels", tag: "#FruitSlash" },
 };
 
 const RECOMMEND_ORDER = ["chick", "run", "shop", "sente", "fortune", "earth", "block", "leap"];
-const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "beat"];
+const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "slash", "hole", "beat"];
 
 const lazyInited = new Set();
 let feedProgressObserver = null;
@@ -10543,6 +10573,10 @@ function initFeedOptimizations() {
   initSavedGames();
   initStreakUI();
   initFeedLazyLoad();
+  window.addEventListener("message", (e) => {
+    if (e.data?.type === "hole-ready") syncHoleFeedSound();
+    if (e.data?.type === "slash-ready") syncSlashFeedSound();
+  });
   initFeedProgress();
   initCookieConsent();
   initContentHub();
@@ -10588,7 +10622,7 @@ const CREATOR_EMOJI = {
   fortune: "🌸", earth: "🌍", chick: "🐣", block: "🦌", shop: "🏪",
   leap: "🐸", run: "⚡", face: "💅", box: "🎁", sente: "✨",
   pet: "🐾", spot: "🌈", mj: "🧠", star: "⭐", stack: "🐷",
-  match: "🃏", merge: "🔢", beat: "🐍",
+  match: "🃏", merge: "🔢", beat: "🐍", hole: "🕳️", slash: "🍉",
 };
 
 function polishTrustSignals() {
@@ -10740,7 +10774,7 @@ function initFeedMeta() {
     }
     const user = item.querySelector(".feed-user");
     if (user) {
-      user.innerHTML = `<span class="feed-cat-pill">${m.categoryLabel || "Game"}</span><span class="feed-cred">VibeVerse editorial</span>`;
+      user.innerHTML = `<span class="feed-cat-pill">${m.categoryLabel || "Game"}</span><span class="feed-cred">Miniverse editorial</span>`;
     }
   });
   const list = document.getElementById("feedHighlightsList");
@@ -10867,6 +10901,8 @@ const LAZY_GAME_INIT = {
   stack: () => { if (!lazyInited.has("stack")) { initPiggyCatch(); lazyInited.add("stack"); } },
   mj: () => { if (!lazyInited.has("mj")) { initBrainSketch(); lazyInited.add("mj"); } },
   beat: () => { if (!lazyInited.has("beat")) { initSnakeGame(); lazyInited.add("beat"); } },
+  hole: () => { if (!lazyInited.has("hole")) { initHoleFeed(); lazyInited.add("hole"); } },
+  slash: () => { if (!lazyInited.has("slash")) { initSlashFeed(); lazyInited.add("slash"); } },
   merge: () => { if (!lazyInited.has("merge")) { initNumberMerge(); lazyInited.add("merge"); } },
   match: () => { if (!lazyInited.has("match")) { initMemoryMatch(); lazyInited.add("match"); } },
 };

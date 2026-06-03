@@ -298,6 +298,82 @@ body::before {
   padding: 14px 18px;
 }
 
+.feed-item:has(> .game-card.hole-card) {
+  background: linear-gradient(180deg, #fffaf5 0%, #fef3c7 42%, #fde68a 100%);
+}
+
+.feed-item:has(> .game-card.hole-card) > .game-card.hole-card {
+  background: transparent;
+  box-shadow: none;
+  min-height: 520px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.feed-item:has(> .game-card.hole-card) > .feed-meta {
+  border-top: none;
+  background: transparent;
+  padding: 14px 18px;
+}
+
+.hole-card .hole-frame {
+  display: block;
+  width: 100%;
+  height: min(72vh, 560px);
+  min-height: 480px;
+  border: none;
+  border-radius: 16px;
+  background: #1a0f0a;
+  touch-action: none;
+}
+
+.game-card.hole-card.fullscreen .hole-frame {
+  height: calc(100dvh - 48px);
+  min-height: 0;
+  border-radius: 0;
+}
+
+.feed-item:has(> .game-card.hole-card.hole-interacting) {
+  scroll-snap-align: none;
+}
+
+.feed-item:has(> .game-card.slash-card) {
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 42%, #fed7aa 100%);
+}
+
+.feed-item:has(> .game-card.slash-card) > .game-card.slash-card {
+  background: transparent;
+  box-shadow: none;
+  min-height: 520px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.feed-item:has(> .game-card.slash-card) > .feed-meta {
+  border-top: none;
+  background: transparent;
+  padding: 14px 18px;
+}
+
+.slash-card .slash-frame {
+  display: block;
+  width: 100%;
+  height: min(72vh, 560px);
+  min-height: 480px;
+  border: none;
+  border-radius: 16px;
+  background: #2a1810;
+  touch-action: none;
+}
+
+.game-card.slash-card.fullscreen .slash-frame {
+  height: calc(100dvh - 48px);
+  min-height: 0;
+  border-radius: 0;
+}
+
 .feed-item:has(> .game-card.brain-card) {
   background: linear-gradient(180deg, #faf8ff 0%, #eef4fc 45%, #e3ecf8 100%);
 }

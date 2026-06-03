@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Fruit Slash Ninja</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;font-family:Arial,sans-serif}
+#game{
+  width:100vw;height:100vh;
+  background:#dcb886;
+  background-image:radial-gradient(#c9a770 8%,transparent 8%);
+  background-size:24px 24px;
+  position:relative;
+}
+.item{position:absolute;transform:translate(-50%,-50%);pointer-events:none}
+.slice{position:absolute;transform:translate(-50%,-50%);pointer-events:none}
+#cutLine{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.ui-score{position:fixed;top:14px;left:14px;font-size:26px;color:#fff;text-shadow:2px 2px #333;z-index:9}
+.ui-life{position:fixed;top:14px;right:14px;font-size:28px;color:#f33;text-shadow:1px 1px #222;z-index:9}
+.gameover-box{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:#0009;padding:32px;border-radius:12px;text-align:center;color:#fff;
+  display:none;z-index:99;
+}
+.restart{
+  margin-top:16px;padding:10px 26px;border:none;border-radius:8px;background:#ff7b22;color:#fff;font-size:17px;
+}
+</style>
+</head>
+<body>
+<div id="game">
+  <div class="ui-score">Score: <span id="score">0</span></div>
+  <div class="ui-life">HP:<span id="life">❤❤❤</span></div>
+  <svg id="cutLine"></svg>
+  <div class="gameover-box" id="overBox">
+    <h2>Game Over</h2>
+    <p>Final Score: <span id="finalScore">0</span></p>
+    <button class="restart" id="restartBtn">Play Again</button>
+  </div>
+</div>
+<script>
+//内嵌全部水果SVG 西瓜/苹果/香蕉/橙子/椰子/炸弹
+const svgData={
+  watermelon:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#239933"/><path d="M50 6 L50 94 M12 22 L88 78 M22 12 L78 88" stroke="#116622" stroke-width="3"/></svg>`,
+  apple:`<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="42" fill="#e63939"/><path d="M50 10 Q66 2 72 16" stroke="#588822" stroke-width="4" fill="none"/></svg>`,
+  banana:`<svg viewBox="0 0 100 100"><path d="M12 72 Q50 12 88 32 Q76 76 32 88 Z" fill="#ffdd22"/></svg>`,
+  orange:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="43" fill="#ff9922"/><circle cx="36" cy="38" r="7" fill="#ffbb55"/></svg>`,
+  coconut:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="41" fill="#664422"/><circle cx="36" cy="36" r="5" fill="#332211"/><circle cx="64" cy="36" r="5" fill="#332211"/></svg>`,
+  bomb:`<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="42" fill="#222"/><rect x="46" y="6" width="8" height="22" fill:#555/><circle cx="50" cy="12" r="6" fill:#ff4422/></svg>`
+};
+const fruitList=["watermelon","apple","banana","orange","coconut"];
+
+//DOM
+const game=document.getElementById('game');
+const cutSvg=document.getElementById('cutLine');
+const scoreDom=document.getElementById('score');
+const lifeDom=document.getElementById('life');
+const overBox=document.getElementById('overBox');
+const finalScoreDom=document.getElementById('finalScore');
+const restartBtn=document.getElementById('restartBtn');
+
+let score=0;
+let life=3;
+let combo=0;
+let isGameOver=false;
+let flyItems=[];
+let cutPoints=[];
+let spawnTimer;
+
+//生成水果实体
+function spawnFruit(){
+  if(isGameOver)return;
+  const isBomb=Math.random()<0.12+score/12000;
+  const type=isBomb?"bomb":fruitList[Math.floor(Math.random()*fruitList.length)];
+  const wrap=document.createElement('div');
+  wrap.className='item';
+  wrap.innerHTML=svgData[type];
+  const size=60+Math.random()*16;
+  wrap.style.width=size+'px';wrap.style.height=size+'px';
+  const x=Math.random()*(innerWidth-80)+40;
+  wrap.style.left=x+'px';wrap.style.top=innerHeight+40+'px';
+  game.appendChild(wrap);
+
+  //抛物线参数
+  const sp={
+    el:wrap,
+    x,
+    y:innerHeight+40,
+    vx:(Math.random()-0.5)*3.2,
+    vy:-14-Math.random()*6,
+    gravity:0.38,
+    type,
+    size
+  };
+  flyItems.push(sp);
+}
+
+//刀路绘制
+let drawPath=[];
+function clearCutLine(){cutSvg.innerHTML=''}
+function renderCut(){
+  if(drawPath.length<2)return;
+  let d=`M${drawPath[0].x} ${drawPath[0].y}`;
+  for(let p of drawPath.slice(1))d+=` L${p.x} ${p.y}`;
+  cutSvg.innerHTML=`<path d="${d}" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>`
+}
+
+//切割碰撞检测
+function checkSlice(pathArr){
+  for(let p of pathArr){
+    for(let i=flyItems.length-1;i>=0;i--){
+      const it=flyItems[i];
+      const dx=p.x-it.x;
+      const dy=p.y-it.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<it.size/2){
+        //切到炸弹
+        if(it.type==="bomb"){
+          loseLife();
+          removeItem(i);
+          combo=0;
+          continue;
+        }
+        //切水果加分
+        combo++;
+        let add=10;
+        if(combo>=3)add=10+combo*3;
+        score+=add;
+        scoreDom.textContent=score;
+        createSplit(it);
+        removeItem(i);
+        break;
+      }
+    }
+  }
+}
+function removeItem(idx){
+  flyItems[idx].el.remove();
+  flyItems.splice(idx,1);
+}
+//水果裂开碎片
+function createSplit(it){
+  for(let a=0;a<2;a++){
+    const s=document.createElement('div');
+    s.className='slice';
+    s.innerHTML=it.el.innerHTML;
+    s.style.width=it.size+'px';s.style.height=it.size+'px';
+    s.style.left=it.x+'px';s.style.top=it.y+'px';
+    game.appendChild(s);
+    const ang=(a?1:-1)*(30+Math.random()*25);
+    s.style.transform=`translate(-50%,-50%) rotate(${ang}deg)`;
+    setTimeout(()=>s.remove(),650);
+  }
+}
+//掉血
+function loseLife(){
+  life--;
+  lifeDom.textContent='❤'.repeat(life);
+  if(life<=0)gameEnd();
+}
+//漏水果落地
+function fruitDropOut(it,idx){
+  if(it.type!="bomb")loseLife();
+  removeItem(idx);
+  combo=0;
+}
+
+//游戏帧循环
+function frame(){
+  if(isGameOver)return;
+  for(let i=flyItems.length-1;i>=0;i--){
+    const o=flyItems[i];
+    o.x+=o.vx;
+    o.y+=o.vy;
+    o.vy+=o.gravity;
+    o.el.style.left=o.x+'px';
+    o.el.style.top=o.y+'px';
+    //落地出屏幕
+    if(o.y>innerHeight+60)fruitDropOut(o,i);
+  }
+  requestAnimationFrame(frame);
+}
+
+//鼠标触屏
+game.addEventListener('mousedown',e=>{
+  cutPoints=[{x:e.clientX,y:e.clientY}];drawPath=[{x:e.clientX,y:e.clientY}];clearCutLine();
+})
+game.addEventListener('mousemove',e=>{
+  if(!cutPoints.length)return;
+  cutPoints.push({x:e.clientX,y:e.clientY});
+  drawPath.push({x:e.clientX,y:e.clientY});
+  renderCut();
+  if(cutPoints.length>3)checkSlice(cutPoints.splice(0,cutPoints.length-2));
+})
+game.addEventListener('mouseup',()=>{checkSlice(cutPoints);cutPoints=[];setTimeout(clearCutLine,120)})
+//触屏
+game.addEventListener('touchstart',e=>{
+  e.preventDefault();
+  const t=e.touches[0];
+  cutPoints=[{x:t.clientX,y:t.clientY}];drawPath=[{x:t.clientX,y:t.clientY}];clearCutLine();
+})
+game.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  const t=e.touches[0];
+  cutPoints.push({x:t.clientX,y:t.clientY});
+  drawPath.push({x:t.clientX,y:t.clientY});
+  renderCut();
+  if(cutPoints.length>3)checkSlice(cutPoints.splice(0,cutPoints.length-2));
+})
+game.addEventListener('touchend',()=>{checkSlice(cutPoints);cutPoints=[];setTimeout(clearCutLine,120)})
+
+//开局&结束
+function startGame(){
+  score=0;life=3;combo=0;isGameOver=false;
+  scoreDom.textContent=score;lifeDom.textContent='❤❤❤';
+  overBox.style.display='none';
+  flyItems.forEach(d=>d.el.remove());flyItems=[];
+  clearInterval(spawnTimer);
+  //难度随分数提速
+  function refreshSpawn(){
+    let ms=950-score/18;
+    if(ms<320)ms=320;
+    spawnTimer=setInterval(spawnFruit,ms);
+  }
+  refreshSpawn();
+  setInterval(()=>{if(!isGameOver)refreshSpawn()},3000);
+  frame();
+}
+function gameEnd(){
+  isGameOver=true;
+  clearInterval(spawnTimer);
+  finalScoreDom.textContent=score;
+  overBox.style.display='block';
+}
+restartBtn.onclick=startGame;
+window.onload=startGame;
+</script>
+</body>
+</html>

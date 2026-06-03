@@ -19,6 +19,8 @@
     { "id": "stack", "name": "Piggy Catch", "slug": "stack-rush", "gistKey": "PiggyCatch", "tag": "#PiggyCatch", "category": "puzzle", "feed": "games" },
     { "id": "match", "name": "Memory Match", "slug": "memory-match", "gistKey": "MemoryMatch", "tag": "#MemoryMatch", "category": "puzzle", "feed": "games" },
     { "id": "merge", "name": "2248 Chain", "slug": "number-merge", "gistKey": "2248Chain", "tag": "#2248Chain", "category": "puzzle", "feed": "games" },
-    { "id": "beat", "name": "Mochi Snake", "slug": "snake-bite", "gistKey": "MochiSnake", "tag": "#MochiSnake", "category": "arcade", "feed": "games" }
+    { "id": "beat", "name": "Mochi Snake", "slug": "snake-bite", "gistKey": "MochiSnake", "tag": "#MochiSnake", "category": "arcade", "feed": "games" },
+    { "id": "hole", "name": "Sushi Black Hole", "slug": "hole-swallow", "gistKey": "HoleSwallow", "tag": "#HoleSwallow", "category": "arcade", "feed": "games" },
+    { "id": "slash", "name": "Fruit Slash", "slug": "fruit-slash", "gistKey": "FruitSlash", "tag": "#FruitSlash", "category": "arcade", "feed": "games" }
   ]
 }

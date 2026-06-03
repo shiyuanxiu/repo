@@ -37,7 +37,7 @@ function renderOgSvg({ title, subtitle, emoji, paletteKey = "default" }) {
   <text x="600" y="250" text-anchor="middle" font-size="120" font-family="Segoe UI, system-ui, sans-serif">${emoji}</text>
   <text x="600" y="340" text-anchor="middle" fill="#fff" font-size="56" font-weight="700" font-family="Segoe UI, system-ui, sans-serif">${safeTitle}</text>
   <text x="600" y="410" text-anchor="middle" fill="rgba(255,255,255,0.92)" font-size="28" font-family="Segoe UI, system-ui, sans-serif">${safeSub}</text>
-  <text x="600" y="560" text-anchor="middle" fill="rgba(255,255,255,0.75)" font-size="28" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">✦ VibeVerse · Free browser mini games</text>
+  <text x="600" y="560" text-anchor="middle" fill="rgba(255,255,255,0.75)" font-size="28" font-weight="600" font-family="Segoe UI, system-ui, sans-serif">✦ Miniverse · Free browser mini games</text>
 </svg>`;
 }
 
@@ -46,7 +46,7 @@ fs.mkdirSync(gamesOgDir, { recursive: true });
 fs.writeFileSync(
   path.join(ogDir, "og-default.svg"),
   renderOgSvg({
-    title: "VibeVerse",
+    title: "Miniverse",
     subtitle: "18 free browser mini games",
     emoji: "✦",
     paletteKey: "default",

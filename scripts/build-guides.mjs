@@ -1,14 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { GUIDES, gameOgImage } from "./game-catalog.mjs";
-import { esc, renderOgMeta, siteChromeNav, siteFooter } from "./og-meta.mjs";
+import { GUIDES, gameOgImage, SITE } from "./game-catalog.mjs";
+import { esc, renderOgMeta, siteChromeNav, siteFooter, BRAND } from "./og-meta.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const gamesDir = path.join(__dirname, "..", "games");
 
 function renderGuide(g) {
-  const url = `https://vibeverse.app/games/${g.slug}.html`;
+  const url = `${SITE}/games/${g.slug}.html`;
   const faqEntities = g.faq.map(([q, a]) => ({
     "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a },
   }));
@@ -18,8 +18,8 @@ function renderGuide(g) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "VibeVerse", item: "https://vibeverse.app/" },
-          { "@type": "ListItem", position: 2, name: "Game guides", item: "https://vibeverse.app/games/" },
+          { "@type": "ListItem", position: 1, name: BRAND, item: `${SITE}/` },
+          { "@type": "ListItem", position: 2, name: "Game guides", item: `${SITE}/games/` },
           { "@type": "ListItem", position: 3, name: g.name, item: url },
         ],
       },
@@ -44,10 +44,10 @@ function renderGuide(g) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(g.name)} — How to Play | VibeVerse</title>
+  <title>${esc(g.name)} — How to Play | ${BRAND}</title>
   <meta name="description" content="${esc(g.lead.slice(0, 155))}">
   <link rel="canonical" href="${url}">
-${renderOgMeta({ url, title: `${g.name} — VibeVerse`, description: g.lead, image: gameOgImage(g.slug) })}
+${renderOgMeta({ url, title: `${g.name} — ${BRAND}`, description: g.lead, image: gameOgImage(g.slug) })}
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../assets/legal.css">

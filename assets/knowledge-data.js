@@ -1,7 +1,7 @@
 window.KNOWLEDGE_ARTICLES = [
   {
     id: "neon-lanes",
-    source: "VibeVerse Editorial",
+    source: "Miniverse Editorial",
     sourceKey: "editorial",
     sourceIcon: "📖",
     topic: "strategy",
@@ -48,7 +48,7 @@ window.KNOWLEDGE_ARTICLES = [
     topic: "updates",
     title: "Every score screen now exports a share card",
     summary: "Fortune, memes, quests, check-ins, streaks, and arcade scores all include Share buttons. Save the PNG or post directly from mobile share sheets.",
-    body: "May 2026 update: share cards ship on all 18 games with results. Look for Share score, Share fortune, or Share quest on end screens and toolbars. Cards include game name, stats, and VibeVerse branding.",
+    body: "May 2026 update: share cards ship on all 18 games with results. Look for Share score, Share fortune, or Share quest on end screens and toolbars. Cards include game name, stats, and Miniverse branding.",
     link: "whats-new.html",
     linkLabel: "Changelog",
     minutesAgo: 60,
@@ -69,7 +69,7 @@ window.KNOWLEDGE_ARTICLES = [
   },
   {
     id: "arcade-vs-puzzle",
-    source: "VibeVerse Editorial",
+    source: "Miniverse Editorial",
     sourceKey: "editorial",
     sourceIcon: "📖",
     topic: "guides",

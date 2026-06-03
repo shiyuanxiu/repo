@@ -12,6 +12,7 @@ import {
   renderOgMeta,
   siteChromeNav,
   siteFooter,
+  BRAND,
 } from "./og-meta.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,14 +32,14 @@ function renderCategoryHub(cat) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "VibeVerse", item: `${SITE}/` },
+          { "@type": "ListItem", position: 1, name: BRAND, item: `${SITE}/` },
           { "@type": "ListItem", position: 2, name: "Categories", item: `${SITE}/categories/arcade.html` },
           { "@type": "ListItem", position: 3, name: meta.shortName, item: url },
         ],
       },
       {
         "@type": "ItemList",
-        name: `${meta.shortName} mini games on VibeVerse`,
+        name: `${meta.shortName} mini games on ${BRAND}`,
         numberOfItems: games.length,
         itemListElement: games.map((g, i) => ({
           "@type": "ListItem",
@@ -93,10 +94,10 @@ function renderCategoryHub(cat) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(meta.title)} | VibeVerse</title>
+  <title>${esc(meta.title)} | ${BRAND}</title>
   <meta name="description" content="${esc(meta.description.slice(0, 155))}">
   <link rel="canonical" href="${url}">
-${renderOgMeta({ url, title: `${meta.title} | VibeVerse`, description: meta.description, image })}
+${renderOgMeta({ url, title: `${meta.title} | ${BRAND}`, description: meta.description, image })}
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../assets/legal.css">
@@ -172,13 +173,13 @@ ${items}
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game Guides — How to Play Every VibeVerse Mini Game</title>
-  <meta name="description" content="Browse all 18 VibeVerse game guides: Squishy Chick, Neon Rush, Runway Glow-Up, Memory Match, and more. Free browser mini games.">
+  <title>Game Guides — How to Play Every ${BRAND} Mini Game</title>
+  <meta name="description" content="Browse all 18 ${BRAND} game guides: Squishy Chick, Neon Rush, Runway Glow-Up, Memory Match, and more. Free browser mini games.">
   <link rel="canonical" href="${url}">
 ${renderOgMeta({
   url,
-  title: "Game Guides — VibeVerse",
-  description: "How to play all 18 free browser mini games on VibeVerse.",
+  title: `Game Guides — ${BRAND}`,
+  description: `How to play all 18 free browser mini games on ${BRAND}.`,
 })}
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../assets/legal.css">
@@ -191,7 +192,7 @@ ${siteChromeNav("../")}
       <a href="../index.html">Home</a> · Game guides
     </nav>
     <h1>Game guides</h1>
-    <p class="content-lead">How to play every mini game on VibeVerse — tips, FAQs, and direct play links. All 18 games run free in your browser with no download.</p>
+    <p class="content-lead">How to play every mini game on ${BRAND} — tips, FAQs, and direct play links. All 18 games run free in your browser with no download.</p>
 
     <a class="play-cta" href="../index.html">▶ Open the game feed</a>
 

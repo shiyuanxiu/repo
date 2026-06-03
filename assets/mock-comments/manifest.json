@@ -27,6 +27,8 @@
         "stack",
         "match",
         "merge",
+        "hole",
+        "slash",
         "beat"
       ]
     }
@@ -175,6 +177,22 @@
       "feed": "games",
       "commentCount": 8,
       "totalLike": 93
+    },
+    "hole": {
+      "file": "hole.json",
+      "name": "Sushi Black Hole",
+      "gistKey": "HoleSwallow",
+      "feed": "games",
+      "commentCount": 6,
+      "totalLike": 71
+    },
+    "slash": {
+      "file": "slash.json",
+      "name": "Fruit Slash",
+      "gistKey": "FruitSlash",
+      "feed": "games",
+      "commentCount": 7,
+      "totalLike": 88
     }
   }
 }

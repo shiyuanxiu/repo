@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vibeverse.app/sitemap.xml
+Sitemap: https://miniverse.gg/sitemap.xml

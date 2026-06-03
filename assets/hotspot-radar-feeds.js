@@ -1,4 +1,4 @@
-/** Hotspot Radar feeds â€?sync with scripts/hotspot-radar-feeds.mjs */
+/** Hotspot Radar feeds ï¿½?sync with scripts/hotspot-radar-feeds.mjs */
 window.HOTSPOT_RADAR_FEEDS = [
   {
     "source": "Hacker News",
@@ -79,7 +79,7 @@ window.HOTSPOT_RADAR_FEEDS = [
   {
     "source": "Google News Â· Tech",
     "sourceKey": "google_tech",
-    "sourceIcon": "âš?,
+    "sourceIcon": "ï¿½?,
     "platform": "web",
     "platformLabel": "Web",
     "domain": "tech",

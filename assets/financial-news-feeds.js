@@ -1,4 +1,4 @@
-/** RSS feed config â€?keep in sync with scripts/financial-news-rss.mjs */
+/** RSS feed config ï¿½?keep in sync with scripts/financial-news-rss.mjs */
 window.FINANCIAL_NEWS_FEEDS = [
   {
     "source": "CNBC",
@@ -35,7 +35,7 @@ window.FINANCIAL_NEWS_FEEDS = [
   {
     "source": "AP Business",
     "sourceKey": "ap",
-    "sourceIcon": "ðŸ—žï¸?,
+    "sourceIcon": "ðŸ—žï¿½?,
     "homepage": "https://apnews.com/hub/business",
     "url": "https://rsshub.app/apnews/topics/business",
     "fallbacks": [

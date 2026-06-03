@@ -1,4 +1,5 @@
-export const SITE = "https://vibeverse.app";
+export const SITE = "https://miniverse.gg";
+export const BRAND = "Miniverse";
 export const OG_DEFAULT = `${SITE}/assets/og/og-default.png`;
 
 export function ogImagePath(category) {
@@ -34,7 +35,7 @@ export function renderOgMeta({ url, title, description, image = OG_DEFAULT }) {
 export function siteChromeNav(root = "") {
   return `  <header class="site-chrome">
     <div class="site-chrome-inner">
-      <a class="site-chrome-brand" href="${root}index.html"><span aria-hidden="true">✦</span> VibeVerse</a>
+      <a class="site-chrome-brand" href="${root}index.html"><span aria-hidden="true">✦</span> ${BRAND}</a>
       <nav class="site-chrome-nav" aria-label="Site">
         <a href="${root}index.html">Play</a>
         <a href="${root}games/index.html">Guides</a>
@@ -47,6 +48,6 @@ export function siteChromeNav(root = "") {
 
 export function siteFooter(root = "") {
   return `  <footer class="site-chrome-footer">
-    <p>© 2026 VibeVerse · <a href="${root}about.html">About</a> · <a href="${root}whats-new.html">What's new</a> · <a href="${root}contact.html">Contact</a> · <a href="${root}privacy.html">Privacy</a> · <a href="${root}terms.html">Terms</a></p>
+    <p>© 2026 ${BRAND} · <a href="${root}about.html">About</a> · <a href="${root}whats-new.html">What's new</a> · <a href="${root}contact.html">Contact</a> · <a href="${root}privacy.html">Privacy</a> · <a href="${root}terms.html">Terms</a></p>
   </footer>`;
 }

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Swipe to slash fruit, dodge bombs, clear levels — combo fever mode!">
+  <title>Fruit Slash — Blade Rush | Miniverse</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      touch-action: none; user-select: none;
+      background: #2a1810;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    #wrap { position: fixed; inset: 0; }
+    canvas { display: block; width: 100%; height: 100%; }
+
+    .overlay {
+      position: fixed; inset: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.45), rgba(0,0,0,0.82));
+      padding: 16px;
+    }
+    .overlay.hidden { display: none; }
+    .card {
+      max-width: 380px; width: 100%; padding: 28px 22px;
+      background: linear-gradient(165deg, #fff 0%, #fef3c7 55%, #fde68a 100%);
+      border-radius: 24px; text-align: center;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.5);
+      border: 2px solid rgba(255,255,255,0.85);
+      animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .badge {
+      display: inline-block; padding: 6px 14px; border-radius: 999px;
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      font-size: 0.82rem; font-weight: 900; color: #713f12; margin-bottom: 10px;
+    }
+    .card h1 { font-size: 1.45rem; font-weight: 900; color: #1c1917; margin-bottom: 8px; }
+    .card p { font-size: 0.92rem; line-height: 1.55; color: #57534e; margin-bottom: 6px; }
+    .card .hook { font-weight: 800; color: #b45309; }
+    .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px 0; }
+    .chip { padding: 5px 11px; border-radius: 999px; background: rgba(0,0,0,0.06); font-size: 0.78rem; font-weight: 800; }
+    .chip-gold { background: linear-gradient(135deg, #fef08a, #fde047); color: #713f12; }
+    .btn {
+      margin-top: 14px; padding: 14px 36px; border: none; border-radius: 14px;
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #052e16; font-weight: 900; font-size: 1.05rem; cursor: pointer;
+      box-shadow: 0 6px 22px rgba(34,197,94,0.45);
+    }
+    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .btn-secondary {
+      background: linear-gradient(180deg, #f5f5f4, #e7e5e4); color: #44403c;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12); font-size: 0.92rem; padding: 12px 20px;
+    }
+    .stars { font-size: 1.6rem; letter-spacing: 3px; margin: 8px 0; }
+    .rank { font-size: 1.2rem; font-weight: 900; color: #b45309; margin-bottom: 6px; }
+    .new-record { color: #dc2626; font-weight: 900; font-size: 0.9rem; display: none; }
+    .new-record.show { display: block; animation: blink 0.6s ease infinite alternate; }
+    @keyframes blink { to { opacity: 0.5; } }
+
+    #playHud {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+      pointer-events: none; padding: 0 10px max(10px, env(safe-area-inset-bottom));
+      display: none;
+    }
+    #playHud.show { display: block; }
+    .hud-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 10px 14px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(12,12,16,0.94), rgba(8,8,12,0.97));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.45);
+    }
+    .hud-block { display: flex; flex-direction: column; gap: 2px; }
+    .hud-block.center { flex: 1; text-align: center; align-items: center; }
+    .hud-lbl { font-size: 9px; font-weight: 800; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); }
+    .hud-val { font-size: 17px; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+    .hud-target { font-size: 22px; font-weight: 900; color: #fde047; }
+    .hud-lives { font-size: 20px; letter-spacing: 2px; }
+    .level-track {
+      height: 5px; border-radius: 999px; background: rgba(255,255,255,0.12);
+      margin-bottom: 8px; overflow: hidden;
+    }
+    .level-fill.boss-fill {
+      background: linear-gradient(90deg, #ef4444, #fde047, #4ade80);
+    }
+    #bossBanner {
+      position: fixed; top: max(52px, calc(env(safe-area-inset-top) + 40px));
+      left: 50%; transform: translateX(-50%) scale(0.9);
+      z-index: 12; pointer-events: none;
+      padding: 8px 18px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(127,29,29,0.95), rgba(185,28,28,0.98));
+      border: 2px solid rgba(253,224,71,0.5);
+      color: #fde047; font-weight: 900; font-size: 13px;
+      letter-spacing: 0.08em;
+      opacity: 0; transition: opacity 0.3s, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 8px 32px rgba(239,68,68,0.45);
+      white-space: nowrap;
+    }
+    #bossBanner.show { opacity: 1; transform: translateX(-50%) scale(1); }
+    #bossBanner .boss-name { display: block; font-size: 11px; opacity: 0.85; letter-spacing: 0.14em; }
+    #comboPill {
+      position: fixed; top: max(12px, env(safe-area-inset-top));
+      left: 50%; transform: translateX(-50%);
+      z-index: 11; padding: 8px 16px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(251,146,60,0.95), rgba(234,88,12,0.98));
+      color: #fff; font-weight: 900; font-size: 14px;
+      opacity: 0; transition: opacity 0.2s, transform 0.25s;
+      box-shadow: 0 8px 28px rgba(249,115,22,0.45);
+      pointer-events: none;
+    }
+    #comboPill.show { opacity: 1; }
+    #comboPill.fever {
+      background: linear-gradient(135deg, #fde047, #eab308); color: #713f12;
+      animation: feverPulse 0.35s ease infinite alternate;
+    }
+    @keyframes feverPulse { to { transform: translateX(-50%) scale(1.06); } }
+    #muteBtn, #histBtn {
+      position: fixed; top: max(12px, env(safe-area-inset-top));
+      z-index: 11; width: 42px; height: 42px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.72);
+      color: #fff; font-size: 17px; cursor: pointer;
+    }
+    #muteBtn { right: max(12px, env(safe-area-inset-right)); }
+    #histBtn { right: max(60px, calc(env(safe-area-inset-right) + 48px)); }
+    body.embed #muteBtn, body.embed #histBtn { display: none; }
+    body.playing #muteBtn, body.playing #histBtn { display: none; }
+    body.embed.playing #comboPill { top: max(10px, env(safe-area-inset-top)); }
+
+    #histPanel {
+      position: fixed; inset: 0; z-index: 30; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); padding: 16px;
+    }
+    #histPanel.show { display: flex; }
+    #histPanel .panel-card {
+      width: min(400px, 100%); max-height: 70vh;
+      background: linear-gradient(165deg, #fff, #fef9c3);
+      border-radius: 20px; padding: 20px 16px; display: flex; flex-direction: column; gap: 10px;
+    }
+    #histPanel h3 { font-weight: 900; color: #1c1917; }
+    #histList { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .hist-row {
+      display: flex; justify-content: space-between; padding: 10px 12px;
+      border-radius: 12px; background: rgba(0,0,0,0.05); font-size: 0.85rem;
+    }
+    .hist-empty { text-align: center; color: #78716c; padding: 20px; }
+  </style>
+</head>
+<body>
+  <div id="wrap"><canvas id="c"></canvas></div>
+  <div id="comboPill">Combo x2</div>
+  <div id="bossBanner"><span class="boss-name">BOSS BATTLE</span><span id="bossBannerText">Melon King</span></div>
+  <div id="playHud">
+    <div class="level-track"><div class="level-fill" id="levelFill"></div></div>
+    <div class="hud-bar">
+      <div class="hud-block">
+        <span class="hud-lbl">SCORE</span>
+        <span class="hud-val" id="hudScore">0</span>
+      </div>
+      <div class="hud-block center">
+        <span class="hud-lbl">LEVEL <span id="hudLvl">1</span> · TARGET</span>
+        <span class="hud-target" id="hudTarget">150</span>
+      </div>
+      <div class="hud-block" style="align-items:flex-end">
+        <span class="hud-lbl">LIVES</span>
+        <span class="hud-lives hud-val" id="hudLives">❤❤❤</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="hint" class="overlay">
+    <div class="card">
+      <div class="badge">⭐ 9.6 · Blade Rush</div>
+      <h1>🍉 Fruit Slash</h1>
+      <p class="hook">Swipe to slice · dodge bombs · clear levels</p>
+      <p>Miss a fruit = lose a life. Hit a bomb = lose a life.</p>
+      <p>Chain slices for combo multipliers &amp; FEVER mode!</p>
+      <p><strong>Every 5 levels</strong> — face a giant fruit BOSS!</p>
+      <div class="legend">
+        <span class="chip">🍉 +10</span>
+        <span class="chip">🍎 +15</span>
+        <span class="chip">🍌 +12</span>
+        <span class="chip chip-gold">⭐ +80</span>
+        <span class="chip">💣 −1 life</span>
+      </div>
+      <button type="button" class="btn" id="startBtn">Start Slicing!</button>
+    </div>
+  </div>
+
+  <div id="endOverlay" class="overlay hidden">
+    <div class="card">
+      <h1 id="endTitle">Level Cleared!</h1>
+      <div class="stars" id="starsEl">★★★★★</div>
+      <div class="rank" id="rankEl">Fruit Ninja</div>
+      <p id="endScore"></p>
+      <p class="new-record" id="newRec">🏆 New best!</p>
+      <p id="nextHint" style="font-size:0.88rem;color:#57534e"></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="histEndBtn">📋 History</button>
+        <button type="button" class="btn btn-secondary" id="shareBtn">📤 Share</button>
+        <button type="button" class="btn" id="nextBtn">Next Level →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameOverOverlay" class="overlay hidden">
+    <div class="card">
+      <h1>Game Over</h1>
+      <div class="stars" id="goStars">★★☆☆☆</div>
+      <div class="rank" id="goRank">Slice Apprentice</div>
+      <p id="goScore"></p>
+      <p class="new-record" id="goNewRec">🏆 New best!</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="goHistBtn">📋 History</button>
+        <button type="button" class="btn btn-secondary" id="goShareBtn">📤 Share</button>
+        <button type="button" class="btn" id="retryBtn">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" id="histBtn" aria-label="History">📋</button>
+  <button type="button" id="muteBtn" aria-label="Sound">🔊</button>
+  <div id="histPanel">
+    <div class="panel-card">
+      <h3>Run History</h3>
+      <div id="histList"></div>
+      <button type="button" class="btn btn-secondary" id="histClose">Close</button>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+    const EMBED = new URLSearchParams(location.search).get("embed") === "1";
+    const BEST_KEY = "vv-slash-best";
+    const HIST_KEY = "vv-slash-history";
+    const FEVER_COMBO = 8;
+    const BOSS_EVERY = 5;
+    const BOSS_TIME_SEC = 45;
+
+    const BOSS_ROSTER = [
+      { name: "Melon King", type: "watermelon", colors: ["#4ade80", "#15803d"] },
+      { name: "Apple Titan", type: "apple", colors: ["#ef4444", "#991b1b"] },
+      { name: "Coconut Colossus", type: "coconut", colors: ["#a8a29e", "#44403c"] },
+      { name: "Orange Overlord", type: "orange", colors: ["#fb923c", "#c2410c"] },
+      { name: "Star Phantom", type: "star", colors: ["#fde047", "#eab308"] },
+    ];
+
+    const FRUITS = {
+      watermelon: { score: 10, color: ["#22c55e", "#15803d"], r: 1 },
+      apple:      { score: 15, color: ["#ef4444", "#b91c1c"], r: 0.95 },
+      banana:     { score: 12, color: ["#fde047", "#eab308"], r: 0.9 },
+      orange:     { score: 14, color: ["#f97316", "#ea580c"], r: 0.92 },
+      coconut:    { score: 18, color: ["#78716c", "#44403c"], r: 1.05 },
+      star:       { score: 80, color: ["#fde047", "#f59e0b"], r: 0.85, special: true },
+      bomb:       { score: 0, bomb: true },
+    };
+    const FRUIT_IDS = ["watermelon", "apple", "banana", "orange", "coconut"];
+
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+    const wrap = document.getElementById("wrap");
+
+    let W = 0, H = 0, dpr = 1;
+    let playing = false;
+    let level = 1;
+    let score = 0;
+    let lives = 3;
+    let combo = 0;
+    let comboTimer = 0;
+    let fever = false;
+    let items = [];
+    let particles = [];
+    let floats = [];
+    let slashPts = [];
+    let slashLife = 0;
+    let spawnAcc = 0;
+    let shake = 0;
+    let best = parseInt(localStorage.getItem(BEST_KEY) || "0", 10) || 0;
+    let rafId = 0;
+    let lastTs = 0;
+    let levelScoreStart = 0;
+    let bossMode = false;
+    let boss = null;
+    let bossTimeLeft = 0;
+    let bossTimerAcc = 0;
+    let bossBombAcc = 0;
+    let bossIntro = 0;
+
+    if (EMBED) document.body.classList.add("embed");
+
+    function isBossLevel(lv) {
+      return lv > 0 && lv % BOSS_EVERY === 0;
+    }
+
+    function getBossCfg(lv) {
+      const tier = lv / BOSS_EVERY;
+      const ro = BOSS_ROSTER[(tier - 1) % BOSS_ROSTER.length];
+      return {
+        ...ro,
+        tier,
+        hp: 5 + tier * 4,
+        bonus: 120 + tier * 80,
+        speed: 1.1 + tier * 0.15,
+        size: 0,
+      };
+    }
+
+    function getLevelCfg(lv) {
+      const t = lv - 1;
+      const boss = isBossLevel(lv);
+      return {
+        level: lv,
+        isBoss: boss,
+        target: boss ? 0 : 120 + t * 85 + Math.floor(t * t * 8),
+        spawnMs: Math.max(380, 920 - t * 55),
+        bombChance: Math.min(0.28, 0.08 + t * 0.025),
+        starChance: Math.max(0.04, 0.12 - t * 0.008),
+        gravity: 0.32 + t * 0.012,
+        tossMin: 12 + t * 0.4,
+        label: boss ? "BOSS" : t === 0 ? "Easy" : t <= 2 ? "Normal" : t <= 4 ? "Hard" : "Insane",
+      };
+    }
+
+    function levelProgress() {
+      if (bossMode && boss) return 1 - boss.hp / boss.maxHp;
+      const cfg = getLevelCfg(level);
+      const gained = score - levelScoreStart;
+      return Math.min(1, gained / cfg.target);
+    }
+
+    function updateHud() {
+      const cfg = getLevelCfg(level);
+      const fill = document.getElementById("levelFill");
+      document.getElementById("hudScore").textContent = score;
+      const targetEl = document.getElementById("hudTarget");
+      const lblEl = document.querySelector("#playHud .hud-block.center .hud-lbl");
+      if (bossMode && boss) {
+        lblEl.innerHTML = `LEVEL ${level} · <span style="color:#fca5a5">BOSS HP</span>`;
+        const secs = Math.max(0, Math.ceil(bossTimeLeft));
+        targetEl.textContent = boss.hp + "/" + boss.maxHp + " · " + secs + "s";
+        targetEl.style.color = boss.hp <= boss.maxHp * 0.3 || secs <= 10 ? "#fca5a5" : "#fde047";
+        fill.classList.add("boss-fill");
+        document.getElementById("bossBanner").classList.add("show");
+        document.getElementById("bossBannerText").textContent = boss.name;
+      } else {
+        lblEl.innerHTML = `LEVEL ${level} · TARGET`;
+        targetEl.textContent = String(cfg.target);
+        targetEl.style.color = "";
+        fill.classList.remove("boss-fill");
+        document.getElementById("bossBanner").classList.remove("show");
+      }
+      document.getElementById("hudLives").textContent = "❤".repeat(Math.max(0, lives));
+      fill.style.width = (levelProgress() * 100) + "%";
+      const pill = document.getElementById("comboPill");
+      const mul = comboMul();
+      if (combo >= 2) {
+        pill.classList.add("show");
+        pill.textContent = fever ? `🔥 FEVER x${mul * 2}` : `Combo x${mul}`;
+        pill.classList.toggle("fever", fever);
+      } else {
+        pill.classList.remove("show", "fever");
+      }
+    }
+
+    function comboMul() {
+      if (combo < 3) return 1;
+      if (combo < 6) return 2;
+      if (combo < 10) return 3;
+      if (combo < 15) return 5;
+      return 8;
+    }
+
+    function getRank(sc, lv, cleared) {
+      const adj = (lv - 1) * 200;
+      const tiers = [
+        { min: 0, title: "Slice Apprentice", stars: 1 },
+        { min: 200, title: "Fruit Ninja", stars: 2 },
+        { min: 600, title: "Blade Master", stars: 3 },
+        { min: 1500, title: "Juice Storm", stars: 4 },
+        { min: 3500, title: "Legendary Slicer", stars: 5 },
+      ];
+      let pick = tiers[0];
+      for (const t of tiers) if (sc >= t.min + adj) pick = t;
+      if (cleared) pick = { ...pick, stars: Math.min(5, pick.stars + 1) };
+      return { title: pick.title, stars: "★".repeat(pick.stars) + "☆".repeat(5 - pick.stars) };
+    }
+
+    function saveHistory(entry) {
+      let h = [];
+      try { h = JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); } catch (_) {}
+      h.unshift(entry);
+      if (h.length > 40) h.length = 40;
+      localStorage.setItem(HIST_KEY, JSON.stringify(h));
+    }
+
+    function renderHistory() {
+      let h = [];
+      try { h = JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); } catch (_) {}
+      const el = document.getElementById("histList");
+      if (!h.length) {
+        el.innerHTML = '<p class="hist-empty">No runs yet — finish a level to log scores.</p>';
+        return;
+      }
+      el.innerHTML = h.map((r) =>
+        `<div class="hist-row"><div><strong>${r.score}</strong> · ${r.title}<br><small>Lv.${r.level} · ${r.result}</small></div><small>${new Date(r.ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}</small></div>`
+      ).join("");
+    }
+
+    function openHist() { renderHistory(); document.getElementById("histPanel").classList.add("show"); }
+    function closeHist() { document.getElementById("histPanel").classList.remove("show"); }
+
+    /* ── Audio ── */
+    const Audio = (function () {
+      let ctxA, master, bgmG, sfxG, muted = false, bgmT = null, step = 0;
+      const scale = [261.63, 293.66, 329.63, 392, 440, 523.25];
+      const mel = [0, 2, 4, 3, 4, 2, 0, 1, 2, 4, 3, 2];
+
+      function ensure() {
+        if (ctxA) return;
+        ctxA = new (window.AudioContext || window.webkitAudioContext)();
+        master = ctxA.createGain(); master.gain.value = 1; master.connect(ctxA.destination);
+        bgmG = ctxA.createGain(); bgmG.gain.value = 0.16; bgmG.connect(master);
+        sfxG = ctxA.createGain(); sfxG.gain.value = 0.9; sfxG.connect(master);
+      }
+
+      function noise(t0, dur, vol, freq) {
+        const n = Math.floor(ctxA.sampleRate * dur);
+        const b = ctxA.createBuffer(1, n, ctxA.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+        const s = ctxA.createBufferSource(); s.buffer = b;
+        const g = ctxA.createGain(); g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+        const f = ctxA.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq;
+        s.connect(f); f.connect(g); g.connect(sfxG); s.start(t0);
+      }
+
+      return {
+        setMuted(m) { ensure(); muted = m; master.gain.value = muted ? 0 : 1; },
+        toggle() { this.setMuted(!muted); document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊"; },
+        startBgm() {
+          ensure(); if (ctxA.state === "suspended") ctxA.resume();
+          if (bgmT) return;
+          const tick = () => {
+            if (muted) return;
+            const t0 = ctxA.currentTime;
+            const f = scale[mel[step++ % mel.length]];
+            const o = ctxA.createOscillator(), g = ctxA.createGain();
+            o.type = "triangle"; o.frequency.value = f;
+            g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(0.12, t0 + 0.03);
+            g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.45);
+            o.connect(g); g.connect(bgmG); o.start(t0); o.stop(t0 + 0.5);
+          };
+          tick(); bgmT = setInterval(tick, fever ? 340 : 460);
+        },
+        stopBgm() { if (bgmT) { clearInterval(bgmT); bgmT = null; } },
+        restartBgm() { this.stopBgm(); this.startBgm(); },
+        slash() {
+          if (muted) return; ensure();
+          const t0 = ctxA.currentTime;
+          noise(t0, 0.06, 0.35, 1800);
+          const o = ctxA.createOscillator(), g = ctxA.createGain();
+          o.type = "sawtooth"; o.frequency.setValueAtTime(900, t0); o.frequency.exponentialRampToValueAtTime(200, t0 + 0.08);
+          g.gain.setValueAtTime(0.15, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.1);
+          o.connect(g); g.connect(sfxG); o.start(t0); o.stop(t0 + 0.12);
+        },
+        splash() {
+          if (muted) return; ensure();
+          noise( ctxA.currentTime, 0.1, 0.4, 600);
+        },
+        bomb() {
+          if (muted) return; ensure();
+          const t0 = ctxA.currentTime;
+          noise(t0, 0.15, 0.55, 200);
+          const o = ctxA.createOscillator(), g = ctxA.createGain();
+          o.type = "square"; o.frequency.setValueAtTime(120, t0); o.frequency.exponentialRampToValueAtTime(40, t0 + 0.25);
+          g.gain.setValueAtTime(0.35, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+          o.connect(g); g.connect(sfxG); o.start(t0); o.stop(t0 + 0.32);
+        },
+        levelUp() {
+          if (muted) return; ensure();
+          const t0 = ctxA.currentTime;
+          [523, 659, 784].forEach((f, i) => {
+            const o = ctxA.createOscillator(), g = ctxA.createGain();
+            o.frequency.value = f; g.gain.setValueAtTime(0, t0 + i * 0.08);
+            g.gain.linearRampToValueAtTime(0.14, t0 + i * 0.08 + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.08 + 0.35);
+            o.connect(g); g.connect(sfxG); o.start(t0 + i * 0.08); o.stop(t0 + i * 0.08 + 0.4);
+          });
+        },
+        comboPing(mul) {
+          if (muted || mul < 2) return; ensure();
+          const o = ctxA.createOscillator(), g = ctxA.createGain();
+          o.frequency.value = 440 + mul * 60; g.gain.setValueAtTime(0.08, ctxA.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctxA.currentTime + 0.1);
+          o.connect(g); g.connect(sfxG); o.start(); o.stop(ctxA.currentTime + 0.12);
+        },
+        bossAppear() {
+          if (muted) return; ensure();
+          const t0 = ctxA.currentTime;
+          [110, 87, 73, 55].forEach((f, i) => {
+            const o = ctxA.createOscillator(), g = ctxA.createGain();
+            o.type = "sawtooth"; o.frequency.value = f;
+            g.gain.setValueAtTime(0, t0 + i * 0.1);
+            g.gain.linearRampToValueAtTime(0.12, t0 + i * 0.1 + 0.04);
+            g.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.1 + 0.5);
+            o.connect(g); g.connect(sfxG); o.start(t0 + i * 0.1); o.stop(t0 + i * 0.1 + 0.55);
+          });
+        },
+        bossHit() {
+          if (muted) return; ensure();
+          noise(ctxA.currentTime, 0.08, 0.45, 400);
+        },
+        bossDefeat() {
+          if (muted) return; ensure();
+          const t0 = ctxA.currentTime;
+          [392, 523, 659, 784, 988].forEach((f, i) => {
+            const o = ctxA.createOscillator(), g = ctxA.createGain();
+            o.frequency.value = f;
+            g.gain.setValueAtTime(0, t0 + i * 0.07);
+            g.gain.linearRampToValueAtTime(0.16, t0 + i * 0.07 + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.001, t0 + i * 0.07 + 0.4);
+            o.connect(g); g.connect(sfxG); o.start(t0 + i * 0.07); o.stop(t0 + i * 0.07 + 0.45);
+          });
+        },
+        bossFail() {
+          if (muted) return; ensure();
+          const o = ctxA.createOscillator(), g = ctxA.createGain();
+          o.type = "square"; o.frequency.setValueAtTime(200, ctxA.currentTime);
+          o.frequency.exponentialRampToValueAtTime(80, ctxA.currentTime + 0.4);
+          g.gain.setValueAtTime(0.2, ctxA.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctxA.currentTime + 0.45);
+          o.connect(g); g.connect(sfxG); o.start(); o.stop(ctxA.currentTime + 0.5);
+        },
+      };
+    })();
+
+    function spawnItem() {
+      if (!playing || bossIntro > 0) return;
+      if (bossMode) return;
+      const cfg = getLevelCfg(level);
+      let type;
+      const r = Math.random();
+      if (r < cfg.bombChance) type = "bomb";
+      else if (r < cfg.bombChance + cfg.starChance) type = "star";
+      else type = FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+      const meta = FRUITS[type];
+      const size = (type === "bomb" ? 52 : 48 + Math.random() * 18) * (meta.r || 1);
+      const x = size + Math.random() * (W - size * 2);
+      items.push({
+        type, x, y: H + size,
+        vx: (Math.random() - 0.5) * 4,
+        vy: -(cfg.tossMin + Math.random() * 6),
+        gravity: cfg.gravity,
+        size, rot: Math.random() * Math.PI * 2,
+        rotV: (Math.random() - 0.5) * 0.12,
+        sliced: false,
+      });
+    }
+
+    function spawnBossMinion() {
+      if (!bossMode || bossIntro > 0 || !boss) return;
+      const isBomb = Math.random() < 0.55 + boss.tier * 0.05;
+      const type = isBomb ? "bomb" : FRUIT_IDS[Math.floor(Math.random() * FRUIT_IDS.length)];
+      const meta = FRUITS[type];
+      const size = (type === "bomb" ? 48 : 40 + Math.random() * 12) * (meta.r || 1);
+      items.push({
+        type, x: boss.x + (Math.random() - 0.5) * boss.size,
+        y: boss.y + boss.size * 0.3,
+        vx: (Math.random() - 0.5) * 5,
+        vy: -(8 + Math.random() * 5),
+        gravity: 0.34,
+        size, rot: 0, rotV: (Math.random() - 0.5) * 0.1,
+        sliced: false,
+      });
+    }
+
+    function startBossFight() {
+      const cfg = getBossCfg(level);
+      bossMode = true;
+      bossTimeLeft = BOSS_TIME_SEC;
+      bossTimerAcc = 0;
+      bossBombAcc = 0;
+      bossIntro = 2.2;
+      items = [];
+      boss = {
+        name: cfg.name,
+        fruitType: cfg.type,
+        colors: cfg.colors,
+        tier: cfg.tier,
+        hp: cfg.hp,
+        maxHp: cfg.hp,
+        bonus: cfg.bonus,
+        x: W / 2,
+        y: H * 0.36,
+        size: Math.min(W, H) * (0.19 + cfg.tier * 0.012),
+        vx: cfg.speed,
+        dir: 1,
+        pulse: 0,
+        hitFlash: 0,
+      };
+      updateHud();
+      Audio.bossAppear();
+      if (navigator.vibrate) navigator.vibrate([12, 20, 12, 20, 30]);
+      spawnFloat(W / 2 - 60, H * 0.22, "⚔ BOSS BATTLE", "#fde047");
+      spawnFloat(W / 2 - 50, H * 0.3, cfg.name, "#fca5a5");
+    }
+
+    function hitBoss() {
+      if (!boss || bossIntro > 0) return;
+      const now = Date.now();
+      if (boss.lastHit && now - boss.lastHit < 180) return;
+      boss.lastHit = now;
+      boss.hp--;
+      boss.hitFlash = 1;
+      boss.pulse = 1;
+      combo++;
+      comboTimer = 2200;
+      const mul = comboMul() * (fever ? 2 : 1);
+      const pts = Math.round(35 * mul);
+      score += pts;
+      shake = 10;
+      Audio.bossHit(); Audio.slash();
+      spawnJuice(boss.x, boss.y, boss.colors, 18);
+      spawnFloat(boss.x - 20, boss.y - boss.size * 0.5, `-${1} HP · +${pts}`, "#fff");
+      if (navigator.vibrate) navigator.vibrate(10);
+      updateHud();
+      if (boss.hp <= 0) defeatBoss();
+    }
+
+    function defeatBoss() {
+      if (!boss) return;
+      const bonus = boss.bonus;
+      const name = boss.name;
+      score += bonus;
+      shake = 24;
+      spawnJuice(boss.x, boss.y, boss.colors, 36);
+      spawnFloat(W / 2 - 70, H * 0.32, `${name} DEFEATED!`, "#fde047");
+      spawnFloat(W / 2 - 40, H * 0.4, `+${bonus} bonus`, "#86efac");
+      Audio.bossDefeat();
+      if (navigator.vibrate) navigator.vibrate([8, 12, 8, 12, 24]);
+      boss = null;
+      bossMode = false;
+      items = [];
+      levelComplete(true, name);
+    }
+
+    function bossTimeout() {
+      lives--;
+      combo = 0; fever = false;
+      shake = 14;
+      Audio.bossFail();
+      spawnFloat(W / 2 - 50, H * 0.35, "Time's up!", "#fca5a5");
+      updateHud();
+      if (lives <= 0) {
+        boss = null; bossMode = false;
+        endGame(false);
+        return;
+      }
+      boss.hp = boss.maxHp;
+      bossTimeLeft = BOSS_TIME_SEC;
+      bossTimerAcc = 0;
+      spawnFloat(W / 2 - 40, H * 0.4, "Retry!", "#fde047");
+    }
+
+    function drawBoss() {
+      if (!boss) return;
+      const b = boss;
+      b.pulse *= 0.9;
+      b.hitFlash *= 0.85;
+      const s = b.size * (1 + b.pulse * 0.06 + Math.sin(Date.now() * 0.003) * 0.02);
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      for (let i = 3; i >= 1; i--) {
+        ctx.beginPath();
+        ctx.arc(0, 0, s * (1 + i * 0.08), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(239,68,68,${0.12 * i})`;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+      }
+      const gr = ctx.createRadialGradient(-s * 0.2, -s * 0.2, 0, 0, 0, s * 0.55);
+      gr.addColorStop(0, b.colors[0]);
+      gr.addColorStop(1, b.colors[1]);
+      ctx.fillStyle = gr;
+      ctx.shadowColor = b.hitFlash > 0.2 ? "#fff" : b.colors[0];
+      ctx.shadowBlur = 20 + b.hitFlash * 20;
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.52, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      if (b.fruitType === "watermelon") {
+        ctx.strokeStyle = "rgba(0,60,0,0.55)"; ctx.lineWidth = 3;
+        for (let i = -2; i <= 2; i++) {
+          ctx.beginPath(); ctx.moveTo(i * s * 0.1, -s * 0.5); ctx.lineTo(i * s * 0.1, s * 0.5); ctx.stroke();
+        }
+      }
+      if (b.fruitType === "star") {
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        drawStar(0, 0, 5, s * 0.25, s * 0.12); ctx.fill();
+      }
+      ctx.fillStyle = "#1c1917";
+      ctx.font = `900 ${Math.floor(s * 0.22)}px system-ui`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("👑", 0, -s * 0.05);
+      ctx.restore();
+      if (bossIntro > 0) {
+        ctx.fillStyle = "rgba(0,0,0,0.35)";
+        ctx.fillRect(0, 0, W, H);
+        ctx.font = `900 ${Math.min(36, W * 0.09)}px system-ui`;
+        ctx.fillStyle = "#fde047";
+        ctx.textAlign = "center";
+        ctx.fillText("BOSS BATTLE", W / 2, H * 0.28);
+        ctx.font = `900 ${Math.min(24, W * 0.06)}px system-ui`;
+        ctx.fillStyle = "#fca5a5";
+        ctx.fillText(b.name, W / 2, H * 0.36);
+      }
+    }
+
+    function beginLevel() {
+      items = [];
+      spawnAcc = 0;
+      if (isBossLevel(level)) startBossFight();
+      else { bossMode = false; boss = null; bossIntro = 0; updateHud(); }
+    }
+
+    function drawBg() {
+      const g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, "#3d2817");
+      g.addColorStop(0.4, "#5c3d2e");
+      g.addColorStop(1, "#2a1810");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = 0.06;
+      for (let y = 0; y < H; y += 28) {
+        for (let x = 0; x < W; x += 28) {
+          ctx.fillStyle = (x + y) % 56 === 0 ? "#fff" : "#000";
+          ctx.fillRect(x, y, 2, 2);
+        }
+      }
+      ctx.globalAlpha = 1;
+      const spot = ctx.createRadialGradient(W * 0.5, H * 0.3, 0, W * 0.5, H * 0.5, W * 0.8);
+      spot.addColorStop(0, "rgba(255,220,180,0.12)");
+      spot.addColorStop(1, "transparent");
+      ctx.fillStyle = spot;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    function drawFruit(it) {
+      ctx.save();
+      ctx.translate(it.x, it.y);
+      ctx.rotate(it.rot);
+      const s = it.size;
+      if (it.type === "bomb") {
+        ctx.fillStyle = "#1c1917";
+        ctx.beginPath(); ctx.arc(0, 0, s * 0.48, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#57534e";
+        ctx.fillRect(-s * 0.06, -s * 0.55, s * 0.12, s * 0.22);
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath(); ctx.arc(0, -s * 0.52, s * 0.1, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#f97316"; ctx.lineWidth = 2;
+        for (let i = 0; i < 5; i++) {
+          ctx.beginPath(); ctx.moveTo(0, -s * 0.35);
+          ctx.lineTo(Math.cos(i * 1.3) * s * 0.2, -s * 0.55 + Math.sin(i) * s * 0.1);
+          ctx.stroke();
+        }
+      } else if (it.type === "star") {
+        const gr = ctx.createRadialGradient(0, 0, 0, 0, 0, s * 0.5);
+        gr.addColorStop(0, "#fff7aa"); gr.addColorStop(0.5, "#fde047"); gr.addColorStop(1, "#eab308");
+        ctx.fillStyle = gr;
+        drawStar(0, 0, 5, s * 0.45, s * 0.22);
+        ctx.fill();
+        ctx.shadowColor = "#fde047"; ctx.shadowBlur = 16;
+        ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 2;
+        drawStar(0, 0, 5, s * 0.45, s * 0.22); ctx.stroke();
+        ctx.shadowBlur = 0;
+      } else {
+        const meta = FRUITS[it.type];
+        const gr = ctx.createRadialGradient(-s * 0.15, -s * 0.15, 0, 0, 0, s * 0.5);
+        gr.addColorStop(0, meta.color[0]); gr.addColorStop(1, meta.color[1]);
+        ctx.fillStyle = gr;
+        if (it.type === "banana") {
+          ctx.beginPath();
+          ctx.moveTo(-s * 0.35, s * 0.2);
+          ctx.quadraticCurveTo(0, -s * 0.45, s * 0.38, -s * 0.15);
+          ctx.quadraticCurveTo(s * 0.2, s * 0.35, -s * 0.3, s * 0.35);
+          ctx.fill();
+        } else {
+          ctx.beginPath(); ctx.arc(0, 0, s * 0.46, 0, Math.PI * 2); ctx.fill();
+        }
+        if (it.type === "watermelon") {
+          ctx.strokeStyle = "rgba(0,80,0,0.5)"; ctx.lineWidth = 2;
+          for (let i = -1; i <= 1; i++) {
+            ctx.beginPath(); ctx.moveTo(i * s * 0.12, -s * 0.44); ctx.lineTo(i * s * 0.12, s * 0.44); ctx.stroke();
+          }
+        }
+        if (it.type === "apple") {
+          ctx.strokeStyle = "#166534"; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.moveTo(0, -s * 0.42); ctx.quadraticCurveTo(s * 0.2, -s * 0.55, s * 0.25, -s * 0.35); ctx.stroke();
+        }
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.beginPath(); ctx.ellipse(-s * 0.12, -s * 0.15, s * 0.15, s * 0.08, -0.4, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawStar(cx, cy, spikes, outer, inner) {
+      let rot = Math.PI / 2 * 3;
+      const step = Math.PI / spikes;
+      ctx.beginPath(); ctx.moveTo(cx, cy - outer);
+      for (let i = 0; i < spikes; i++) {
+        ctx.lineTo(cx + Math.cos(rot) * outer, cy + Math.sin(rot) * outer); rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * inner, cy + Math.sin(rot) * inner); rot += step;
+      }
+      ctx.lineTo(cx, cy - outer); ctx.closePath();
+    }
+
+    function spawnJuice(x, y, colors, n) {
+      for (let i = 0; i < (n || 14); i++) {
+        const a = Math.random() * Math.PI * 2;
+        const sp = 2 + Math.random() * 5;
+        particles.push({
+          x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2,
+          life: 1, r: 3 + Math.random() * 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
+    }
+
+    function spawnFloat(x, y, text, color) {
+      floats.push({ x, y, text, color, life: 1, vy: -1.5 });
+    }
+
+    function sliceItem(it, idx) {
+      if (it.sliced) return;
+      it.sliced = true;
+      if (it.type === "bomb") {
+        lives--;
+        combo = 0; fever = false;
+        shake = 18;
+        Audio.bomb();
+        if (navigator.vibrate) navigator.vibrate([20, 30, 40]);
+        spawnJuice(it.x, it.y, ["#ef4444", "#f97316", "#1c1917"], 20);
+        items.splice(idx, 1);
+        updateHud();
+        if (lives <= 0) endGame(false);
+        return;
+      }
+      combo++;
+      comboTimer = 2200;
+      const wasFever = fever;
+      fever = combo >= FEVER_COMBO;
+      if (fever && !wasFever) Audio.restartBgm();
+      const mul = comboMul() * (fever ? 2 : 1);
+      const pts = Math.round(FRUITS[it.type].score * mul);
+      score += pts;
+      Audio.slash(); Audio.splash();
+      if (combo >= 3) Audio.comboPing(mul);
+      if (navigator.vibrate) navigator.vibrate(8);
+      const colors = FRUITS[it.type].color || ["#fde047", "#f97316"];
+      spawnJuice(it.x, it.y, colors, it.type === "star" ? 24 : 12);
+      spawnFloat(it.x, it.y - 10, mul > 1 ? `+${pts} x${mul}` : `+${pts}`, fever ? "#fde047" : "#fff");
+      for (let h = 0; h < 2; h++) {
+        particles.push({
+          x: it.x, y: it.y, vx: (h ? 3 : -3) + Math.random(), vy: -2 - Math.random() * 2,
+          life: 1, r: it.size * 0.35, color: colors[0], half: true, rot: it.rot,
+        });
+      }
+      items.splice(idx, 1);
+      updateHud();
+      if (!bossMode && levelProgress() >= 1) levelComplete();
+    }
+
+    function distSegToPoint(ax, ay, bx, by, px, py) {
+      const dx = bx - ax, dy = by - ay;
+      const len2 = dx * dx + dy * dy;
+      if (len2 < 1) return Math.hypot(px - ax, py - ay);
+      let t = ((px - ax) * dx + (py - ay) * dy) / len2;
+      t = Math.max(0, Math.min(1, t));
+      return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+    }
+
+    function checkSlash() {
+      if (slashPts.length < 2) return;
+      const p = slashPts[slashPts.length - 1];
+      const p0 = slashPts[slashPts.length - 2];
+      if (bossMode && boss && bossIntro <= 0) {
+        const hitR = boss.size * 0.5;
+        if (Math.hypot(p.x - boss.x, p.y - boss.y) < hitR ||
+            distSegToPoint(p0.x, p0.y, p.x, p.y, boss.x, boss.y) < hitR) {
+          hitBoss();
+        }
+      }
+      for (let i = items.length - 1; i >= 0; i--) {
+        const it = items[i];
+        if (it.sliced) continue;
+        const d = Math.hypot(p.x - it.x, p.y - it.y);
+        if (d < it.size * 0.45) sliceItem(it, i);
+      }
+    }
+
+    function missItem(it, idx) {
+      if (it.type !== "bomb") {
+        lives--;
+        combo = 0; fever = false;
+        updateHud();
+        if (lives <= 0) endGame(false);
+      }
+      items.splice(idx, 1);
+    }
+
+    function levelComplete(cleared, bossName) {
+      playing = false;
+      bossMode = false;
+      boss = null;
+      bossIntro = 0;
+      items = [];
+      Audio.stopBgm();
+      Audio.levelUp();
+      const rank = getRank(score, level, true);
+      const cfg = getLevelCfg(level);
+      if (bossName) {
+        document.getElementById("endTitle").textContent = `${bossName} Defeated!`;
+        document.getElementById("endScore").textContent = `Score ${score} · Boss Level ${level}`;
+      } else {
+        document.getElementById("endTitle").textContent = `Level ${level} Cleared!`;
+        document.getElementById("endScore").textContent = `Score ${score} · ${cfg.label}`;
+      }
+      document.getElementById("starsEl").textContent = rank.stars;
+      document.getElementById("rankEl").textContent = rank.title;
+      const next = getLevelCfg(level + 1);
+      document.getElementById("nextHint").textContent = next.isBoss
+        ? `Next: Lv.${next.level} · ⚔ BOSS battle!`
+        : `Next: Lv.${next.level} · target ${next.target} · ${next.label}`;
+      const isNew = score > best;
+      document.getElementById("newRec").classList.toggle("show", isNew);
+      if (isNew) { best = score; localStorage.setItem(BEST_KEY, String(best)); }
+      saveHistory({
+        score, level, title: rank.title,
+        result: bossName ? `Boss: ${bossName}` : "Cleared",
+        ts: Date.now(),
+      });
+      document.getElementById("endOverlay").classList.remove("hidden");
+      document.getElementById("playHud").classList.remove("show");
+      document.body.classList.remove("playing");
+    }
+
+    function endGame(cleared) {
+      playing = false;
+      bossMode = false;
+      boss = null;
+      bossIntro = 0;
+      Audio.stopBgm();
+      const rank = getRank(score, level, cleared);
+      document.getElementById("goStars").textContent = rank.stars;
+      document.getElementById("goRank").textContent = rank.title;
+      document.getElementById("goScore").textContent = `Score ${score} · reached Level ${level}`;
+      const isNew = score > best;
+      document.getElementById("goNewRec").classList.toggle("show", isNew);
+      if (isNew) { best = score; localStorage.setItem(BEST_KEY, String(best)); }
+      saveHistory({ score, level, title: rank.title, result: "Game Over", ts: Date.now() });
+      document.getElementById("gameOverOverlay").classList.remove("hidden");
+      document.getElementById("playHud").classList.remove("show");
+      document.body.classList.remove("playing");
+    }
+
+    function resetRound(startLevel) {
+      level = startLevel || 1;
+      score = 0;
+      lives = 3;
+      combo = 0;
+      comboTimer = 0;
+      fever = false;
+      items = [];
+      particles = [];
+      floats = [];
+      slashPts = [];
+      levelScoreStart = 0;
+      spawnAcc = 0;
+      bossMode = false;
+      boss = null;
+      bossIntro = 0;
+      bossTimeLeft = 0;
+      bossTimerAcc = 0;
+      bossBombAcc = 0;
+      playing = true;
+      document.getElementById("hint").classList.add("hidden");
+      document.getElementById("endOverlay").classList.add("hidden");
+      document.getElementById("gameOverOverlay").classList.add("hidden");
+      document.getElementById("playHud").classList.add("show");
+      document.body.classList.add("playing");
+      beginLevel();
+      Audio.startBgm();
+    }
+
+    function nextLevel() {
+      level++;
+      levelScoreStart = score;
+      playing = true;
+      document.getElementById("endOverlay").classList.add("hidden");
+      document.getElementById("playHud").classList.add("show");
+      document.body.classList.add("playing");
+      beginLevel();
+      Audio.startBgm();
+      const msg = isBossLevel(level) ? "⚔ BOSS!" : `Level ${level}!`;
+      spawnFloat(W / 2, H * 0.35, msg, isBossLevel(level) ? "#fca5a5" : "#86efac");
+    }
+
+    function shareScore() {
+      const rank = getRank(score, level, false);
+      const text = `🍉 Fruit Slash Lv.${level} — ${rank.title}! Score ${score}. Can you beat me?`;
+      const url = EMBED ? `${location.origin}${location.pathname}` : location.href;
+      if (navigator.share) navigator.share({ title: "Fruit Slash", text, url }).catch(() => {});
+      else if (navigator.clipboard) navigator.clipboard.writeText(text + " " + url);
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = wrap.clientWidth; H = wrap.clientHeight;
+      canvas.width = Math.floor(W * dpr); canvas.height = Math.floor(H * dpr);
+      canvas.style.width = W + "px"; canvas.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function update(dt) {
+      if (!playing) return;
+      const cfg = getLevelCfg(level);
+      if (!bossMode) {
+        spawnAcc += dt;
+        if (spawnAcc >= cfg.spawnMs) { spawnAcc = 0; spawnItem(); }
+      } else if (boss) {
+        if (bossIntro > 0) {
+          bossIntro -= dt / 1000;
+          if (bossIntro < 0) bossIntro = 0;
+        } else {
+          boss.x += boss.vx * boss.dir;
+          const margin = boss.size * 0.55;
+          if (boss.x < margin) { boss.x = margin; boss.dir = 1; }
+          if (boss.x > W - margin) { boss.x = W - margin; boss.dir = -1; }
+          bossTimerAcc += dt;
+          if (bossTimerAcc >= 1000) {
+            bossTimerAcc -= 1000;
+            bossTimeLeft--;
+            updateHud();
+            if (bossTimeLeft <= 0) bossTimeout();
+          }
+          bossBombAcc += dt;
+          const minionMs = Math.max(700, 1900 - boss.tier * 120);
+          if (bossBombAcc >= minionMs) {
+            bossBombAcc = 0;
+            spawnBossMinion();
+          }
+        }
+      }
+      if (combo > 0) { comboTimer -= dt; if (comboTimer <= 0) { combo = 0; fever = false; updateHud(); } }
+
+      for (let i = items.length - 1; i >= 0; i--) {
+        const it = items[i];
+        it.x += it.vx; it.y += it.vy; it.vy += it.gravity;
+        it.rot += it.rotV;
+        if (it.y > H + it.size * 1.2) missItem(it, i);
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy; p.vy += 0.15;
+        p.life -= 0.028;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+      for (let i = floats.length - 1; i >= 0; i--) {
+        const f = floats[i];
+        f.y += f.vy; f.life -= 0.018;
+        if (f.life <= 0) floats.splice(i, 1);
+      }
+      slashLife -= dt * 0.003;
+      if (slashLife <= 0) slashPts = [];
+    }
+
+    function render() {
+      ctx.save();
+      if (shake > 0.4) {
+        ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+        shake *= 0.82;
+      } else shake = 0;
+      drawBg();
+      drawBoss();
+      items.forEach(drawFruit);
+      particles.forEach((p) => {
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        if (p.half) {
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI, true); ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2); ctx.fill();
+        }
+      });
+      ctx.globalAlpha = 1;
+      if (slashPts.length >= 2) {
+        ctx.strokeStyle = fever ? "rgba(253,224,71,0.95)" : "rgba(255,255,255,0.9)";
+        ctx.lineWidth = fever ? 6 : 4;
+        ctx.lineCap = "round"; ctx.lineJoin = "round";
+        ctx.shadowColor = fever ? "#fde047" : "#fff";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.moveTo(slashPts[0].x, slashPts[0].y);
+        for (let i = 1; i < slashPts.length; i++) ctx.lineTo(slashPts[i].x, slashPts[i].y);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+      floats.forEach((f) => {
+        ctx.globalAlpha = f.life;
+        ctx.font = `900 ${16 + (1 - f.life) * 8}px system-ui`;
+        ctx.fillStyle = f.color;
+        ctx.strokeStyle = "rgba(0,0,0,0.5)"; ctx.lineWidth = 3;
+        ctx.strokeText(f.text, f.x, f.y);
+        ctx.fillText(f.text, f.x, f.y);
+      });
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+
+    function loop(ts) {
+      const dt = lastTs ? Math.min(48, ts - lastTs) : 16;
+      lastTs = ts;
+      update(dt); render();
+      rafId = requestAnimationFrame(loop);
+    }
+
+    function addSlash(x, y) {
+      slashPts.push({ x, y });
+      if (slashPts.length > 24) slashPts.shift();
+      slashLife = 1;
+      checkSlash();
+    }
+
+    function onDown(x, y) { slashPts = [{ x, y }]; slashLife = 1; }
+    function onMove(x, y) { if (!slashPts.length) return; addSlash(x, y); }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      if (!playing) return;
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+      onDown(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (!playing || !slashPts.length) return;
+      e.preventDefault();
+      const r = canvas.getBoundingClientRect();
+      onMove(e.clientX - r.left, e.clientY - r.top);
+    });
+    canvas.addEventListener("pointerup", () => { slashPts = []; });
+    canvas.addEventListener("pointercancel", () => { slashPts = []; });
+
+    document.getElementById("startBtn").addEventListener("click", () => resetRound(1));
+    document.getElementById("nextBtn").addEventListener("click", nextLevel);
+    document.getElementById("retryBtn").addEventListener("click", () => resetRound(1));
+    document.getElementById("shareBtn").addEventListener("click", shareScore);
+    document.getElementById("goShareBtn").addEventListener("click", shareScore);
+    document.getElementById("muteBtn").addEventListener("click", () => Audio.toggle());
+    document.getElementById("histBtn").addEventListener("click", openHist);
+    document.getElementById("histEndBtn").addEventListener("click", openHist);
+    document.getElementById("goHistBtn").addEventListener("click", openHist);
+    document.getElementById("histClose").addEventListener("click", closeHist);
+    document.getElementById("histPanel").addEventListener("click", (e) => { if (e.target.id === "histPanel") closeHist(); });
+
+    if (EMBED) window.parent.postMessage({ type: "slash-ready" }, "*");
+    window.addEventListener("message", (e) => {
+      if (e.data?.type === "slash-sound") Audio.setMuted(!e.data.enabled);
+    });
+
+    window.addEventListener("resize", () => { resize(); });
+    resize();
+    rafId = requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

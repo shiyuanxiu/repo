@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Hole IO Black Hole</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden}
+#game{
+  width:100vw;height:100vh;position:relative;
+  background:#86c86e;
+  background-image:radial-gradient(#72b55b 7%,transparent 7%);
+  background-size:34px 34px;
+}
+#hole{
+  border-radius:50%;
+  background:radial-gradient(#0a0a0a,#2c2c2c,#555);
+  position:absolute;transform:translate(-50%,-50%);
+  box-shadow:inset 0 0 20px #000, 0 0 14px rgba(0,0,0,0.35);
+}
+.item{
+  position:absolute;transform:translate(-50%,-50%);
+}
+.score-box{position:fixed;top:12px;left:12px;color:#fff;font-size:22px;font-weight:bold;text-shadow:1px 1px 3px #222;z-index:99}
+.time-box{position:fixed;top:12px;right:12px;color:#fff;font-size:22px;font-weight:bold;text-shadow:1px 1px 3px #222;z-index:99}
+.restart{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  padding:11px 30px;border:none;border-radius:9px;background:#222;color:#fff;font-size:17px;display:none;z-index:99;
+}
+</style>
+</head>
+<body>
+<div id="game">
+  <div class="score-box">Score: <span id="score">0</span></div>
+  <div class="time-box">Time: <span id="time">120</span>s</div>
+  <div id="hole"></div>
+  <button class="restart" id="restartBtn">Restart Game</button>
+</div>
+<script>
+//SVG素材 人、小车、楼房
+const svgHuman = `<svg viewBox="0 0 100 100"><circle cx="50" cy="25" r="16"/><rect x="42" y="45" width="16" height="35"/><rect x="32" y="50" width="12" height="6"/><rect x="56" y="50" width="12" height="6"/><rect x="38" y="80" width="9" height="18"/><rect x="53" y="80" width="9" height="18"/></svg>`;
+const svgCar = `<svg viewBox="0 0 100 60"><rect x="10" y="22" width="80" height="26" rx="6"/><rect x="25" y="12" width="50" height="16" rx="4"/><circle cx="26" cy="48" r="9"/><circle cx="74" cy="48" r="9"/></svg>`;
+const svgHouse = `<svg viewBox="0 0 100 110"><polygon points="50,5 95,45 5,45"/><rect x="18" y="45" width="64" height="60"/><rect x="36" y="60" width="28" height="45"/></svg>`;
+
+const gameWrap = document.getElementById('game');
+const hole = document.getElementById('hole');
+const scoreDom = document.getElementById('score');
+const timeDom = document.getElementById('time');
+const restartBtn = document.getElementById('restartBtn');
+let score = 0;
+let remainTime = 120;
+let holeX = window.innerWidth/2;
+let holeY = window.innerHeight/2;
+let holeR = 24;
+
+// 尺寸、分数、内置svg，无外部图片
+const itemConfig = [
+  {r:9,svg:svgHuman,s:1},
+  {r:18,svg:svgCar,s:4},
+  {r:62,svg:svgHouse,s:35},
+];
+let itemList = [];
+let timer,countDown;
+
+function resetHole(){
+  hole.style.width = holeR*2+'px';
+  hole.style.height = holeR*2+'px';
+  hole.style.left = holeX+'px';
+  hole.style.top = holeY+'px';
+}
+
+function createItems(num=72){
+  itemList.forEach(d=>d.el.remove());
+  itemList=[];
+  for(let i=0;i<num;i++){
+    const cfg = itemConfig[Math.floor(Math.random()*itemConfig.length)];
+    const div = document.createElement('div');
+    div.className='item';
+    div.style.width = cfg.r*2+'px';
+    div.style.height = cfg.r*2+'px';
+    div.innerHTML = cfg.svg;
+    let x = Math.random()*(innerWidth-50)+25;
+    let y = Math.random()*(innerHeight-50)+25;
+    div.style.left=x+'px';div.style.top=y+'px';
+    gameWrap.appendChild(div);
+    itemList.push({el:div,x,y,r:cfg.r,score:cfg.s});
+  }
+}
+
+function checkEat(){
+  for(let i=itemList.length-1;i>=0;i--){
+    const it = itemList[i];
+    const dx = holeX-it.x;
+    const dy = holeY-it.y;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    if(dist < holeR-it.r){
+      score += it.score;
+      scoreDom.innerText = score;
+      it.el.remove();
+      itemList.splice(i,1);
+      holeR += 0.38;
+      resetHole();
+    }
+  }
+}
+
+gameWrap.addEventListener('mousemove',e=>{
+  holeX = e.clientX;holeY = e.clientY;
+  hole.style.left=holeX+'px';hole.style.top=holeY+'px';
+})
+gameWrap.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  const t = e.touches[0];
+  holeX = t.clientX;holeY = t.clientY;
+  hole.style.left=holeX+'px';hole.style.top=holeY+'px';
+})
+
+function startCount(){
+  countDown = setInterval(()=>{
+    remainTime--;
+    timeDom.innerText=remainTime;
+    if(remainTime<=0){
+      clearInterval(countDown);clearInterval(timer);
+      restartBtn.style.display='block';
+    }
+  },1000)
+}
+function gameLoop(){checkEat();}
+
+function initGame(){
+  score=0;remainTime=120;holeR=24;
+  holeX=innerWidth/2;holeY=innerHeight/2;
+  scoreDom.innerText=score;timeDom.innerText=remainTime;
+  restartBtn.style.display='none';
+  resetHole();createItems();
+  clearInterval(timer);clearInterval(countDown);
+  timer = setInterval(gameLoop,30);
+  startCount();
+}
+restartBtn.onclick = initGame;
+window.onload = initGame;
+window.onresize = ()=>createItems();
+</script>
+</body>
+</html>

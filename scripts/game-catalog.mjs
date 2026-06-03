@@ -1,4 +1,4 @@
-export const SITE = "https://vibeverse.app";
+export const SITE = "https://miniverse.gg";
 
 export function gameOgImage(slug) {
   return `${SITE}/assets/og/games/${slug}.svg`;
@@ -14,7 +14,7 @@ export const CATEGORY_META = {
       "Fast reflex games for adrenaline breaks — lane runners, rhythm taps, star catchers, and timing stackers. No download, instant play in your browser.",
     blurb: "Reflex runs, rhythm taps, and arcade timing games.",
     editorial: [
-      "Arcade games on VibeVerse are built for the five-minute adrenaline loop: learn in one swipe, fail fast, retry instantly. Runners like Neon Rush and Starfall escalate speed without punishing you with long tutorials. Score-chasers like Mochi Snake reward quick reflexes — perfect when you want a number worth bragging about.",
+      "Arcade games on Miniverse are built for the five-minute adrenaline loop: learn in one swipe, fail fast, retry instantly. Runners like Neon Rush and Starfall escalate speed without punishing you with long tutorials. Score-chasers like Mochi Snake reward quick reflexes — perfect when you want a number worth bragging about.",
       "Our editors reach for arcade picks between tasks, on commutes, or when puzzle games feel too thoughtful. Each title includes a share card on the results screen so your personal best becomes a story, not just a number.",
     ],
     topPickSlugs: ["neon-rush", "snake-bite"],
@@ -42,7 +42,7 @@ export const CATEGORY_META = {
       "Low-pressure vibes for unwinding — squeeze toys, daily fortunes, cozy shops, travel check-ins, and gentle rituals.",
     blurb: "Stress relief, daily rituals, and cozy simulation.",
     editorial: [
-      "Chill is the biggest category on VibeVerse for a reason: most people open the feed to decompress, not to sweat. Squishy Chick and Daily Fortune are the gateway drugs — zero fail state, instant feedback. Blue Planet Diary and Rainbow Salt Lake nudge you toward small real-world wins and dreamy screenshots.",
+      "Chill is the biggest category on Miniverse for a reason: most people open the feed to decompress, not to sweat. Squishy Chick and Daily Fortune are the gateway drugs — zero fail state, instant feedback. Blue Planet Diary and Rainbow Salt Lake nudge you toward small real-world wins and dreamy screenshots.",
       "Editors use chill picks before bed, after meetings, or when social games feel too loud. Nothing here demands an account or a perfect run — close the tab anytime and come back tomorrow for a streak point.",
     ],
     topPickSlugs: ["squishy-chick", "daily-fortune"],
@@ -68,14 +68,14 @@ const CATEGORY_BY_ID = {
   fortune: "chill", earth: "chill", block: "puzzle", leap: "arcade",
   face: "social", box: "social", pet: "chill", spot: "chill",
   mj: "chill", star: "arcade", stack: "puzzle", match: "puzzle",
-  merge: "puzzle", beat: "arcade",
+  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade",
 };
 
 const EMOJI_BY_ID = {
   fortune: "🌸", earth: "🌍", chick: "🐣", block: "🦌", shop: "🏪",
   leap: "🐸", run: "⚡", face: "💅", box: "🎁", sente: "✨",
   pet: "🐾", spot: "🌈", mj: "🧠", star: "⭐", stack: "🧱",
-  match: "🃏", merge: "🔢", beat: "🐍",
+  match: "🃏", merge: "🔢", beat: "🐍", hole: "🕳️", slash: "🍉",
 };
 
 const RAW_GUIDES = [
@@ -85,7 +85,7 @@ const RAW_GUIDES = [
     forWho: "Great if you need a fidget-style break, want cute feedback without rules, or feel tense between tasks. Skip it if you prefer score-chasing arcade games.",
     how: "Tap Start, then press the chick repeatedly. Each tap adds relief points and emote reactions. Switch Rubber, Balloon, and Clay skins for different bounce effects. Open Achievements to track milestones.",
     tips: ["Balloon skin pops after many taps — a fun milestone.", "Steady tapping builds relief faster than random spam.", "Use Fullscreen on the card for a distraction-free session."],
-    faq: [["Is Squishy Chick free?", "Yes. It runs free in your browser on VibeVerse."], ["Do I need an account?", "No download or sign-up required."], ["Is progress saved?", "Relief and taps can persist locally in your browser for the session."], ["Does it work on mobile?", "Yes — fully touch-friendly."]],
+    faq: [["Is Squishy Chick free?", "Yes. It runs free in your browser on Miniverse."], ["Do I need an account?", "No download or sign-up required."], ["Is progress saved?", "Relief and taps can persist locally in your browser for the session."], ["Does it work on mobile?", "Yes — fully touch-friendly."]],
     related: [["neon-rush.html", "Neon Rush"], ["daily-fortune.html", "Daily Fortune"], ["brain-sketch.html", "Brain Sketch"]],
   },
   {
@@ -111,7 +111,7 @@ const RAW_GUIDES = [
     lead: "Daily random quests that nudge small real-world wins — learn a song, tidy your desk, message someone important. Complete tasks and collect feel-good rewards.",
     forWho: "For people who want playful accountability without heavy productivity apps. Best as a 2-minute daily check-in.",
     how: "Tap Random Quest to receive today's task. Mark Complete when done, then enjoy the reward animation. Share quest from the reward screen. Quest Log stores history locally.",
-    tips: ["Do the quest same day for streak synergy with VibeVerse.", "Share completed quests to inspire friends.", "Quests are suggestions — adapt them to your life."],
+    tips: ["Do the quest same day for streak synergy with Miniverse.", "Share completed quests to inspire friends.", "Quests are suggestions — adapt them to your life."],
     faq: [["Are quests personalized?", "Randomly picked from a curated list each draw."], ["Is data stored?", "Quest log saves locally in your browser."], ["Can I share?", "Yes — Share quest on the reward screen."]],
     related: [["daily-fortune.html", "Daily Fortune"], ["office-pets.html", "Office Pets"], ["play-tips.html", "../play-tips.html"]],
   },
@@ -241,6 +241,24 @@ const RAW_GUIDES = [
     faq: [["Food values?", "Common snacks 1pt, spring rolls and mooncakes 5pt, roast duck 10pt."], ["Controls?", "Tap or drag on the meadow — snake steers toward your finger."], ["Rivals?", "Colored rival snakes spawn over time — touching one ends your run."], ["Share?", "Share score on the game-over screen or via the feed button."]],
     related: [["neon-rush.html", "Neon Rush"], ["starfall.html", "Starfall"], ["stack-rush.html", "Stack Rush"]],
   },
+  {
+    slug: "hole-swallow", id: "hole", name: "Sushi Black Hole", tag: "#HoleSwallow",
+    lead: "Drag a glowing black hole across a sushi table — swallow nigiri, ramen, maki rolls, and golden teapots. Chain combos, trigger FEVER mode, and climb levels with run history saved locally.",
+    forWho: "Hole.io fans and anyone who loves satisfying swallow physics with score multipliers. One-finger drag — instant fun.",
+    how: "Tap Start Swallowing, drag the hole toward food. Bigger items need a larger hole. Build combos within 2.2s for x2–x8 multipliers. Golden teapot adds time. Tap Next level after each round — difficulty ramps. Open History anytime to review past runs.",
+    tips: ["Swallow many small sushi first to grow before tackling maki.", "FEVER at 8 combos doubles all points — keep the chain alive.", "Golden teapots add +4 seconds — grab them when the timer is low.", "Check Run History from the 📋 button or end screen."],
+    faq: [["Combo rules?", "3+ swallows within 2.2s start multipliers — up to x8, FEVER at 8."], ["History saved?", "Yes — last 40 runs in your browser (History button)."], ["Levels?", "Each Next level adds more food, less time, higher rewards."], ["Share?", "Share score from the end screen or feed card."]],
+    related: [["snake-bite.html", "Mochi Snake"], ["starfall.html", "Starfall"], ["number-merge.html", "2248 Chain"]],
+  },
+  {
+    slug: "fruit-slash", id: "slash", name: "Fruit Slash", tag: "#FruitSlash",
+    lead: "Swipe to slice flying fruit on a bamboo board — dodge bombs, chain combos, trigger FEVER mode, and clear level score targets. Run history saved locally.",
+    forWho: "Fruit Ninja fans who want instant browser play with level progression and juicy feedback. One-finger swipe slicing.",
+    how: "Tap Start Slicing, swipe through fruit as they fly up. Miss a fruit or hit a bomb = lose a life (3 total). Reach the level target score to advance — each level spawns faster with more bombs. Open History anytime.",
+    tips: ["Slice star fruit for +80 bonus points.", "Build 8+ combo for FEVER — double points and golden slash trail.", "Don't chase bombs — one swipe costs a life.", "Check the bottom bar for SCORE, TARGET, and LIVES."],
+    faq: [["Like Fruit Ninja?", "Same swipe-to-slice core with levels, combos, and local run history."], ["Levels?", "Each level has a score target — clear it to unlock the next, harder stage."], ["History?", "Last 40 runs saved in browser — tap History on end screen."], ["Share?", "Share score from level clear or game over screen."]],
+    related: [["fresh-fruit-stand.html", "Fresh Fruit Stand"], ["snake-bite.html", "Mochi Snake"], ["hole-swallow.html", "Sushi Black Hole"]],
+  },
 ];
 
 const EDITOR_PICK_BY_ID = {
@@ -262,6 +280,8 @@ const EDITOR_PICK_BY_ID = {
   match: "Editor's pick: calm memory training — no clock, just move count.",
   merge: "Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.",
   beat: "Editor's pick: cute pill snake — swipe, eat coins, chase high score.",
+  hole: "Editor's pick: drag, swallow, combo — FEVER mode is pure dopamine.",
+  slash: "Editor's pick: swipe, juice splatter, level targets — instant Fruit Ninja fix.",
 };
 
 const HIGHLIGHT_BY_ID = {
@@ -283,6 +303,8 @@ const HIGHLIGHT_BY_ID = {
   match: "Six pairs, your move count is the flex.",
   merge: "Longer chains = bigger merges. Corner your highest tile early.",
   beat: "Swipe, eat coins, grow faster — five pill crew colors to meet.",
+  hole: "Chain swallows, hit FEVER, golden teapot adds time — check your run history.",
+  slash: "Swipe flying fruit, dodge bombs, clear level targets — FEVER at 8 combo.",
 };
 
 export const GUIDES = RAW_GUIDES.map((g) => ({

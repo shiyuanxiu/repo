@@ -1,6 +1,6 @@
 {
-  "name": "VibeVerse — Free Mini Games",
-  "short_name": "VibeVerse",
+  "name": "Miniverse — Free Mini Games",
+  "short_name": "Miniverse",
   "description": "18 free browser mini games in a scroll feed. No download.",
   "start_url": "./index.html",
   "scope": "./",
