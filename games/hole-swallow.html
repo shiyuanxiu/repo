@@ -407,6 +407,27 @@
     </div>
   </div>
 
+  <footer class="game-page-support">
+    <p class="site-support-link"><a href="https://buymeacoffee.com/miniversegames" target="_blank" rel="noopener noreferrer">Support Creator → https://buymeacoffee.com/miniversegames</a></p>
+  </footer>
+  <style>
+    body.embed .game-page-support { display: none; }
+    .game-page-support {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 7;
+      padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.45;
+      background: rgba(0, 0, 0, 0.55);
+      pointer-events: auto;
+    }
+    .game-page-support .site-support-link { margin: 0; font-size: inherit; }
+    .game-page-support a { color: #fde68a; font-weight: 700; text-decoration: none; }
+    .game-page-support a:hover { text-decoration: underline; }
+  </style>
+
   <script>
   (function () {
     "use strict";
@@ -1739,6 +1760,23 @@
       rafId = requestAnimationFrame(loop);
       scheduleEmbedResize();
     });
+  })();
+  </script>
+  <script>
+  (function () {
+    if (new URLSearchParams(location.search).get("embed") === "1") return;
+    const s = document.createElement("script");
+    s.setAttribute("data-name", "BMC-Widget");
+    s.setAttribute("data-cfasync", "false");
+    s.src = "https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js";
+    s.dataset.id = "miniversegames";
+    s.dataset.description = "Support me on Buy me a coffee!";
+    s.dataset.message = "All games on miniverse.gg are 100% free! Buy me a coffee to support new game updates.";
+    s.dataset.color = "#BD5FFF";
+    s.dataset.position = "Right";
+    s.setAttribute("data-x_margin", "18");
+    s.setAttribute("data-y_margin", "18");
+    document.body.appendChild(s);
   })();
   </script>
 </body>

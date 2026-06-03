@@ -115,6 +115,22 @@
   text-decoration: none;
 }
 
+.site-support-link {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.site-support-link a {
+  color: var(--feed-accent);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.site-support-link a:hover {
+  text-decoration: underline;
+}
+
 .play-cta {
   display: inline-flex;
   align-items: center;

@@ -535,6 +535,23 @@ body::before {
   text-decoration: underline;
 }
 
+.site-support-link {
+  margin: 0 auto 1rem;
+  max-width: 36rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.site-support-link a {
+  color: var(--feed-accent);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.site-support-link a:hover {
+  text-decoration: underline;
+}
+
 .site-footer-games {
   margin-top: 0.5rem;
   font-size: 0.75rem;
