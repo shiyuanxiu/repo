@@ -267,3 +267,38 @@
 .feed-item .feed-meta {
   flex-wrap: wrap;
 }
+
+@media (max-width: 768px) {
+  .social-feed-stats {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .feed-item:has(.social-comments:not(.hidden)) {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .social-btn {
+    padding: 8px 9px;
+    font-size: 11px;
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  .social-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .social-comments {
+    margin: 0 8px 8px;
+    max-height: min(42vh, 280px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .feed-item .feed-meta .social-feed-stats {
+    margin-left: auto;
+  }
+}

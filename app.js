@@ -10562,6 +10562,7 @@ function initFeedOptimizations() {
     initKnowledgeHub();
     handleDeepLink();
     switchFeedTab(tab);
+    window.MiniverseSocial?.refresh?.();
     document.querySelectorAll(".game-card button, .mini-scene button, .feed-item .btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const gameId = btn.closest(".feed-item")?.dataset.game;
@@ -10791,7 +10792,10 @@ function initSavedGames() {
   try { list = JSON.parse(localStorage.getItem("vv_saved") || "[]"); } catch (_) { list = []; }
   list.forEach((gameId) => {
     const item = document.querySelector(`.feed-item[data-game="${gameId}"]`);
-    item?.querySelector('.stat-btn[data-action="star"]')?.classList.add("saved");
+    const star =
+      item?.querySelector(".social-btn.social-star") ||
+      item?.querySelector('.stat-btn[data-action="star"]');
+    star?.classList.add("saved", "is-on");
   });
 }
 
@@ -10879,8 +10883,11 @@ function feedLazyOnTabSwitch(tabName) {
   }
   if (tabName === "recommend") lazyInitGame("run");
   else stopRunCoverAnim();
-  document.querySelectorAll(`.feed-item[data-feed="${tabName}"]:not(.hidden)`).forEach((item) => {
-    if (isElementVisibleInFeed(item)) lazyInitGame(item.dataset.game);
+  requestAnimationFrame(() => {
+    document.querySelectorAll(`.feed-item[data-feed="${tabName}"]:not(.hidden)`).forEach((item) => {
+      if (item.dataset.game) lazyInitGame(item.dataset.game);
+    });
+    window.MiniverseSocial?.refresh?.();
   });
 }
 

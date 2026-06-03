@@ -27,6 +27,7 @@
   --gradient-underline: linear-gradient(90deg, #ec4899, #a855f7);
   --page-gutter: 2rem;
   --nav-bar-h: calc(68px + env(safe-area-inset-top, 0px));
+  --feed-social-bar-h: 56px;
   --noise-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
@@ -6544,8 +6545,32 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   color: #fff;
 }
 
-.feed-item > .game-card.snake-card > .snake-scene:not(.hidden),
+.feed-item > .game-card.fish-card > .fish-landing:not(.hidden) {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  touch-action: pan-y !important;
+  justify-content: flex-start;
+}
+
+.feed-item > .game-card.fish-card > .fish-play:not(.hidden) {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+.feed-item > .game-card.snake-card .snake-landing,
+.feed-item > .game-card.fish-card .fish-landing,
+.feed-item > .game-card.brain-card .brain-landing {
+  min-height: 0 !important;
+}
+
 .feed-item > .game-card.snake-card > .snake-landing:not(.hidden) {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  touch-action: pan-y !important;
+  justify-content: flex-start;
+}
+
+.feed-item > .game-card.snake-card > .snake-scene.snake-play:not(.hidden) {
   overflow: hidden !important;
   touch-action: none !important;
 }
@@ -8740,10 +8765,17 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
-.feed-item > .game-card.brain-card > .brain-scene:not(.hidden),
 .feed-item > .game-card.brain-card > .brain-landing:not(.hidden) {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  touch-action: pan-y !important;
+  justify-content: flex-start;
+}
+
+.feed-item > .game-card.brain-card > .brain-scene.brain-play:not(.hidden),
+.feed-item > .game-card.brain-card > .mini-scene.brain-scene:not(.hidden):not(.brain-landing) {
   overflow: hidden !important;
-  touch-action: none;
+  touch-action: none !important;
 }
 
 .feed-item > .game-card.brain-card .brain-stage-frame,
@@ -8980,22 +9012,59 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 }
 
 .feed-item:has(> .game-card) > .game-card:not(.fullscreen) {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-height: 0 !important;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  width: 100%;
+  align-self: stretch;
+}
+
+/* Cancel standalone card min-heights inside snap feed — flex allocates space */
+.feed-item > .game-card.star-card,
+.feed-item > .game-card.fish-card,
+.feed-item > .game-card.match-card,
+.feed-item > .game-card.merge-card,
+.feed-item > .game-card.beat-card,
+.feed-item > .game-card.snake-card,
+.feed-item > .game-card.brain-card,
+.feed-item > .game-card.fortune-card {
+  min-height: 0 !important;
+}
+
+/* Landing / cover scenes: fill card body, scroll if content is taller than viewport */
+.feed-item > .game-card:not(.fullscreen) > .mini-scene:not(.hidden),
+.feed-item > .game-card:not(.fullscreen) > .fish-scene:not(.hidden),
+.feed-item > .game-card:not(.fullscreen) > .draw-scene:not(.hidden),
+.feed-item > .game-card:not(.fullscreen) > .snake-landing:not(.hidden),
+.feed-item > .game-card:not(.fullscreen) > .brain-landing:not(.hidden) {
+  flex: 1 1 auto;
+  min-height: 0 !important;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  align-self: stretch;
 }
 
 .feed-item:has(> .game-card) > .feed-meta {
   flex-shrink: 0;
-  margin-top: 0.25rem;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  pointer-events: none;
+  flex-grow: 0;
+  margin-top: 0;
+  min-height: auto;
+  padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+  pointer-events: auto;
+  position: relative;
+  z-index: 25;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .feed-item:has(> .game-card) > .feed-meta .feed-stats,
 .feed-item:has(> .game-card) > .feed-meta .stat-btn,
+.feed-item:has(> .game-card) > .feed-meta .social-btn,
 .feed-item:has(> .game-card) > .feed-meta a {
   pointer-events: auto;
 }
@@ -9151,64 +9220,65 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.14);
 }
 
-/* Mobile: overlay feed-meta so game visuals get full card height */
+/* Mobile: flex footer — keep likes / favorites / comments in flow (iOS Safari) */
 @media (max-width: 768px) {
+  :root {
+    --feed-social-bar-h: 52px;
+  }
+
+  .feed-intro .brand-note {
+    display: none;
+  }
+
   .feed-item:has(> .game-card) {
     position: relative;
+    justify-content: flex-start;
+    padding-bottom: 0;
+  }
+
+  .feed-item:has(> .game-card) > .game-card:not(.fullscreen) {
+    flex: 1 1 0;
+    min-height: 0 !important;
+    max-height: none;
+    width: 100%;
   }
 
   .feed-item:has(> .game-card) > .feed-meta {
-    position: absolute;
-    bottom: calc(0.35rem + env(safe-area-inset-bottom, 0px));
-    left: 0.5rem;
-    right: 0.5rem;
-    z-index: 20;
-    margin-top: 0;
-    padding: 0.65rem 12px 8px;
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 72%, rgba(255, 255, 255, 0.55) 92%, transparent);
-    border-top: none;
+    flex-shrink: 0;
+    width: 100%;
+    padding: 6px 10px max(8px, env(safe-area-inset-bottom, 0px));
     border-radius: 0 0 12px 12px;
-    pointer-events: none;
+    align-items: center;
+    gap: 6px;
   }
 
-  .feed-item:has(> .game-card) > .feed-meta .feed-stats,
-  .feed-item:has(> .game-card) > .feed-meta .stat-btn,
-  .feed-item:has(> .game-card) > .feed-meta a {
-    pointer-events: auto;
+  .feed-item:has(> .game-card) > .feed-meta .feed-meta-left {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
-  .feed-item:has(> .game-card) > .feed-meta .feed-desc {
+  .feed-item:has(> .game-card) > .feed-meta .feed-desc,
+  .feed-item:has(> .game-card) > .feed-meta .feed-guide-link,
+  .feed-item:has(> .game-card) > .feed-meta .feed-user {
     display: none;
   }
 
   .feed-item:has(> .game-card) > .feed-meta .feed-title {
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-
-  .feed-item:has(> .game-card) > .feed-meta .feed-date {
-    margin-bottom: 4px;
-    font-size: 11px;
-  }
-
-  .feed-item:has(> .game-card) > .feed-meta .feed-user {
-    font-size: 11px;
+    font-size: 13px;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .feed-item:has(> .game-card.chick-card) > .feed-meta {
-    background: linear-gradient(to top, rgba(255, 253, 245, 0.98) 58%, rgba(255, 243, 214, 0.78) 82%, transparent);
+    background: rgba(255, 253, 245, 0.98);
   }
 
-  .feed-item > .game-card > [class*="-scene"]:not(.hidden):not([class*="-play"]),
-  .feed-item > .game-card > .draw-scene:not(.hidden),
-  .feed-item > .game-card > .result-scene:not(.hidden),
-  .feed-item > .game-card > .mini-scene:not(.hidden) {
-    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-  }
-
-  .feed-item > .game-card .earth-scene.earth-home {
-    padding-top: 44px;
-    padding-bottom: 20px;
+  .game-categories {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
   }
 }
 
@@ -9578,6 +9648,11 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   display: none;
 }
 
+/* Legacy stat buttons replaced by assets/social-feed.js */
+.feed-stats:not(.social-feed-stats) .stat-btn[data-action="comment"] {
+  display: none;
+}
+
 .favorites-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -9617,6 +9692,48 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   text-align: center;
   padding: 2rem 1rem;
   color: var(--text-muted);
+}
+
+.profile-page .profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.profile-page .profile-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+}
+
+.profile-page .profile-sync {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.profile-page .profile-section {
+  margin-bottom: 36px;
+}
+
+.profile-page .profile-section h2 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+}
+
+.profile-page .profile-hint {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.profile-like-badge {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ef4444;
 }
 
 .feed-progress {
@@ -9681,6 +9798,14 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 @supports (-webkit-touch-callout: none) {
   .feed-column {
     max-height: calc(-webkit-fill-available - var(--nav-bar-h));
+  }
+
+  .feed {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .feed-item:has(> .game-card) > .feed-meta {
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 0px));
   }
 }
 
