@@ -8983,6 +8983,8 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   flex: 1 1 0;
   min-height: 0;
   height: 0;
+  display: block;
+  width: 100%;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -9008,6 +9010,13 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 }
 
 /* Game cards: flex to fit feed scrollport; keep bottom controls + feed-meta visible (iOS) */
+.feed-column .feed .feed-item:has(> .game-card) {
+  overflow: hidden;
+  margin-bottom: 0;
+  padding: 0.35rem 0.5rem 0;
+  background-clip: padding-box;
+}
+
 .feed-item:has(> .game-card) {
   overflow: hidden;
 }
@@ -9020,6 +9029,22 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   overflow: hidden;
   width: 100%;
   align-self: stretch;
+  justify-content: flex-start;
+}
+
+/* Promo / landing scenes — fill game area, scroll when tall (box, face, run, …) */
+.feed-item > .game-card:not(.fullscreen) > [class*="-scene"]:not(.hidden):not([class*="-play"]),
+.feed-item > .game-card:not(.fullscreen) > .draw-scene:not(.hidden) {
+  flex: 1 1 0;
+  min-height: 0 !important;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
+  align-items: center;
+  align-self: stretch;
+  box-sizing: border-box;
 }
 
 /* Cancel standalone card min-heights inside snap feed — flex allocates space */
@@ -9073,14 +9098,15 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item:has(> .game-card) > .feed-meta {
   flex-shrink: 0;
   flex-grow: 0;
-  margin-top: 0;
+  margin-top: 0 !important;
   min-height: auto;
   padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
   pointer-events: auto;
-  position: relative;
-  z-index: 25;
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
   width: 100%;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.98);
   border-top: 1px solid rgba(15, 23, 42, 0.06);
 }
 
@@ -9099,6 +9125,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   flex-direction: column;
   justify-content: flex-start;
   align-content: flex-start;
+  align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -9245,7 +9272,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   box-shadow: 0 2px 12px rgba(15, 23, 42, 0.14);
 }
 
-/* Mobile: grid pins social bar to bottom — game scrolls above, no dead flex gap */
+/* Mobile: flex card shell — game scrolls, social bar sticky at bottom */
 @media (max-width: 768px) {
   :root {
     --feed-social-bar-h: 52px;
@@ -9255,7 +9282,13 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
     flex: 1 1 0;
     min-height: 0;
     height: 0;
+    display: block;
     padding: 0.35rem var(--page-gutter) 0.25rem;
+  }
+
+  /* Footer lives outside #feed — hide on mobile so it doesn't bleed into cards */
+  .feed-column > .site-footer {
+    display: none;
   }
 
   .feed-intro .brand-note {
@@ -9263,10 +9296,9 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   }
 
   .feed-item:has(> .game-card) {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto auto;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     position: relative;
     height: 100%;
     min-height: 100%;
@@ -9277,9 +9309,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   }
 
   .feed-item:has(> .game-card) > .game-card:not(.fullscreen) {
-    grid-row: 1;
-    grid-column: 1;
-    flex: unset;
+    flex: 1 1 0;
     min-height: 0 !important;
     max-height: none;
     width: 100%;
@@ -9289,24 +9319,24 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   }
 
   .feed-item:has(> .game-card) > .feed-meta {
-    grid-row: 2;
-    grid-column: 1;
-    flex: unset;
-    flex-shrink: 0;
+    flex: 0 0 auto;
     width: 100%;
-    padding: 6px 10px 6px;
+    padding: 6px 10px max(6px, env(safe-area-inset-bottom, 0px));
     border-radius: 0 0 12px 12px;
     align-items: center;
     gap: 6px;
-    margin-top: 0;
+    margin-top: 0 !important;
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
   }
 
   .feed-item:has(> .game-card) > .social-comments:not(.hidden) {
-    grid-row: 3;
-    grid-column: 1;
-    max-height: min(34vh, 200px);
+    flex: 0 0 auto;
+    max-height: min(32vh, 180px);
     overflow-y: auto;
-    margin: 0 6px 6px;
+    margin: 0 6px 0;
+    order: 3;
   }
 
   .feed-item:has(> .game-card) > .feed-meta .feed-meta-left {
@@ -9339,14 +9369,29 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
     flex-shrink: 0;
   }
 
-  /* Cover-style landings — scroll inside game row, compact padding */
+  /* Promo landings — compact padding, content from top */
+  .feed-item > .game-card.box-card > .box-scene.box-landing:not(.hidden),
+  .feed-item > .game-card.face-card > .face-scene.face-landing:not(.hidden),
+  .feed-item > .game-card.star-card > .star-scene.star-landing:not(.hidden),
+  .feed-item > .game-card.run-card > .run-scene.run-landing:not(.hidden),
+  .feed-item > .game-card.leap-card > .leap-scene.leap-landing:not(.hidden),
+  .feed-item > .game-card.block-card > .block-scene.block-landing:not(.hidden),
+  .feed-item > .game-card.shop-card > .shop-scene.shop-landing:not(.hidden),
   .feed-item > .game-card.snake-card > .mini-scene.snake-landing:not(.hidden),
   .feed-item > .game-card.fish-card > .fish-scene.fish-landing:not(.hidden) {
     flex: 1 1 0;
     min-height: 0 !important;
-    padding: 2.25rem 0.65rem 0.5rem;
+    padding: 2.5rem 0.65rem 0.5rem;
     justify-content: flex-start;
     gap: 0.35rem;
+  }
+
+  .feed-item > .game-card.box-card .box-title {
+    font-size: 1.375rem;
+  }
+
+  .feed-item > .game-card.box-card #boxCoverCanvas {
+    max-width: min(100%, 280px);
   }
 
   .feed-item > .game-card.snake-card .snake-cover-wrap {
@@ -9365,17 +9410,6 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   .feed-item > .game-card.snake-card .snake-start-btn {
     padding: 0.65rem 1.25rem;
     font-size: 0.9375rem;
-  }
-
-  /* Promo landing cards (Runway Glow-Up, Flavor Box, …) — compact, scroll from top */
-  .feed-item > .game-card.face-card > .face-scene.face-landing:not(.hidden),
-  .feed-item > .game-card.box-card > .box-scene:not(.hidden) {
-    flex: 1 1 0;
-    min-height: 0 !important;
-    max-height: 100%;
-    justify-content: flex-start;
-    padding: 2.75rem 0.85rem 0.75rem;
-    gap: 0.35rem;
   }
 
   .feed-item > .game-card.face-card .face-hero-head {
@@ -9419,10 +9453,6 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
   .feed-item > .game-card.face-card .face-feature-desc {
     font-size: 0.625rem;
-  }
-
-  .feed-item > .game-card.box-card > .box-scene:not(.hidden) {
-    padding: 2.75rem 0.85rem 0.75rem;
   }
 }
 
