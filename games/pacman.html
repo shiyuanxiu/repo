@@ -6,9 +6,16 @@
   <meta name="description" content="Classic Pac-Man arcade — eat pellets, power up, dodge ghosts. 12 mazes, wrap tunnels, keyboard controls.">
   <meta name="keywords" content="Pac-Man,Pacman,arcade,maze,retro,HTML5 game,classic,Miniverse">
   <title>Pac-Man Classic Arcade | Miniverse</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).get("embed") !== "1") {
+        var l = document.createElement("link");
+        l.rel = "stylesheet";
+        l.href = "https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap";
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -19,7 +26,9 @@
       touch-action: manipulation; user-select: none; -webkit-user-select: none;
       color: #f8fafc;
     }
-    html.embed-root, body.embed { height: 100%; }
+    html.embed-root, body.embed {
+      height: 100%; min-height: -webkit-fill-available; overflow: hidden;
+    }
     body.embed:not(.playing) { touch-action: pan-y; }
     body.embed.playing { touch-action: none; }
     #wrap {
@@ -27,6 +36,13 @@
       display: flex; align-items: center; justify-content: center;
       padding: max(8px, env(safe-area-inset-top)) 8px max(100px, calc(88px + env(safe-area-inset-bottom))) 8px;
     }
+    /* iOS Safari iframe: fixed + mix-blend-mode often yields blank canvas */
+    body.embed #wrap {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      padding: max(4px, env(safe-area-inset-top)) 4px max(92px, calc(80px + env(safe-area-inset-bottom))) 4px;
+    }
+    body.embed #wrap::after { display: none; }
+    body.embed canvas { max-height: calc(100% - 84px); }
     #wrap::after {
       content: ""; position: absolute; pointer-events: none; z-index: 3;
       width: min(100% - 16px, 960px); aspect-ratio: 960 / 640; max-height: calc(100% - 120px);
@@ -2269,15 +2285,24 @@ function Game(id,params){
 
   function fitCanvas() {
     if (!canvas) return;
-    canvas.style.width = Math.min(window.innerWidth - 8, 960) + "px";
-    canvas.style.height = "auto";
+    var maxW = Math.min(window.innerWidth - 8, 960);
+    if (EMBED) maxW = Math.min(maxW, window.innerWidth - 4);
+    canvas.style.width = maxW + "px";
+    canvas.style.height = EMBED ? Math.round(maxW * 640 / 960) + "px" : "auto";
   }
   fitCanvas();
   window.addEventListener("resize", fitCanvas);
+  window.addEventListener("load", function () {
+    fitCanvas();
+    requestAnimationFrame(fitCanvas);
+  });
 
   if (EMBED) {
     document.documentElement.classList.add("embed-root");
     document.body.classList.add("embed");
+    fitCanvas();
+    setTimeout(fitCanvas, 0);
+    setTimeout(fitCanvas, 120);
     window.parent.postMessage({ type: "pacman-ready" }, "*");
   }
 

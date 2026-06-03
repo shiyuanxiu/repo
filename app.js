@@ -9783,23 +9783,38 @@ function snakeSetFeedLock(on) {
   snakeFeed?.classList.toggle("snake-interacting", on);
 }
 
+function isIframeBlank(frame) {
+  if (!frame) return true;
+  const src = frame.getAttribute("src") || frame.src || "";
+  return !src || src === "about:blank" || src.endsWith("about:blank");
+}
+
 function loadIframeGame(game) {
   const map = {
     slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=ios-audio-unlock" },
     hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=ios-audio-unlock" },
-    pacman: { id: "pacmanFrame", src: "games/pacman.html?embed=1&v=pacman-v6" },
+    pacman: { id: "pacmanFrame", src: "games/pacman.html?embed=1&v=pacman-v7" },
   };
   const cfg = map[game];
   if (!cfg) return false;
   const frame = document.getElementById(cfg.id);
   if (!frame) return false;
   const target = frame.dataset.src || cfg.src;
-  const blank = !frame.src || frame.src === "about:blank" || frame.src.endsWith("about:blank");
-  if (blank || frame.dataset.loaded !== "1") {
+  if (game === "pacman") frame.removeAttribute("loading");
+  if (isIframeBlank(frame) || frame.dataset.loaded !== "1") {
     frame.dataset.loaded = "1";
     frame.src = target;
   }
   frame.contentWindow?.postMessage({ type: `${game}-resize` }, "*");
+  if (game === "pacman" && isIframeBlank(frame)) {
+    frame.dataset.loaded = "0";
+    setTimeout(() => {
+      if (!isIframeBlank(frame)) return;
+      frame.dataset.loaded = "1";
+      frame.src = target;
+      frame.contentWindow?.postMessage({ type: "pacman-resize" }, "*");
+    }, 280);
+  }
   return true;
 }
 

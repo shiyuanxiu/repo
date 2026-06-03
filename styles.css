@@ -445,7 +445,8 @@ body::before {
   border-radius: 0;
 }
 
-.feed-item:has(> .game-card.pacman-card) {
+.feed-item:has(> .game-card.pacman-card),
+.feed-item[data-game="pacman"] {
   background: linear-gradient(180deg, #0a0a12 0%, #12121f 42%, #1a1a2e 100%);
 }
 
@@ -458,15 +459,18 @@ body::before {
   border-radius: 20px;
 }
 
-.feed-item:has(> .game-card.pacman-card) > .feed-meta {
+.feed-item:has(> .game-card.pacman-card) > .feed-meta,
+.feed-item[data-game="pacman"] > .feed-meta {
   border-top: none;
   background: transparent;
   padding: 14px 18px;
   color: #e2e8f0;
 }
 
-.feed-item:has(> .game-card.pacman-card) .feed-title { color: #f8fafc; }
-.feed-item:has(> .game-card.pacman-card) .feed-desc { color: #94a3b8; }
+.feed-item:has(> .game-card.pacman-card) .feed-title,
+.feed-item[data-game="pacman"] .feed-title { color: #f8fafc; }
+.feed-item:has(> .game-card.pacman-card) .feed-desc,
+.feed-item[data-game="pacman"] .feed-desc { color: #94a3b8; }
 
 .pacman-card .pacman-frame {
   display: block;
