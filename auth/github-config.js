@@ -1,8 +1,29 @@
 window.GITHUB_AUTH_CONFIG = {
-  clientId: "Ov23liOu1avolRsyCXgE",
+  /** Local dev OAuth App (localhost:8765). */
+  clientIdLocal: "Ov23liOu1avolRsyCXgE",
+  /** Production OAuth App (miniverse.gg). */
+  clientIdProduction: "Ov23liEp1iutKOH6gnjd",
   scope: "read:user",
   storageKey: "miniverse_github_auth",
   stateKey: "miniverse_oauth_state",
+  redirectUriLocal: "http://localhost:8765/github-callback.html",
+  redirectUriProduction: "https://miniverse.gg/github-callback.html",
+  /**
+   * Auth mode (local + production):
+   *   "mock"  — demo user, no GitHub OAuth (current)
+   *   "oauth" — real GitHub login (enable later)
+   */
+  authMode: "mock",
+  /** Demo user while authMode is "mock". */
+  mockUser: {
+    login: "demo_player",
+    id: 10000001,
+    name: "Demo Player",
+    avatar_url: "https://avatars.githubusercontent.com/u/10000001?v=4",
+  },
+  /** Token exchange — local dev-server only (unused when authModeProduction is mock). */
+  tokenExchangeApiLocal: "/auth/exchange-token",
+  tokenExchangeApiProduction: "https://miniverse.gg/auth/exchange-token",
   social: {
     /** Shared comments + counts for all users (no GitHub required). */
     communityApi: "/auth/social/community",

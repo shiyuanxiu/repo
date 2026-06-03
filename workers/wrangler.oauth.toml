@@ -1,0 +1,13 @@
+name = "miniverse-oauth"
+main = "oauth-exchange.js"
+compatibility_date = "2024-01-01"
+
+# After deploy, add route in Cloudflare dashboard:
+#   miniverse.gg/auth/exchange-token  →  miniverse-oauth
+# Or uncomment and set your zone:
+# routes = [{ pattern = "miniverse.gg/auth/exchange-token", zone_name = "miniverse.gg" }]
+
+[vars]
+GITHUB_CLIENT_ID = "Ov23liEp1iutKOH6gnjd"
+
+# wrangler secret put GITHUB_CLIENT_SECRET

@@ -20,7 +20,10 @@ GITHUB_TIMEOUT = 90
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 COMMUNITY_STORE = DATA_DIR / "miniverse-community.json"
-CLIENT_ID = "Ov23liOu1avolRsyCXgE"
+CLIENT_ID_LOCAL = "Ov23liOu1avolRsyCXgE"
+CLIENT_ID_PRODUCTION = "Ov23liEp1iutKOH6gnjd"
+REDIRECT_URI_LOCAL = "http://localhost:8765/github-callback.html"
+REDIRECT_URI_PRODUCTION = "https://miniverse.gg/github-callback.html"
 PORT = 8765
 GITHUB_API_PREFIX = "/auth/github-api"
 SOCIAL_COMMUNITY_PATH = "/auth/social/community"
@@ -820,13 +823,58 @@ def get_opener() -> urllib.request.OpenerDirector:
     return _opener
 
 
-def load_client_secret() -> str:
+def load_secrets_js() -> dict[str, str]:
     path = ROOT / "auth" / "secrets.js"
     if not path.is_file():
-        return ""
+        return {}
     text = path.read_text(encoding="utf-8")
-    match = re.search(r'clientSecret:\s*"([^"]+)"', text)
-    return match.group(1) if match else ""
+
+    def pick(*keys: str) -> str:
+        for key in keys:
+            m = re.search(rf'{re.escape(key)}:\s*"([^"]+)"', text)
+            if m and m.group(1):
+                return m.group(1)
+        return ""
+
+    return {
+        "clientSecretLocal": pick("clientSecretLocal", "clientSecret"),
+        "clientSecretProduction": pick("clientSecretProduction"),
+    }
+
+
+def load_oauth_config() -> dict[str, str]:
+    cfg_path = ROOT / "auth" / "github-config.js"
+    text = cfg_path.read_text(encoding="utf-8") if cfg_path.is_file() else ""
+
+    def pick(key: str, default: str = "") -> str:
+        m = re.search(rf'{re.escape(key)}:\s*"([^"]+)"', text)
+        return m.group(1) if m and m.group(1) else default
+
+    return {
+        "clientIdLocal": pick("clientIdLocal", pick("clientId", CLIENT_ID_LOCAL)),
+        "clientIdProduction": pick("clientIdProduction", CLIENT_ID_PRODUCTION),
+        "redirectUriLocal": pick("redirectUriLocal", REDIRECT_URI_LOCAL),
+        "redirectUriProduction": pick("redirectUriProduction", REDIRECT_URI_PRODUCTION),
+    }
+
+
+def is_local_redirect_uri(redirect_uri: str) -> bool:
+    u = (redirect_uri or "").lower()
+    return "localhost:8765" in u or "127.0.0.1:8765" in u
+
+
+def oauth_credentials_for_redirect(redirect_uri: str) -> tuple[str, str, str]:
+    """Return (client_id, client_secret, env_label) for GitHub token exchange."""
+    cfg = load_oauth_config()
+    sec = load_secrets_js()
+    if is_local_redirect_uri(redirect_uri):
+        return cfg["clientIdLocal"], sec.get("clientSecretLocal", ""), "local"
+    return cfg["clientIdProduction"], sec.get("clientSecretProduction", ""), "production"
+
+
+def load_client_secret() -> str:
+    """Legacy helper — local dev secret."""
+    return load_secrets_js().get("clientSecretLocal", "")
 
 
 def oauth_access_token_request(payload: dict) -> tuple[int, bytes]:
@@ -1023,13 +1071,16 @@ class DevHandler(SimpleHTTPRequestHandler):
             self._json_response(400, {"error": "missing_code_or_redirect_uri"})
             return
 
-        secret = load_client_secret()
+        client_id, secret, env_label = oauth_credentials_for_redirect(redirect_uri)
         if not secret:
             self._json_response(
                 500,
                 {
                     "error": "missing_client_secret",
-                    "error_description": "Fill auth/secrets.js and restart dev server.",
+                    "error_description": (
+                        f"Fill auth/secrets.js → clientSecret{env_label.capitalize()} "
+                        f"(or clientSecret for local) and restart dev server."
+                    ),
                 },
             )
             return
@@ -1037,7 +1088,7 @@ class DevHandler(SimpleHTTPRequestHandler):
         try:
             status, raw = oauth_access_token_request(
                 {
-                    "client_id": CLIENT_ID,
+                    "client_id": client_id,
                     "client_secret": secret,
                     "code": code,
                     "redirect_uri": redirect_uri,

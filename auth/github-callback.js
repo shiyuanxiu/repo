@@ -32,7 +32,8 @@
     show("正在验证 GitHub 账号…");
 
     try {
-      const tokenRes = await fetch("/auth/exchange-token", {
+      const exchangeUrl = window.MiniverseGitHubAuth?.tokenExchangeApi?.() || "/auth/exchange-token";
+      const tokenRes = await fetch(exchangeUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -44,7 +45,9 @@
       if (!tokenRes.ok || tokenData.error || !tokenData.access_token) {
         let hint =
           tokenData.error === "missing_client_secret"
-            ? "请用 start-dev-server.bat 启动（不要用 py -m http.server），并填写 auth/secrets.js"
+            ? window.MiniverseGitHubAuth?.isLocalDev?.()
+              ? "请用 start-dev-server.bat 启动，并在 auth/secrets.js 填写 clientSecretLocal"
+              : "线上 Worker 未配置 GITHUB_CLIENT_SECRET — 运行 deploy-oauth-worker.bat"
             : tokenData.error_description || tokenData.error || "请检查 Client Secret 与 Callback URL";
         if (tokenData.error === "github_unreachable" || /ssl|handshake|timed out/i.test(hint)) {
           hint =

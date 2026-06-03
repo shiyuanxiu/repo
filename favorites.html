@@ -27,7 +27,7 @@
       <img id="profileAvatar" class="profile-avatar" alt="" width="56" height="56">
       <div>
         <h1 id="profileName">My games</h1>
-        <p id="profileSync" class="profile-sync">Synced from GitHub Gist</p>
+        <p id="profileSync" class="profile-sync hidden" hidden></p>
       </div>
     </div>
     <div id="profileGuest" class="favorites-empty">
@@ -134,27 +134,50 @@
         avatarEl.hidden = false;
       }
 
+      const isDemo = window.MiniverseGitHubAuth?.isMockAuth?.() === true;
+      const syncEl = document.getElementById("profileSync");
+      syncEl.hidden = true;
+      syncEl.classList.add("hidden");
+
       let favorites = [];
       let likes = [];
-      try {
-        const res = await fetch("/auth/social/community", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          communityLikes = data.likes || {};
-          const row = data.users?.[auth.user.login] || {};
-          favorites = row.favorites || [];
-          likes = row.likes || [];
-          document.getElementById("profileSync").textContent = "Synced from GitHub Gist · global-users.json";
+      if (!isDemo) {
+        try {
+          const res = await fetch("/auth/social/community", { cache: "no-store" });
+          if (res.ok) {
+            const data = await res.json();
+            communityLikes = data.likes || {};
+            const row = data.users?.[auth.user.login] || {};
+            favorites = row.favorites || [];
+            likes = row.likes || [];
+          }
+        } catch {
+          /* offline — use local cache below */
         }
-      } catch {
-        document.getElementById("profileSync").textContent = "Offline — start start-dev-server.bat to sync";
       }
 
       if (!favorites.length) {
         try {
-          favorites = JSON.parse(localStorage.getItem("vv_saved") || "[]");
+          const cache = JSON.parse(localStorage.getItem("miniverse_social_cache_v1") || "{}");
+          favorites = cache.user?.favorites || JSON.parse(localStorage.getItem("vv_saved") || "[]");
         } catch {
           favorites = [];
+        }
+      }
+      if (!likes.length) {
+        try {
+          const cache = JSON.parse(localStorage.getItem("miniverse_social_cache_v1") || "{}");
+          likes = cache.user?.likes || [];
+        } catch {
+          likes = [];
+        }
+      }
+      if (isDemo && !Object.keys(communityLikes).length) {
+        try {
+          const cache = JSON.parse(localStorage.getItem("miniverse_social_cache_v1") || "{}");
+          communityLikes = cache.community?.likes || {};
+        } catch {
+          communityLikes = {};
         }
       }
 

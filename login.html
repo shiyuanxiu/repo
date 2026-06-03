@@ -91,11 +91,12 @@
 
     <div class="warn" id="serverWarn" hidden></div>
 
-    <ol class="steps">
-      <li>Double-click <code>start-dev-server.bat</code> in the project folder</li>
-      <li>Open <code>http://localhost:8765/login.html</code> (use <code>http://</code>, not https)</li>
-      <li>If GitHub times out: add lines from <code>auth/hosts.example</code> to Windows hosts (Admin), then <code>ipconfig /flushdns</code></li>
-      <li>OAuth callback must be <code>http://localhost:8765/github-callback.html</code> in GitHub App settings</li>
+    <ol class="steps" id="loginSteps">
+      <li data-local-only>Double-click <code>start-dev-server.bat</code> in the project folder</li>
+      <li data-local-only>Open <code>http://localhost:8765/login.html</code> (use <code>http://</code>, not https)</li>
+      <li data-local-only>If GitHub times out: add lines from <code>auth/hosts.example</code> to Windows hosts (Admin), then <code>ipconfig /flushdns</code></li>
+      <li>OAuth callback (local): <code>http://localhost:8765/github-callback.html</code></li>
+      <li>OAuth callback (production): <code>https://miniverse.gg/github-callback.html</code></li>
     </ol>
 
     <button class="btn" id="githubLoginBtn" type="button">Continue with GitHub</button>
@@ -124,6 +125,16 @@
         return;
       }
 
+      if (window.MiniverseGitHubAuth?.isMockAuth?.()) {
+        location.replace("index.html");
+        return;
+      }
+
+      var localDev = window.MiniverseGitHubAuth?.isLocalDev?.() === true;
+      document.querySelectorAll("[data-local-only]").forEach(function (el) {
+        el.hidden = !localDev;
+      });
+
       function refreshOAuthLink() {
         if (!window.MiniverseGitHubAuth?.buildAuthorizeUrl) return;
         try {
@@ -136,8 +147,17 @@
       }
 
       async function checkServer() {
-        statusEl.textContent = "Checking dev server…";
+        statusEl.textContent = localDev ? "Checking dev server…" : "Production sign-in";
         serverWarn.hidden = true;
+        if (!localDev) {
+          loginBtn.disabled = false;
+          serverWarn.className = "warn ok";
+          serverWarn.textContent = "Production — sign in with GitHub (miniverse.gg callback).";
+          serverWarn.hidden = false;
+          statusEl.textContent = "Ready. Callback: " + window.MiniverseGitHubAuth.redirectUri();
+          refreshOAuthLink();
+          return;
+        }
         try {
           var res = await fetch("/auth/health", { cache: "no-store" });
           if (!res.ok) throw new Error("HTTP " + res.status);

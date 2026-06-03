@@ -149,10 +149,20 @@
   }
 
   function lockedToast() {
+    if (window.MiniverseGitHubAuth?.isMockAuth?.()) return;
     toast("Sign in with GitHub to like, save, or comment.");
   }
 
+  function isProductionMock() {
+    return window.MiniverseGitHubAuth?.isMockAuth?.() === true;
+  }
+
+  function isDemoAuth() {
+    return isProductionMock();
+  }
+
   function useCommunityApi() {
+    if (window.MiniverseGitHubAuth?.isMockAuth?.()) return false;
     return !!COMMUNITY_API;
   }
 
@@ -407,6 +417,12 @@
 
   async function pullFromGists() {
     ensureCacheShape();
+    if (isProductionMock()) {
+      await loadAllMockComments();
+      saveCache();
+      syncSavedGamesList();
+      return;
+    }
     if (useCommunityApi()) {
       await pullCommunityShared();
     } else {
@@ -443,12 +459,17 @@
 
   function scheduleSync() {
     if (!isAuthed()) return;
+    if (isProductionMock()) {
+      saveCache();
+      return;
+    }
     markPendingSync();
     clearTimeout(syncTimer);
     syncTimer = setTimeout(flushToGists, SYNC_DEBOUNCE_MS);
   }
 
   async function flushToGists() {
+    if (isProductionMock()) return;
     if (!isAuthed() || syncing) return;
     if (useCommunityApi()) {
       clearPendingSync();
@@ -489,6 +510,10 @@
   }
 
   function tryResumePendingSync() {
+    if (isProductionMock()) {
+      loadAllMockComments().then(refreshAllCardsUI);
+      return;
+    }
     if (useCommunityApi()) pullCommunityShared().then(refreshAllCardsUI);
     if (!isAuthed()) return;
     if (localStorage.getItem(LS_PENDING_SYNC)) scheduleSync();
@@ -730,6 +755,12 @@
     const input = panel?.querySelector(".social-comment-input");
     const send = panel?.querySelector(".social-comment-send");
     if (!input || !send) return;
+    if (isProductionMock()) {
+      input.disabled = true;
+      send.disabled = true;
+      input.placeholder = "Demo mode — view mock comments only";
+      return;
+    }
     const replyTo = panel.querySelector(".social-comment-form")?.dataset.replyTo;
     const hasMain = svc && authed && svc.hasMainComment(getCommentsForCard(gameId), myUserId());
     if (!authed) {
@@ -782,19 +813,18 @@
       </button>`;
   }
 
+  function commentPanelHint() {
+    if (isProductionMock()) return "";
+    if (!isAuthed()) return "Sign in to comment.";
+    return "";
+  }
+
   function buildCommentsPanel(gameId) {
     const authed = isAuthed();
+    const hint = commentPanelHint();
     return `
       <div class="social-comments hidden" data-social-comments="${gameId}" data-card-id="${gameId}">
-        <p class="social-login-hint">${
-          useCommunityApi()
-            ? authed
-              ? "Comments sync to GitHub Gist (global-comment.json). One main comment per account; replies supported."
-              : "Sign in to post · everyone can read comments."
-            : authed
-              ? "Comments sync via public GitHub Gist."
-              : "Sign in to read and post comments."
-        }</p>
+        ${hint ? `<p class="social-login-hint">${hint}</p>` : ""}
         <ul class="social-comment-list"></ul>
         <div class="social-comment-reply-hint hidden" data-reply-hint>
           Replying to <strong data-reply-name></strong>
@@ -839,6 +869,17 @@
     if (willLike) btn.classList.add("pop"), setTimeout(() => btn.classList.remove("pop"), 400);
     setCountEl(btn, getLikeCount(gameId) + (willLike ? 1 : -1));
     toast(willLike ? "Liked!" : "Like removed");
+    if (isProductionMock()) {
+      ensureCacheShape();
+      const likes = cache.community.likes[gameId] || (cache.community.likes[gameId] = []);
+      const i = likes.indexOf(login);
+      if (willLike && i === -1) likes.push(login);
+      if (!willLike && i !== -1) likes.splice(i, 1);
+      saveCache();
+      updateCardUI(document.querySelector(`[data-game="${gameId}"]`)?.closest(".feed-item") || document.querySelector(".feed-item"), gameId);
+      refreshAllCardsUI();
+      return;
+    }
     if (useCommunityApi()) {
       try {
         await postCommunityOp({ op: "like", gameId, login, liked: willLike });
@@ -868,6 +909,11 @@
     syncSavedGamesList();
     if (typeof toggleSavedGame === "function") toggleSavedGame(gameId, willSave);
     toast(willSave ? "Saved to favorites" : "Removed from favorites");
+    if (isProductionMock()) {
+      saveCache();
+      updateCardUI(item, gameId);
+      return;
+    }
     if (useCommunityApi()) {
       try {
         await postCommunityOp({ op: "favorite", gameId, login, saved: willSave });
@@ -921,6 +967,10 @@
   }
 
   async function handleCommentPost(item, gameId, text) {
+    if (isProductionMock()) {
+      toast("Demo mode — mock comments are read-only.");
+      return;
+    }
     if (!isAuthed()) return lockedToast();
     const trimmed = text.trim();
     if (!trimmed) return;
