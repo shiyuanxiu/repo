@@ -66,7 +66,7 @@
       {"@type":"ListItem","position":14,"name":"Starfall","url":"https://miniverse.gg/games/starfall.html"},
       {"@type":"ListItem","position":15,"name":"Piggy Catch","url":"https://miniverse.gg/games/stack-rush.html"},
       {"@type":"ListItem","position":16,"name":"Memory Match","url":"https://miniverse.gg/games/memory-match.html"},
-      {"@type":"ListItem","position":17,"name":"2248 Chain","url":"https://miniverse.gg/games/number-merge.html"},
+      {"@type":"ListItem","position":17,"name":"2048","url":"https://miniverse.gg/2048.html"},
       {"@type":"ListItem","position":18,"name":"Mochi Snake","url":"https://miniverse.gg/games/snake-bite.html"}
     ]
   }
@@ -76,7 +76,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=merge-ios-drag">
+  <link rel="stylesheet" href="styles.css?v=tile2048-feed">
   <link rel="stylesheet" href="assets/social-feed.css?v=20">
   <link rel="stylesheet" href="assets/legal.css">
   <style>
@@ -1769,7 +1769,7 @@
 
       
       <article class="feed-item" data-feed="games" data-game="merge">
-        <div class="game-card merge-card" id="mergeCard">
+        <div class="game-card tile2048-card" id="mergeCard">
           <div class="card-controls">
             <button class="control-btn sound-toggle" data-game="merge" aria-label="Sound">
               <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
@@ -1780,46 +1780,72 @@
               Full
             </button>
           </div>
-          <div class="merge-scene merge-landing" id="mergeLanding">
-            <span class="merge-badge">No ads · Offline · Free</span>
-            <span class="merge-deco merge-deco-1" aria-hidden="true">✦</span>
-            <span class="merge-deco merge-deco-2" aria-hidden="true">2</span>
-            <span class="merge-deco merge-deco-3" aria-hidden="true">128</span>
-            <div class="merge-cover-wrap">
-              <canvas id="mergeCoverCanvas" width="360" height="260" aria-hidden="true"></canvas>
-              <div class="merge-cover-content">
-                <p class="merge-cover-kicker">2248 Chain</p>
-                <h2 class="merge-title">Link &amp; Double</h2>
-                <p class="merge-sub">Drag through matching numbers · merge ×2 · beat your best</p>
-                <button class="merge-start-btn" id="mergeStartBtn" type="button">▶ Play Now</button>
-              </div>
+          <div class="tile2048-scene tile2048-landing" id="tile2048Landing">
+            <span class="tile2048-badge">Classic · Official rules</span>
+            <div class="tile2048-cover-demo" aria-hidden="true">
+              <div class="tile2048-cell tile-2">2</div>
+              <div class="tile2048-cell tile-4">4</div>
+              <div class="tile2048-cell tile-8">8</div>
+              <div class="tile2048-cell tile-16">16</div>
+              <div class="tile2048-cell tile-32">32</div>
+              <div class="tile2048-cell tile-64">64</div>
+              <div class="tile2048-cell tile-128">128</div>
+              <div class="tile2048-cell tile-256">256</div>
+              <div class="tile2048-cell tile-512">512</div>
+              <div class="tile2048-cell tile-1024">1024</div>
+              <div class="tile2048-cell tile-2048">2048</div>
+              <div class="tile2048-cell"></div>
+              <div class="tile2048-cell"></div>
+              <div class="tile2048-cell"></div>
+              <div class="tile2048-cell"></div>
+              <div class="tile2048-cell"></div>
             </div>
-            <div class="merge-tags">
-              <span>5×5 grid</span><span>One-hand</span><span>Brain snack</span>
+            <h2 class="tile2048-title">2048</h2>
+            <p class="tile2048-sub">Gabriele Cirulli classic — swipe the 4×4 board, merge tiles, reach 2048.</p>
+            <button class="tile2048-start-btn" id="tile2048StartBtn" type="button">▶ Play Now</button>
+            <div class="tile2048-tags">
+              <span>4×4 slide</span><span>90/10 spawn</span><span>One merge per move</span>
             </div>
           </div>
-          <div class="merge-scene merge-play hidden" id="mergePlay">
-            <div class="merge-hud">
-              <div class="merge-hud-box"><span>Score</span><strong id="mergeScore">0</strong></div>
-              <div class="merge-hud-box"><span>Best</span><strong id="mergeBest">0</strong></div>
+          <div class="tile2048-scene tile2048-play hidden" id="tile2048Play">
+            <div class="tile2048-hud">
+              <div class="tile2048-hud-box"><span>Score</span><strong id="tile2048Score">0</strong></div>
+              <div class="tile2048-hud-box"><span>Best</span><strong id="tile2048Best">0</strong></div>
             </div>
-            <div class="merge-toast hidden" id="mergeToast" aria-live="polite"></div>
-            <div class="merge-stage-frame">
-              <canvas id="mergeCanvas" width="390" height="390" aria-label="Number merge 2248 grid"></canvas>
+            <div class="tile2048-board-shell" id="tile2048BoardWrap">
+              <div class="tile2048-grid" id="tile2048Grid" role="grid" aria-label="2048 game board"></div>
+              <div class="tile2048-overlay hidden" id="tile2048Win" role="dialog" aria-modal="true">
+                <div class="tile2048-overlay-box">
+                  <h3>You win!</h3>
+                  <p>You reached 2048.</p>
+                  <div class="tile2048-overlay-actions">
+                    <button class="tile2048-tool-btn" id="tile2048KeepBtn" type="button">Keep going</button>
+                    <button class="tile2048-tool-btn" id="tile2048WinNewBtn" type="button">New game</button>
+                  </div>
+                </div>
+              </div>
+              <div class="tile2048-overlay hidden" id="tile2048Lose" role="dialog" aria-modal="true">
+                <div class="tile2048-overlay-box">
+                  <h3>Game over</h3>
+                  <p id="tile2048LoseMsg">No moves left.</p>
+                  <div class="tile2048-overlay-actions">
+                    <button class="tile2048-tool-btn" id="tile2048RetryBtn" type="button">Try again</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p class="merge-hint" id="mergeHint">Drag to link same numbers · release to merge ×2</p>
-            <div class="merge-play-tools" id="mergePlayTools">
-              <button class="merge-tool-btn" id="mergeRestartBtn" type="button">↺ Restart</button>
-              <button class="merge-tool-btn" id="mergeMuteBtn" type="button">🔊 Sound</button>
-              <button class="merge-back-btn" id="mergeBackBtn" type="button">← Back</button>
+            <p class="tile2048-hint" id="tile2048Hint">Swipe or arrow keys · classic 2048 rules</p>
+            <div class="tile2048-play-tools">
+              <button class="tile2048-tool-btn" id="tile2048NewBtn" type="button">↺ New Game</button>
+              <button class="tile2048-back-btn" id="tile2048BackBtn" type="button">← Back</button>
             </div>
           </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
-            <p class="feed-title">2248 Chain</p>
-            <p class="feed-desc">Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.</p>
-            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">✨</span><span>Chain Labs</span></div>
+            <p class="feed-title">2048</p>
+            <p class="feed-desc">Editor's pick: the original Gabriele Cirulli slide puzzle — 4×4, merge to 2048.</p>
+            <div class="feed-user"><span class="feed-avatar" aria-hidden="true">🎯</span><span>Classic Grid</span></div>
           </div>
           <div class="feed-stats">
             <button class="stat-btn" data-action="like" aria-label="Like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
@@ -1999,7 +2025,8 @@
             <a href="games/lily-pad-leap.html">Lily Pad</a> ·
             <a href="games/memory-match.html">Memory Match</a> ·
             <a href="games/rainbow-salt-lake.html">Salt Lake</a> ·
-            <a href="games/number-merge.html">2248 Chain</a>
+            <a href="2048.html">2048</a>
+            <a href="number-merge.html">2248 Chain</a>
           </p>
           <p class="site-footer-games site-footer-games-sub">
             <a href="games/index.html">All game guides →</a> ·
@@ -2016,7 +2043,8 @@
   <script src="assets/chunks.js"></script>
   <script src="assets/games-chunk.js"></script>
   <script src="assets/learn-chunk.js"></script>
-  <script src="app.js?v=merge-playable-fix"></script>
+  <script src="assets/tile2048-feed.js?v=tile2048-feed"></script>
+  <script src="app.js?v=tile2048-feed"></script>
   <script src="assets/comment-service.js?v=1"></script>
   <script src="assets/social-feed.js?v=21"></script>
 

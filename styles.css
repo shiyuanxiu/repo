@@ -4818,7 +4818,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-empty-sub { font-size: 14px; margin: 0; }
 
 /* ===== 游戏 Tab 共用 ===== */
-.star-card, .fish-card, .match-card, .merge-card, .beat-card {
+.star-card, .fish-card, .match-card, .merge-card, .tile2048-card, .beat-card {
   min-height: 520px;
   position: relative;
   overflow: hidden;
@@ -4836,7 +4836,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 }
 
 .star-scene.hidden, .fish-scene.hidden, .match-scene.hidden,
-.merge-scene.hidden, .beat-scene.hidden { display: none; }
+.merge-scene.hidden, .tile2048-scene.hidden, .beat-scene.hidden { display: none; }
 
 /* ===== 星落拾光 ===== */
 .star-card {
@@ -6507,6 +6507,288 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
   touch-action: none;
 }
 
+/* ===== Classic 2048 feed card (replaces 2248 Chain slot) ===== */
+.tile2048-card {
+  background: linear-gradient(145deg, #faf8ef 0%, #eee4da 45%, #faf8ef 100%);
+}
+
+.feed-item:has(> .game-card.tile2048-card) {
+  background: linear-gradient(180deg, #faf8ef 0%, #ede0c8 55%, #faf8ef 100%);
+}
+
+.feed-item:has(> .game-card.tile2048-card) > .game-card.tile2048-card {
+  background: transparent;
+  box-shadow: none;
+}
+
+.feed-item:has(> .game-card.tile2048-card) > .feed-meta {
+  border-top: none;
+  background: transparent;
+}
+
+.tile2048-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 14px 14px 16px;
+  box-sizing: border-box;
+  min-height: 420px;
+}
+
+.tile2048-scene.hidden { display: none; }
+
+.tile2048-landing {
+  text-align: center;
+  justify-content: center;
+}
+
+.tile2048-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(187, 173, 160, 0.35);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #776e65;
+}
+
+.tile2048-cover-demo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: min(100%, 280px);
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #bbada0;
+}
+
+.tile2048-title {
+  margin: 0 0 8px;
+  font-size: 42px;
+  font-weight: 800;
+  color: #776e65;
+  line-height: 1;
+}
+
+.tile2048-sub {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #8c7b6c;
+  max-width: 32ch;
+}
+
+.tile2048-start-btn {
+  width: min(100%, 320px);
+  min-height: 48px;
+  border: none;
+  border-radius: 8px;
+  background: #8f7a66;
+  color: #f9f6f2;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tile2048-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.tile2048-tags span {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.65);
+  color: #776e65;
+}
+
+.tile2048-hud {
+  display: flex;
+  gap: 8px;
+  width: min(100%, 408px);
+  margin-bottom: 10px;
+}
+
+.tile2048-hud-box {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #bbada0;
+  text-align: center;
+}
+
+.tile2048-hud-box span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #eee4da;
+}
+
+.tile2048-hud-box strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.tile2048-board-shell {
+  position: relative;
+  width: min(100%, 408px);
+  padding: 10px;
+  border-radius: 10px;
+  background: #bbada0;
+  touch-action: none;
+}
+
+.tile2048-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 10px;
+  aspect-ratio: 1;
+}
+
+.tile2048-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(238, 228, 218, 0.35);
+  font-size: clamp(16px, 4.5vw, 32px);
+  font-weight: 700;
+  color: #776e65;
+  user-select: none;
+}
+
+.tile2048-cell.tile-2 { background: #eee4da; }
+.tile2048-cell.tile-4 { background: #ede0c8; }
+.tile2048-cell.tile-8 { background: #f2b179; color: #f9f6f2; }
+.tile2048-cell.tile-16 { background: #f59563; color: #f9f6f2; }
+.tile2048-cell.tile-32 { background: #f67c5f; color: #f9f6f2; }
+.tile2048-cell.tile-64 { background: #f65e3b; color: #f9f6f2; }
+.tile2048-cell.tile-128 { background: #edcf72; color: #f9f6f2; font-size: clamp(14px, 4vw, 28px); }
+.tile2048-cell.tile-256 { background: #edcc61; color: #f9f6f2; font-size: clamp(14px, 4vw, 28px); }
+.tile2048-cell.tile-512 { background: #edc850; color: #f9f6f2; font-size: clamp(14px, 4vw, 28px); }
+.tile2048-cell.tile-1024 { background: #edc53f; color: #f9f6f2; font-size: clamp(12px, 3.5vw, 24px); }
+.tile2048-cell.tile-2048 { background: #edc22e; color: #f9f6f2; font-size: clamp(12px, 3.5vw, 24px); box-shadow: 0 0 16px rgba(237, 194, 46, 0.45); }
+.tile2048-cell.tile-super { background: #3c3a32; color: #f9f6f2; font-size: clamp(11px, 3vw, 20px); }
+
+.tile2048-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8c7b6c;
+  text-align: center;
+}
+
+.tile2048-play-tools {
+  display: flex;
+  gap: 8px;
+  width: min(100%, 408px);
+  margin-top: 8px;
+}
+
+.tile2048-tool-btn,
+.tile2048-back-btn {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tile2048-tool-btn {
+  border: none;
+  background: #8f7a66;
+  color: #f9f6f2;
+}
+
+.tile2048-back-btn {
+  border: 1px solid #bbada0;
+  background: rgba(255, 255, 255, 0.85);
+  color: #776e65;
+}
+
+.tile2048-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(238, 228, 218, 0.78);
+  border-radius: 10px;
+  z-index: 5;
+}
+
+.tile2048-overlay.hidden { display: none; }
+
+.tile2048-overlay-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+.tile2048-overlay-box h3 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  color: #776e65;
+}
+
+.tile2048-overlay-box p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #8c7b6c;
+}
+
+.tile2048-overlay-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tile2048-scene.tile2048-play {
+  touch-action: none;
+}
+
+.feed.tile2048-interacting {
+  overflow: hidden !important;
+  touch-action: none;
+  scroll-snap-type: none !important;
+}
+
+.feed-item.tile2048-feed-locked {
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
+
+.game-card.tile2048-card.tile2048-interacting,
+.game-card.tile2048-card.tile2048-interacting .tile2048-board-shell {
+  touch-action: none;
+}
+
+.tile2048-card.fullscreen .tile2048-board-shell {
+  width: min(92vw, 480px);
+}
+
 .beat-card {
   background: linear-gradient(180deg, #042f2e 0%, #134e4a 100%);
 }
@@ -6894,6 +7176,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .fish-card.fullscreen .fish-scene,
 .match-card.fullscreen .match-scene,
 .merge-card.fullscreen .merge-scene,
+.tile2048-card.fullscreen .tile2048-scene,
 .beat-card.fullscreen .beat-scene,
 .snake-card.fullscreen .snake-scene,
 .snake-card.fullscreen .snake-landing,
@@ -9276,6 +9559,7 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card.fish-card,
 .feed-item > .game-card.match-card,
 .feed-item > .game-card.merge-card,
+.feed-item > .game-card.tile2048-card,
 .feed-item > .game-card.beat-card,
 .feed-item > .game-card.snake-card,
 .feed-item > .game-card.brain-card,

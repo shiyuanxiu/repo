@@ -112,11 +112,11 @@ window.FEED_META = {
     "name": "Seaside Memory"
   },
   "merge": {
-    "editorPick": "Editor's pick: link matching digits on a 5×5 grid — zero ads, pure merge dopamine.",
-    "guide": "number-merge.html",
+    "editorPick": "Editor's pick: the original Gabriele Cirulli slide puzzle — 4×4, merge to 2048.",
+    "guide": "2048.html",
     "category": "puzzle",
     "categoryLabel": "Puzzle",
-    "name": "2248 Chain"
+    "name": "2048"
   },
   "beat": {
     "editorPick": "Editor's pick: a hand-painted picnic meadow — guide your mochi caterpillar to snacks.",
