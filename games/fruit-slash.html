@@ -8,12 +8,13 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      width: 100%; height: 100%; overflow: hidden;
+      width: 100%; height: 100%; min-height: 100%; min-height: -webkit-fill-available;
+      overflow: hidden;
       touch-action: none; user-select: none;
       background: #2a1810;
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
-    #wrap { position: fixed; inset: 0; }
+    #wrap { position: fixed; inset: 0; width: 100%; height: 100%; }
     canvas { display: block; width: 100%; height: 100%; }
 
     .overlay {
@@ -129,8 +130,8 @@
     #muteBtn { right: max(12px, env(safe-area-inset-right)); }
     #histBtn { right: max(60px, calc(env(safe-area-inset-right) + 48px)); }
     body.embed #muteBtn, body.embed #histBtn { display: none; }
-    body.playing #muteBtn, body.playing #histBtn { display: none; }
     body.embed.playing #comboPill { top: max(10px, env(safe-area-inset-top)); }
+    html.embed-root, body.embed { height: 100%; min-height: -webkit-fill-available; }
 
     #histPanel {
       position: fixed; inset: 0; z-index: 30; display: none;
@@ -293,7 +294,16 @@
     let bossBombAcc = 0;
     let bossIntro = 0;
 
-    if (EMBED) document.body.classList.add("embed");
+    if (EMBED) {
+      document.documentElement.classList.add("embed-root");
+      document.body.classList.add("embed");
+    }
+
+    function scheduleEmbedResize() {
+      resize();
+      requestAnimationFrame(resize);
+      [80, 250, 600].forEach((ms) => setTimeout(resize, ms));
+    }
 
     function isBossLevel(lv) {
       return lv > 0 && lv % BOSS_EVERY === 0;
@@ -1172,10 +1182,15 @@
     if (EMBED) window.parent.postMessage({ type: "slash-ready" }, "*");
     window.addEventListener("message", (e) => {
       if (e.data?.type === "slash-sound") Audio.setMuted(!e.data.enabled);
+      if (e.data?.type === "slash-resize") scheduleEmbedResize();
     });
 
     window.addEventListener("resize", () => { resize(); });
     resize();
+    if (EMBED && typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(scheduleEmbedResize).observe(wrap);
+      scheduleEmbedResize();
+    }
     rafId = requestAnimationFrame(loop);
   })();
   </script>

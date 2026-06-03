@@ -10318,16 +10318,32 @@ function snakeSetFeedLock(on) {
   snakeFeed?.classList.toggle("snake-interacting", on);
 }
 
+function loadIframeGame(game) {
+  const map = {
+    slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1" },
+    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1" },
+  };
+  const cfg = map[game];
+  if (!cfg) return false;
+  const frame = document.getElementById(cfg.id);
+  if (!frame) return false;
+  const target = frame.dataset.src || cfg.src;
+  const blank = !frame.src || frame.src === "about:blank" || frame.src.endsWith("about:blank");
+  if (blank || frame.dataset.loaded !== "1") {
+    frame.dataset.loaded = "1";
+    frame.src = target;
+  }
+  frame.contentWindow?.postMessage({ type: `${game}-resize` }, "*");
+  return true;
+}
+
 function syncSlashFeedSound() {
   const frame = document.getElementById("slashFrame");
   frame?.contentWindow?.postMessage({ type: "slash-sound", enabled: soundState.slash }, "*");
 }
 
 function initSlashFeed() {
-  const frame = document.getElementById("slashFrame");
-  if (!frame || frame.dataset.loaded === "1") return;
-  frame.dataset.loaded = "1";
-  frame.src = frame.dataset.src || "games/fruit-slash.html?embed=1";
+  loadIframeGame("slash");
 }
 
 function syncHoleFeedSound() {
@@ -10336,10 +10352,74 @@ function syncHoleFeedSound() {
 }
 
 function initHoleFeed() {
-  const frame = document.getElementById("holeFrame");
-  if (!frame || frame.dataset.loaded === "1") return;
-  frame.dataset.loaded = "1";
-  frame.src = frame.dataset.src || "games/hole-swallow.html?embed=1";
+  loadIframeGame("hole");
+}
+
+function ensureVisibleIframeGames() {
+  document.querySelectorAll(".feed-item[data-feed='games']:not(.hidden)").forEach((item) => {
+    const game = item.dataset.game;
+    if (game === "hole" || game === "slash") loadIframeGame(game);
+  });
+}
+
+function initIframeFeedRetry() {
+  const iframeGames = ["hole", "slash"];
+  const feed = document.getElementById("feed");
+  if (!feed) return;
+
+  const retryVisible = () => {
+    iframeGames.forEach((game) => {
+      const item = document.querySelector(`.feed-item[data-game="${game}"]:not(.hidden)`);
+      if (!item || !isElementVisibleInFeed(item)) return;
+      const frame = document.getElementById(`${game}Frame`);
+      if (!frame) return;
+      const blank = !frame.src || frame.src.includes("about:blank");
+      if (blank) loadIframeGame(game);
+      else frame.contentWindow?.postMessage({ type: `${game}-resize` }, "*");
+    });
+  };
+
+  feed.addEventListener("scroll", () => {
+    if (feed.__vvIframeScroll) return;
+    feed.__vvIframeScroll = requestAnimationFrame(() => {
+      feed.__vvIframeScroll = 0;
+      retryVisible();
+    });
+  }, { passive: true });
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || entry.intersectionRatio < 0.12) return;
+          const item = entry.target.closest?.(".feed-item") || entry.target;
+          const game = item?.dataset?.game;
+          if (iframeGames.includes(game)) loadIframeGame(game);
+        });
+      },
+      { root: feed, rootMargin: "80px 0px", threshold: [0.12, 0.35, 0.6] },
+    );
+    iframeGames.forEach((game) => {
+      const frame = document.getElementById(`${game}Frame`);
+      const card = document.getElementById(`${game}Card`);
+      if (frame) io.observe(frame);
+      if (card) io.observe(card);
+    });
+  }
+
+  setTimeout(retryVisible, 400);
+  setTimeout(retryVisible, 1200);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) retryVisible();
+  });
+
+  ["holeCard", "slashCard"].forEach((id) => {
+    document.getElementById(id)?.addEventListener(
+      "pointerdown",
+      () => loadIframeGame(id.replace(/Card$/, "").toLowerCase()),
+      { passive: true },
+    );
+  });
 }
 
 function initSnakeGame() {
@@ -10573,6 +10653,7 @@ function initFeedOptimizations() {
   initSavedGames();
   initStreakUI();
   initFeedLazyLoad();
+  initIframeFeedRetry();
   window.addEventListener("message", (e) => {
     if (e.data?.type === "hole-ready") syncHoleFeedSound();
     if (e.data?.type === "slash-ready") syncSlashFeedSound();
@@ -10933,6 +11014,7 @@ function feedLazyOnTabSwitch(tabName) {
     document.querySelectorAll(`.feed-item[data-feed="${tabName}"]:not(.hidden)`).forEach((item) => {
       if (item.dataset.game) lazyInitGame(item.dataset.game);
     });
+    ensureVisibleIframeGames();
     resetFeedSceneScroll();
     window.MiniverseSocial?.refresh?.();
   });

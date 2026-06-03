@@ -289,8 +289,9 @@
       cursor: pointer; backdrop-filter: blur(8px);
       box-shadow: 0 4px 16px rgba(0,0,0,0.35);
     }
-    body.embed, html.embed-root { height: 100%; overflow: hidden; }
-    body.embed #gameWrap { position: absolute; inset: 0; }
+    html, body { height: 100%; min-height: 100%; min-height: -webkit-fill-available; }
+    body.embed, html.embed-root { height: 100%; min-height: -webkit-fill-available; overflow: hidden; }
+    body.embed #gameWrap { position: absolute; inset: 0; width: 100%; height: 100%; }
     body.embed #historyBtn { display: none; }
     body.embed #muteBtn { display: none; }
     body.embed .hud-pill { padding: 6px 12px; font-size: 13px; }
@@ -519,7 +520,10 @@
     }
 
     bestScore = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10) || 0;
-    if (EMBED) document.body.classList.add("embed");
+    if (EMBED) {
+      document.documentElement.classList.add("embed-root");
+      document.body.classList.add("embed");
+    }
     const legacyBest = localStorage.getItem("sushi-hole-best");
     if (legacyBest && !localStorage.getItem(STORAGE_KEY)) {
       localStorage.setItem(STORAGE_KEY, legacyBest);
@@ -1174,7 +1178,24 @@
     }
     window.addEventListener("message", (e) => {
       if (e.data?.type === "hole-sound") Audio.setMuted(!e.data.enabled);
+      if (e.data?.type === "hole-resize") {
+        cancelAnimationFrame(rafId);
+        applyResize().then(() => { rafId = requestAnimationFrame(loop); });
+      }
     });
+
+    function scheduleEmbedResize() {
+      if (!EMBED) return;
+      cancelAnimationFrame(rafId);
+      applyResize().then(() => { rafId = requestAnimationFrame(loop); });
+      [80, 250, 600].forEach((ms) => setTimeout(() => {
+        cancelAnimationFrame(rafId);
+        applyResize().then(() => { rafId = requestAnimationFrame(loop); });
+      }, ms));
+    }
+    if (EMBED && typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(scheduleEmbedResize).observe(wrap);
+    }
 
     function setTarget(cx, cy) {
       const r = canvas.getBoundingClientRect();
@@ -1707,6 +1728,7 @@
         hudBottomPad = Math.ceil(playHud.getBoundingClientRect().height) + 8;
       }
       rafId = requestAnimationFrame(loop);
+      scheduleEmbedResize();
     });
   })();
   </script>

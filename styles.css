@@ -305,7 +305,7 @@ body::before {
 .feed-item:has(> .game-card.hole-card) > .game-card.hole-card {
   background: transparent;
   box-shadow: none;
-  min-height: 520px;
+  min-height: 0 !important;
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -319,9 +319,10 @@ body::before {
 
 .hole-card .hole-frame {
   display: block;
+  flex: 1 1 0;
   width: 100%;
-  height: min(72vh, 560px);
-  min-height: 480px;
+  height: 100%;
+  min-height: min(56vh, 480px);
   border: none;
   border-radius: 16px;
   background: #1a0f0a;
@@ -345,7 +346,7 @@ body::before {
 .feed-item:has(> .game-card.slash-card) > .game-card.slash-card {
   background: transparent;
   box-shadow: none;
-  min-height: 520px;
+  min-height: 0 !important;
   position: relative;
   overflow: hidden;
   border-radius: 20px;
@@ -359,9 +360,10 @@ body::before {
 
 .slash-card .slash-frame {
   display: block;
+  flex: 1 1 0;
   width: 100%;
-  height: min(72vh, 560px);
-  min-height: 480px;
+  height: 100%;
+  min-height: min(56vh, 480px);
   border: none;
   border-radius: 16px;
   background: #2a1810;
@@ -372,6 +374,47 @@ body::before {
   height: calc(100dvh - 48px);
   min-height: 0;
   border-radius: 0;
+}
+
+.feed-item:has(> .game-card.jump-card) {
+  background: linear-gradient(180deg, #eff6ff 0%, #bfdbfe 42%, #93c5fd 100%);
+}
+
+.feed-item:has(> .game-card.jump-card) > .game-card.jump-card {
+  background: transparent;
+  box-shadow: none;
+  min-height: 0 !important;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.feed-item:has(> .game-card.jump-card) > .feed-meta {
+  border-top: none;
+  background: transparent;
+  padding: 14px 18px;
+}
+
+.jump-card .jump-frame {
+  display: block;
+  flex: 1 1 0;
+  width: 100%;
+  height: 100%;
+  min-height: min(56vh, 480px);
+  border: none;
+  border-radius: 16px;
+  background: #5eb0ff;
+  touch-action: none;
+}
+
+.game-card.jump-card.fullscreen .jump-frame {
+  height: calc(100dvh - 48px);
+  min-height: 0;
+  border-radius: 0;
+}
+
+.feed-item:has(> .game-card.jump-card.jump-interacting) {
+  scroll-snap-align: none;
 }
 
 .feed-item:has(> .game-card.brain-card) {
@@ -9141,7 +9184,10 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed-item > .game-card.shop-card,
 .feed-item > .game-card.sente-card,
 .feed-item > .game-card.earth-card,
-.feed-item > .game-card.chick-card {
+.feed-item > .game-card.chick-card,
+.feed-item > .game-card.hole-card,
+.feed-item > .game-card.slash-card,
+.feed-item > .game-card.jump-card {
   min-height: 0 !important;
 }
 
@@ -9436,6 +9482,22 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 
   .feed-item:has(> .game-card.chick-card) > .feed-meta {
     background: rgba(255, 253, 245, 0.98);
+  }
+
+  .feed-item > .game-card.hole-card > .hole-frame,
+  .feed-item > .game-card.slash-card > .slash-frame,
+  .feed-item > .game-card.jump-card > .jump-frame {
+    flex: 1 1 0;
+    min-height: min(52vh, 52dvh, 460px) !important;
+    height: auto !important;
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .feed-item > .game-card.hole-card,
+  .feed-item > .game-card.slash-card,
+  .feed-item > .game-card.jump-card {
+    min-height: 0 !important;
   }
 
   .game-categories {
