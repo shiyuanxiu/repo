@@ -130,6 +130,8 @@
     #muteBtn { right: max(12px, env(safe-area-inset-right)); }
     #histBtn { right: max(60px, calc(env(safe-area-inset-right) + 48px)); }
     body.embed #muteBtn, body.embed #histBtn { display: none; }
+    body.embed:not(.playing) { touch-action: pan-y; }
+    body.embed.playing { touch-action: none; }
     body.embed.playing #comboPill { top: max(10px, env(safe-area-inset-top)); }
     html.embed-root, body.embed { height: 100%; min-height: -webkit-fill-available; }
 
@@ -297,6 +299,11 @@
     if (EMBED) {
       document.documentElement.classList.add("embed-root");
       document.body.classList.add("embed");
+    }
+
+    function setFeedInteract(active) {
+      if (!EMBED) return;
+      window.parent.postMessage({ type: "slash-interact", active: !!active }, "*");
     }
 
     function scheduleEmbedResize() {
@@ -957,10 +964,12 @@
       document.getElementById("endOverlay").classList.remove("hidden");
       document.getElementById("playHud").classList.remove("show");
       document.body.classList.remove("playing");
+      setFeedInteract(false);
     }
 
     function endGame(cleared) {
       playing = false;
+      setFeedInteract(false);
       bossMode = false;
       boss = null;
       bossIntro = 0;
@@ -1003,6 +1012,7 @@
       document.getElementById("gameOverOverlay").classList.add("hidden");
       document.getElementById("playHud").classList.add("show");
       document.body.classList.add("playing");
+      setFeedInteract(true);
       beginLevel();
       Audio.startBgm();
     }
@@ -1014,6 +1024,7 @@
       document.getElementById("endOverlay").classList.add("hidden");
       document.getElementById("playHud").classList.add("show");
       document.body.classList.add("playing");
+      setFeedInteract(true);
       beginLevel();
       Audio.startBgm();
       const msg = isBossLevel(level) ? "⚔ BOSS!" : `Level ${level}!`;
@@ -1191,6 +1202,7 @@
       new ResizeObserver(scheduleEmbedResize).observe(wrap);
       scheduleEmbedResize();
     }
+    setFeedInteract(false);
     rafId = requestAnimationFrame(loop);
   })();
   </script>

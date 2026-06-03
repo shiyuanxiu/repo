@@ -76,7 +76,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=iframe-ios-fix">
+  <link rel="stylesheet" href="styles.css?v=iframe-scroll-fix">
   <link rel="stylesheet" href="assets/social-feed.css?v=20">
   <link rel="stylesheet" href="assets/legal.css">
   <style>
@@ -1845,11 +1845,14 @@
             id="slashFrame"
             title="Fruit Slash — swipe to slice fruit"
             src="about:blank"
-            data-src="games/fruit-slash.html?embed=1"
+            data-src="games/fruit-slash.html?embed=1&v=iframe-scroll-fix"
             loading="lazy"
             allow="autoplay"
             tabindex="0"
           ></iframe>
+          <div class="iframe-feed-shield" aria-hidden="true">
+            <button type="button" class="iframe-feed-shield-hint" aria-label="Tap to play. Swipe to scroll the feed.">Tap to play · swipe to scroll</button>
+          </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
@@ -1882,11 +1885,14 @@
             id="holeFrame"
             title="Sushi Black Hole — drag to swallow sushi"
             src="about:blank"
-            data-src="games/hole-swallow.html?embed=1"
+            data-src="games/hole-swallow.html?embed=1&v=iframe-scroll-fix"
             loading="lazy"
             allow="autoplay"
             tabindex="0"
           ></iframe>
+          <div class="iframe-feed-shield" aria-hidden="true">
+            <button type="button" class="iframe-feed-shield-hint" aria-label="Tap to play. Swipe to scroll the feed.">Tap to play · swipe to scroll</button>
+          </div>
         </div>
         <footer class="feed-meta">
           <div class="feed-meta-left">
@@ -2008,7 +2014,7 @@
   <script src="assets/chunks.js"></script>
   <script src="assets/games-chunk.js"></script>
   <script src="assets/learn-chunk.js"></script>
-  <script src="app.js?v=iframe-ios-fix"></script>
+  <script src="app.js?v=iframe-scroll-fix"></script>
   <script src="assets/comment-service.js?v=1"></script>
   <script src="assets/social-feed.js?v=21"></script>
 

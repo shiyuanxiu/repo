@@ -294,6 +294,8 @@
     body.embed #gameWrap { position: absolute; inset: 0; width: 100%; height: 100%; }
     body.embed #historyBtn { display: none; }
     body.embed #muteBtn { display: none; }
+    body.embed:not(.playing) { touch-action: pan-y; }
+    body.embed.playing { touch-action: none; }
     body.embed .hud-pill { padding: 6px 12px; font-size: 13px; }
     body.embed #comboPill { right: max(12px, env(safe-area-inset-right)); top: max(58px, calc(env(safe-area-inset-top) + 46px)); }
     #historyPanel {
@@ -517,12 +519,19 @@
     function setPlayingHud(on) {
       document.body.classList.toggle("playing", on);
       playHud.classList.toggle("show", on);
+      setFeedInteract(on);
+    }
+
+    function setFeedInteract(active) {
+      if (!EMBED) return;
+      window.parent.postMessage({ type: "hole-interact", active: !!active }, "*");
     }
 
     bestScore = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10) || 0;
     if (EMBED) {
       document.documentElement.classList.add("embed-root");
       document.body.classList.add("embed");
+      setFeedInteract(false);
     }
     const legacyBest = localStorage.getItem("sushi-hole-best");
     if (legacyBest && !localStorage.getItem(STORAGE_KEY)) {

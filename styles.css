@@ -329,6 +329,31 @@ body::before {
   touch-action: none;
 }
 
+.feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen),
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) {
+  pointer-events: none;
+}
+
+.feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield,
+.feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .iframe-feed-shield-hint,
+.feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .card-controls,
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .card-controls {
+  pointer-events: auto;
+}
+
+.feed-item:has(> .game-card.hole-card:not(.iframe-active):not(.fullscreen)),
+.feed-item:has(> .game-card.slash-card:not(.iframe-active):not(.fullscreen)) {
+  scroll-snap-stop: normal;
+}
+
+.feed-item > .game-card.hole-card:not(.iframe-active):not(.fullscreen) .hole-frame,
+.feed-item > .game-card.slash-card:not(.iframe-active):not(.fullscreen) .slash-frame {
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
 .game-card.hole-card.fullscreen .hole-frame {
   height: calc(100dvh - 48px);
   min-height: 0;
@@ -337,6 +362,44 @@ body::before {
 
 .feed-item:has(> .game-card.hole-card.hole-interacting) {
   scroll-snap-align: none;
+}
+
+/* iframe feed games: scroll passes through until user taps hint to play */
+.iframe-feed-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+.iframe-feed-shield-hint {
+  position: absolute;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  pointer-events: auto;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  border: none;
+  font-family: inherit;
+}
+.game-card.hole-card.iframe-active .iframe-feed-shield,
+.game-card.slash-card.iframe-active .iframe-feed-shield,
+.game-card.fullscreen .iframe-feed-shield {
+  display: none;
 }
 
 .feed-item:has(> .game-card.slash-card) {

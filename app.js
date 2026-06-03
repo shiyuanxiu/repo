@@ -10320,8 +10320,8 @@ function snakeSetFeedLock(on) {
 
 function loadIframeGame(game) {
   const map = {
-    slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1" },
-    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1" },
+    slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=iframe-scroll-fix" },
+    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=iframe-scroll-fix" },
   };
   const cfg = map[game];
   if (!cfg) return false;
@@ -10414,12 +10414,47 @@ function initIframeFeedRetry() {
   });
 
   ["holeCard", "slashCard"].forEach((id) => {
-    document.getElementById(id)?.addEventListener(
-      "pointerdown",
-      () => loadIframeGame(id.replace(/Card$/, "").toLowerCase()),
-      { passive: true },
-    );
+    const card = document.getElementById(id);
+    if (!card) return;
+    const game = id.replace(/Card$/, "").toLowerCase();
+    card.querySelector(".iframe-feed-shield-hint")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      loadIframeGame(game);
+      card.classList.add("iframe-active");
+    });
   });
+}
+
+function deactivateIframeCards() {
+  document.querySelectorAll(".hole-card.iframe-active, .slash-card.iframe-active").forEach((card) => {
+    card.classList.remove("iframe-active");
+  });
+}
+
+function initIframeScrollShield() {
+  const feed = document.getElementById("feed");
+  if (!feed) return;
+
+  feed.addEventListener(
+    "scroll",
+    () => {
+      if (feed.__vvShieldScroll) return;
+      feed.__vvShieldScroll = requestAnimationFrame(() => {
+        feed.__vvShieldScroll = 0;
+        deactivateIframeCards();
+      });
+    },
+    { passive: true },
+  );
+
+  feed.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.target.closest(".iframe-feed-shield-hint, .card-controls, .control-btn")) return;
+      deactivateIframeCards();
+    },
+    { passive: true },
+  );
 }
 
 function initSnakeGame() {
@@ -10654,9 +10689,16 @@ function initFeedOptimizations() {
   initStreakUI();
   initFeedLazyLoad();
   initIframeFeedRetry();
+  initIframeScrollShield();
   window.addEventListener("message", (e) => {
     if (e.data?.type === "hole-ready") syncHoleFeedSound();
     if (e.data?.type === "slash-ready") syncSlashFeedSound();
+    if (e.data?.type === "hole-interact") {
+      document.getElementById("holeCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "slash-interact") {
+      document.getElementById("slashCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
   });
   initFeedProgress();
   initCookieConsent();
