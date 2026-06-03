@@ -1207,7 +1207,10 @@
       window.parent.postMessage({ type: "hole-ready" }, "*");
     }
     window.addEventListener("message", (e) => {
-      if (e.data?.type === "hole-sound") Audio.setMuted(!e.data.enabled);
+      if (e.data?.type === "hole-sound") {
+        Audio.setMuted(!e.data.enabled);
+        if (e.data.enabled) Audio.unlock();
+      }
       if (e.data?.type === "hole-resize") {
         cancelAnimationFrame(rafId);
         applyResize().then(() => { rafId = requestAnimationFrame(loop); });
@@ -1737,11 +1740,25 @@
           muted = !!on;
           if (master) master.gain.value = muted ? 0 : 1;
           muteBtn.textContent = muted ? "🔇" : "🔊";
+          if (!muted && ctxA.state === "suspended") ctxA.resume();
+        },
+        unlock() {
+          if (muted) return;
+          ensure();
+          if (ctxA.state === "suspended") ctxA.resume();
         },
       };
     })();
 
     Audio.setMuted(true);
+    canvas.addEventListener("pointerdown", () => Audio.unlock(), { passive: true, capture: true });
+    document.addEventListener("pointerdown", () => Audio.unlock(), { passive: true, capture: true });
+    document.addEventListener("touchstart", () => Audio.unlock(), { passive: true, capture: true });
+    window.__setFeedSound = (enabled) => {
+      Audio.setMuted(!enabled);
+      if (enabled) Audio.unlock();
+    };
+    window.__unlockGameAudio = () => window.__setFeedSound(true);
 
     function loop(ts) {
       const dt = lastTs ? Math.min(48, ts - lastTs) : 16;

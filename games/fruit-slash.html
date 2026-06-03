@@ -480,7 +480,17 @@
       }
 
       return {
-        setMuted(m) { ensure(); muted = m; master.gain.value = muted ? 0 : 1; },
+        setMuted(m) {
+          ensure();
+          muted = m;
+          master.gain.value = muted ? 0 : 1;
+          if (!muted && ctxA.state === "suspended") ctxA.resume();
+        },
+        unlock() {
+          if (muted) return;
+          ensure();
+          if (ctxA.state === "suspended") ctxA.resume();
+        },
         toggle() { this.setMuted(!muted); document.getElementById("muteBtn").textContent = muted ? "🔇" : "🔊"; },
         startBgm() {
           ensure(); if (ctxA.state === "suspended") ctxA.resume();
@@ -1214,8 +1224,19 @@
     document.getElementById("histPanel").addEventListener("click", (e) => { if (e.target.id === "histPanel") closeHist(); });
 
     if (EMBED) window.parent.postMessage({ type: "slash-ready" }, "*");
+    canvas.addEventListener("pointerdown", () => Audio.unlock(), { passive: true, capture: true });
+
+    window.__setFeedSound = (enabled) => {
+      Audio.setMuted(!enabled);
+      if (enabled) Audio.unlock();
+    };
+    window.__unlockGameAudio = () => window.__setFeedSound(true);
+
     window.addEventListener("message", (e) => {
-      if (e.data?.type === "slash-sound") Audio.setMuted(!e.data.enabled);
+      if (e.data?.type === "slash-sound") {
+        Audio.setMuted(!e.data.enabled);
+        if (e.data.enabled) Audio.unlock();
+      }
       if (e.data?.type === "slash-resize") scheduleEmbedResize();
     });
 

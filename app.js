@@ -118,10 +118,38 @@ const chickLandingHero = document.getElementById("chickLandingHero");
 const landingChick = document.getElementById("landingChick");
 
 /* ===== 音频工具 ===== */
+async function unlockAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") {
+    try {
+      await audioCtx.resume();
+    } catch (_) { /* noop */ }
+  }
+  return audioCtx;
+}
+
+function unlockAudioSync() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === "suspended") {
+    try {
+      audioCtx.resume();
+    } catch (_) { /* noop */ }
+  }
+  return audioCtx;
+}
+
 function getAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === "suspended") audioCtx.resume();
   return audioCtx;
+}
+
+function installGlobalAudioUnlock() {
+  const warm = () => {
+    unlockAudioSync();
+  };
+  document.addEventListener("pointerdown", warm, { passive: true, capture: true });
+  document.addEventListener("touchstart", warm, { passive: true, capture: true });
 }
 
 function getMaster(ctx, vol) {
@@ -8570,9 +8598,13 @@ function initMemoryMatch() {
     buildMatchGrid(true);
   });
 
+  matchMuteBtn?.addEventListener("pointerdown", () => {
+    if (!soundState.match) unlockAudioSync();
+  }, { capture: true });
   matchMuteBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     soundState.match = !soundState.match;
+    if (soundState.match) unlockAudioSync();
     matchLoadPrefs();
   });
 }
@@ -9128,9 +9160,13 @@ function initNumberMerge() {
     e.stopPropagation();
     startMerge();
   });
+  mergeMuteBtn?.addEventListener("pointerdown", () => {
+    if (!soundState.merge) unlockAudioSync();
+  }, { capture: true });
   mergeMuteBtn?.addEventListener("click", (e) => {
     e.stopPropagation();
     soundState.merge = !soundState.merge;
+    if (soundState.merge) unlockAudioSync();
     mergeMuteBtn.textContent = soundState.merge ? "🔊 Sound" : "🔇 Muted";
     mergeMuteBtn.classList.toggle("muted", !soundState.merge);
   });
@@ -10367,8 +10403,8 @@ function snakeSetFeedLock(on) {
 
 function loadIframeGame(game) {
   const map = {
-    slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=iframe-scroll-fix" },
-    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=hole-audio-fix" },
+    slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=ios-audio-unlock" },
+    hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=ios-audio-unlock" },
   };
   const cfg = map[game];
   if (!cfg) return false;
@@ -10384,9 +10420,25 @@ function loadIframeGame(game) {
   return true;
 }
 
+function unlockIframeGameAudio(game) {
+  const win = document.getElementById(`${game}Frame`)?.contentWindow;
+  try {
+    if (typeof win?.__setFeedSound === "function") win.__setFeedSound(true);
+    else win?.__unlockGameAudio?.();
+  } catch (_) { /* noop */ }
+}
+
 function syncSlashFeedSound() {
   const frame = document.getElementById("slashFrame");
-  frame?.contentWindow?.postMessage({ type: "slash-sound", enabled: soundState.slash }, "*");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.slash);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "slash-sound", enabled: soundState.slash }, "*");
 }
 
 function initSlashFeed() {
@@ -10395,7 +10447,15 @@ function initSlashFeed() {
 
 function syncHoleFeedSound() {
   const frame = document.getElementById("holeFrame");
-  frame?.contentWindow?.postMessage({ type: "hole-sound", enabled: soundState.hole }, "*");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.hole);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "hole-sound", enabled: soundState.hole }, "*");
 }
 
 function initHoleFeed() {
@@ -10468,6 +10528,7 @@ function initIframeFeedRetry() {
       e.stopPropagation();
       loadIframeGame(game);
       card.classList.add("iframe-active");
+      unlockIframeGameAudio(game);
     });
   });
 }
@@ -10581,6 +10642,10 @@ function syncSoundToggleUI() {
 }
 
 document.querySelectorAll(".sound-toggle").forEach((btn) => {
+  btn.addEventListener("pointerdown", () => {
+    const game = btn.dataset.game;
+    if (game && !soundState[game]) unlockAudioSync();
+  }, { capture: true });
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
     const game = btn.dataset.game;
@@ -10588,6 +10653,7 @@ document.querySelectorAll(".sound-toggle").forEach((btn) => {
     btn.querySelector(".icon-on").classList.toggle("hidden", !soundState[game]);
     btn.querySelector(".icon-off").classList.toggle("hidden", soundState[game]);
     btn.classList.toggle("muted", !soundState[game]);
+    if (soundState[game]) unlockAudioSync();
     if (game === "fortune") {
       soundState.fortune ? startFortuneBGM() : stopFortuneBGM();
     } else if (game === "earth") {
@@ -11281,6 +11347,6 @@ function initCookieConsent() {
 }
 
 initFeedOptimizations();
+installGlobalAudioUnlock();
 window.addEventListener("load", () => requestAnimationFrame(hideAppLoader));
-document.body.addEventListener("click", () => getAudioCtx(), { once: true });
 
