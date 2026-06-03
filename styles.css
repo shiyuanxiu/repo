@@ -6798,6 +6798,17 @@ body:not([data-feed-tab="knowledge"]) .learn-feed-compact-bar {
 .feed.merge-interacting {
   overflow: hidden !important;
   touch-action: none;
+  scroll-snap-type: none !important;
+}
+
+.feed-item.merge-feed-locked {
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
+
+.game-card.merge-card.merge-interacting,
+.game-card.merge-card.merge-interacting .merge-stage-frame {
+  touch-action: none;
 }
 
 .snake-card.fullscreen .snake-stage {

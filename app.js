@@ -8742,11 +8742,15 @@ function mergeCellRect(r, c) {
 }
 
 function mergePtFromEvent(e) {
+  const src = e.touches?.[0] ?? e;
+  return mergePtFromClient(src.clientX, src.clientY);
+}
+
+function mergePtFromClient(clientX, clientY) {
   const rect = mergeCanvas.getBoundingClientRect();
   const sx = mergeCanvas.width / rect.width;
   const sy = mergeCanvas.height / rect.height;
-  const t = e.touches?.[0] ?? e;
-  return { x: (t.clientX - rect.left) * sx, y: (t.clientY - rect.top) * sy };
+  return { x: (clientX - rect.left) * sx, y: (clientY - rect.top) * sy };
 }
 
 function mergeCellAt(x, y) {
@@ -8758,6 +8762,30 @@ function mergeCellAt(x, y) {
     }
   }
   return null;
+}
+
+/** When the finger crosses tile gaps (common on iOS), snap to the best adjacent match. */
+function mergeCellAtDrag(x, y) {
+  const hit = mergeCellAt(x, y);
+  if (hit) return hit;
+  if (!mergePath.length) return null;
+  const last = mergePath[mergePath.length - 1];
+  const base = mergeBoard[mergePath[0].r][mergePath[0].c];
+  let best = null;
+  let bestDist = Infinity;
+  const reach = mergeCell + MERGE_GAP + MERGE_HIT * 2;
+  for (const nb of mergeNeighborsOf(last.r, last.c)) {
+    const v = mergeBoard[nb.r][nb.c];
+    if (!v || v !== base) continue;
+    if (mergePath.some((p) => p.r === nb.r && p.c === nb.c)) continue;
+    const { cx, cy } = mergeCellRect(nb.r, nb.c);
+    const d = Math.hypot(x - cx, y - cy);
+    if (d < bestDist && d <= reach) {
+      bestDist = d;
+      best = nb;
+    }
+  }
+  return best;
 }
 
 function mergeAdj(a, b) {
@@ -9122,9 +9150,12 @@ function startMerge() {
 }
 
 const mergeFeed = document.getElementById("feed");
+const mergeCardEl = document.getElementById("mergeCard");
 
 function mergeSetFeedLock(on) {
   mergeFeed?.classList.toggle("merge-interacting", on);
+  mergeCardEl?.classList.toggle("merge-interacting", on);
+  mergeCardEl?.closest(".feed-item")?.classList.toggle("merge-feed-locked", on);
 }
 
 function initNumberMerge() {
@@ -9171,26 +9202,26 @@ function initNumberMerge() {
     mergeMuteBtn.classList.toggle("muted", !soundState.merge);
   });
 
-  const onDown = (e) => {
-    e.stopPropagation();
-    if (mergeOver) { startMerge(); return; }
-    if (!mergeActive) return;
-    e.preventDefault();
-    mergePointerId = e.pointerId;
-    mergeDragging = true;
-    mergeSetFeedLock(true);
-    mergePath = [];
-    mergeLastLinkLen = 0;
-    try { mergeCanvas.setPointerCapture(e.pointerId); } catch (_) { /* noop */ }
-    const p = mergePtFromEvent(e);
-    const cell = mergeCellAt(p.x, p.y);
-    if (cell && mergeBoard[cell.r][cell.c]) mergePath = [cell];
-  };
-  const onMove = (e) => {
-    if (!mergeDragging || (e.pointerId != null && e.pointerId !== mergePointerId)) return;
-    e.preventDefault();
-    const p = mergePtFromEvent(e);
-    const cell = mergeCellAt(p.x, p.y);
+  const mergePeOpts = { passive: false };
+  let mergeDocBound = false;
+
+  function mergeUnbindDocDrag() {
+    if (!mergeDocBound) return;
+    mergeDocBound = false;
+    document.removeEventListener("pointermove", onMove, mergePeOpts);
+    document.removeEventListener("pointerup", onUp, mergePeOpts);
+    document.removeEventListener("pointercancel", onUp, mergePeOpts);
+  }
+
+  function mergeBindDocDrag() {
+    if (mergeDocBound) return;
+    mergeDocBound = true;
+    document.addEventListener("pointermove", onMove, mergePeOpts);
+    document.addEventListener("pointerup", onUp, mergePeOpts);
+    document.addEventListener("pointercancel", onUp, mergePeOpts);
+  }
+
+  function mergeTryExtendPath(cell) {
     if (!cell || !mergePath.length) return;
     const last = mergePath[mergePath.length - 1];
     if (cell.r === last.r && cell.c === last.c) return;
@@ -9203,14 +9234,13 @@ function initNumberMerge() {
       mergePlayFx("link");
       mergeLastLinkLen = mergePath.length;
     }
-  };
-  const onUp = (e) => {
-    if (!mergeDragging || (e.pointerId != null && mergePointerId != null && e.pointerId !== mergePointerId)) return;
+  }
+
+  function mergeFinishDrag() {
+    if (!mergeDragging) return;
     mergeDragging = false;
     mergeSetFeedLock(false);
-    try {
-      if (mergeCanvas.hasPointerCapture(e.pointerId)) mergeCanvas.releasePointerCapture(e.pointerId);
-    } catch (_) { /* noop */ }
+    mergeUnbindDocDrag();
     mergePointerId = null;
     const chain = mergePath.slice();
     mergePath = [];
@@ -9218,17 +9248,46 @@ function initNumberMerge() {
     else if (chain.length === 1 && mergeHintEl) {
       mergeHintEl.textContent = "Link adjacent same numbers — drag through each tile";
     }
+  }
+
+  const onDown = (e) => {
+    e.stopPropagation();
+    if (mergeOver) { startMerge(); return; }
+    if (!mergeActive) return;
+    e.preventDefault();
+    mergeSetFeedLock(true);
+    mergePointerId = e.pointerId ?? 0;
+    mergeDragging = true;
+    mergePath = [];
+    mergeLastLinkLen = 0;
+    mergeBindDocDrag();
+    try { mergeCanvas.setPointerCapture(e.pointerId); } catch (_) { /* noop */ }
+    const p = mergePtFromEvent(e);
+    const cell = mergeCellAt(p.x, p.y);
+    if (cell && mergeBoard[cell.r][cell.c]) mergePath = [cell];
+  };
+  const onMove = (e) => {
+    if (!mergeDragging || (e.pointerId != null && mergePointerId != null && e.pointerId !== mergePointerId)) return;
+    e.preventDefault();
+    const p = mergePtFromEvent(e);
+    mergeTryExtendPath(mergeCellAtDrag(p.x, p.y));
+  };
+  const onUp = (e) => {
+    if (!mergeDragging || (e.pointerId != null && mergePointerId != null && e.pointerId !== mergePointerId)) return;
+    e.preventDefault();
+    try {
+      if (mergeCanvas.hasPointerCapture(e.pointerId)) mergeCanvas.releasePointerCapture(e.pointerId);
+    } catch (_) { /* noop */ }
+    mergeFinishDrag();
   };
 
-  mergeCanvas.addEventListener("pointerdown", onDown);
-  mergeCanvas.addEventListener("pointermove", onMove);
-  mergeCanvas.addEventListener("pointerup", onUp);
-  mergeCanvas.addEventListener("pointercancel", onUp);
+  mergeCanvas.addEventListener("pointerdown", onDown, mergePeOpts);
+  mergeCanvas.addEventListener("pointermove", onMove, mergePeOpts);
+  mergeCanvas.addEventListener("pointerup", onUp, mergePeOpts);
+  mergeCanvas.addEventListener("pointercancel", onUp, mergePeOpts);
   mergeCanvas.addEventListener("lostpointercapture", () => {
-    mergeDragging = false;
-    mergePointerId = null;
-    mergeSetFeedLock(false);
-    mergePath = [];
+    if (!mergeDragging) return;
+    mergeFinishDrag();
   });
   mergeCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
 }
