@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="ASMR Sparkle & Shine — scrub muddy items clean with satisfying tools.">
+  <title>ASMR Sparkle & Shine | Miniverse</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; min-height: -webkit-fill-available; overflow: hidden;
+      background: #B8E6C8;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      touch-action: manipulation; user-select: none; -webkit-user-select: none; color: #64748b;
+    }
+    html.embed-root, body.embed { height: 100%; overflow: hidden; }
+    body.playing #gameCanvas { touch-action: none; }
+
+    #wrap {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      max-width: 480px; margin: 0 auto; background: #B8E6C8;
+    }
+    body.embed #wrap { position: absolute; inset: 0; max-width: none; margin: 0; width: 100%; }
+
+    #topBar {
+      flex: 0 0 auto; z-index: 30;
+      margin: max(8px, env(safe-area-inset-top)) 10px 6px;
+      padding: 10px 14px;
+      background: #fff; border-radius: 22px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .back-btn {
+      width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; flex-shrink: 0;
+      background: #F8C8DC; color: #fff; font-size: 24px; line-height: 1; font-weight: 300;
+      box-shadow: 0 2px 10px rgba(248, 200, 220, 0.5);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .coin-wrap {
+      display: flex; align-items: center; gap: 5px; flex-shrink: 0;
+      font-size: 16px; font-weight: 900; color: #eab308;
+    }
+    .coin-svg { width: 24px; height: 24px; }
+
+    .progress-col { flex: 1; min-width: 0; text-align: center; padding: 0 4px; }
+    .progress-label { font-size: 11px; font-weight: 700; color: #64748b; }
+    .progress-track {
+      height: 11px; border-radius: 999px; background: #e2e8f0;
+      margin: 4px 0 3px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; border-radius: 999px;
+      background: linear-gradient(90deg, #fb923c, #fbbf24);
+      transition: width 0.12s ease;
+    }
+    .progress-pct { font-size: 14px; font-weight: 900; color: #22c55e; line-height: 1; }
+
+    .timer {
+      flex-shrink: 0; font-size: 18px; font-weight: 800;
+      color: #14b8a6; font-variant-numeric: tabular-nums; min-width: 54px; text-align: right;
+    }
+
+    #mainArea {
+      flex: 1 1 0; min-height: 0; position: relative; background: #B8E6C8;
+    }
+    #gameCanvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+    .nav-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 15;
+      width: 44px; height: 44px; border: none; border-radius: 14px; cursor: pointer;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+    .nav-arrow:active { transform: translateY(-50%) scale(0.94); }
+    .nav-arrow svg { width: 16px; height: 16px; fill: #64748b; }
+    .nav-arrow.left { left: 10px; }
+    .nav-arrow.right { right: 10px; }
+    .nav-hint { display: none !important; }
+
+    #hintOverlay {
+      position: fixed; inset: 0; z-index: 250; display: flex; align-items: center; justify-content: center;
+      background: rgba(15, 23, 42, 0.28); pointer-events: none; opacity: 1;
+      transition: opacity 0.35s ease;
+    }
+    #hintOverlay.hide { opacity: 0; }
+    .hint-card {
+      max-width: 280px; margin: 0 20px; padding: 16px 18px; border-radius: 20px;
+      background: rgba(255,255,255,0.97); box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+      text-align: center; pointer-events: auto;
+    }
+    .hint-card p { font-size: 13px; line-height: 1.55; color: #475569; margin: 6px 0; }
+    .hint-card .hint-title { font-size: 16px; font-weight: 900; color: #db2777; margin-bottom: 8px; }
+
+    #coinBurst.show {
+      opacity: 1; transform: translate(-50%, -80px) scale(1.15);
+    }
+    #coinBurst {
+      left: 50%; top: 42%; transform: translate(-50%, 0) scale(0.8);
+    }
+
+    .progress-pct.pulse { animation: pctPulse 0.45s ease; }
+    @keyframes pctPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); color: #16a34a; }
+    }
+
+    #toolBar {
+      flex: 0 0 auto; z-index: 30;
+      margin: 6px 10px max(10px, env(safe-area-inset-bottom));
+      padding: 12px 14px;
+      background: #fff; border-radius: 22px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+      display: flex; gap: 10px; justify-content: center;
+    }
+    .tool-slot {
+      flex: 1; max-width: 62px; aspect-ratio: 1;
+      border: none; border-radius: 16px; cursor: pointer; padding: 0;
+      background: #eef2f7;
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, box-shadow 0.15s;
+      overflow: hidden;
+    }
+    .tool-slot .tool-icon {
+      width: 100%; height: 100%; object-fit: contain;
+      transform: scale(1.18);
+      pointer-events: none; display: block;
+    }
+    .tool-slot.active {
+      background: #F8C8DC;
+      box-shadow: 0 4px 14px rgba(248, 200, 220, 0.5);
+    }
+
+    #toast {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(16px);
+      z-index: 200; padding: 10px 18px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.96); font-size: 13px; font-weight: 700;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+      opacity: 0; pointer-events: none; transition: opacity 0.25s, transform 0.25s;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #coinBurst {
+      position: fixed; pointer-events: none; z-index: 180; font-size: 20px; font-weight: 900;
+      color: #eab308; opacity: 0; transition: opacity 0.3s, transform 0.6s;
+    }
+    body.embed #attribution { display: none; }
+
+    body.embed #topBar { margin: 4px 8px 4px; padding: 8px 10px; }
+    body.embed .back-btn { width: 34px; height: 34px; font-size: 20px; }
+    body.embed .tool-slot { max-width: 52px; }
+    body.embed .nav-arrow { width: 40px; height: 40px; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <header id="topBar">
+      <button class="back-btn" id="btnBack" type="button" aria-label="Back">‹</button>
+      <div class="coin-wrap">
+        <svg class="coin-svg" viewBox="0 0 32 32" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+          <circle cx="11" cy="14" r="2" fill="#78350f"/><circle cx="21" cy="14" r="2" fill="#78350f"/>
+          <path d="M11 20 Q16 24 21 20" stroke="#78350f" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span id="coinCount">0</span>
+      </div>
+      <div class="progress-col">
+        <div class="progress-label">Cleanliness</div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-pct" id="progressPct">0%</div>
+      </div>
+      <div class="timer" id="timer">10:02</div>
+    </header>
+
+    <div id="mainArea">
+      <button class="nav-arrow left" id="btnPrev" type="button" aria-label="Rotate left">
+        <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <span class="nav-hint left" id="navHintL">↺</span>
+      <canvas id="gameCanvas"></canvas>
+      <span class="nav-hint right" id="navHintR">↻</span>
+      <button class="nav-arrow right" id="btnNext" type="button" aria-label="Rotate right">
+        <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+
+    <footer id="toolBar">
+      <button class="tool-slot active" data-tool="spray" type="button" aria-label="Spray"></button>
+      <button class="tool-slot" data-tool="sponge" type="button" aria-label="Sponge"></button>
+      <button class="tool-slot" data-tool="brush" type="button" aria-label="Brush"></button>
+      <button class="tool-slot" data-tool="water" type="button" aria-label="Water"></button>
+      <button class="tool-slot" data-tool="dryer" type="button" aria-label="Dryer"></button>
+    </footer>
+  </div>
+  <div id="hintOverlay">
+    <div class="hint-card">
+      <p class="hint-title">✨ Sparkle &amp; Shine</p>
+      <p>Pick a tool · drag to scrub mud</p>
+      <p>Use ◀ ▶ to rotate &amp; clean every side</p>
+    </div>
+  </div>
+  <div id="toast"></div>
+  <div id="coinBurst">+10</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var EMBED = new URLSearchParams(location.search).get("embed") === "1";
+  var canvas = document.getElementById("gameCanvas");
+  var ctx = canvas.getContext("2d");
+  var dpr = 1;
+
+  var itemCanvas, itemCtx, dirtCanvas, dirtCtx, foamCanvas, foamCtx, maskCanvas, maskCtx;
+  var itemIndex = 0, tool = "spray", coins = 0;
+  var itemAnchor = { cx: 0, cy: 0, sc: 1, dx: 0, dy: 0, dw: 0, dh: 0 };
+  var itemClean = [false, false, false, false];
+  var timerSec = 602, timerRunning = true;
+  var soundOn = false, audioCtx = null, lastSoundT = 0;
+  var scrubbing = false, animId = 0;
+  var particles = [], lastFrameTs = 0;
+  var cachedPct = 0, lastHudMs = 0, hintHidden = false;
+  var celebrateT = 0;
+  var refImg = new Image();
+  var turnaroundImg = new Image();
+  var refReady = false;
+  var shoeAngleSet = [];
+  var localDirtSet = [];
+  var shoeAngleIdx = 2;
+  var SHOE_YAW_STEPS = 8;
+  var shoeRotatePulse = 0;
+  var shoeRotatePulseStart = 0;
+  var shoeLayoutCache = { cssW: 0, cssH: 0, uniformScale: 0 };
+  var TOOL_CROPS = [
+    { x: 0.012, y: 0.04, w: 0.188, h: 0.92 },
+    { x: 0.212, y: 0.04, w: 0.188, h: 0.92 },
+    { x: 0.412, y: 0.04, w: 0.188, h: 0.92 },
+    { x: 0.612, y: 0.04, w: 0.188, h: 0.92 },
+    { x: 0.812, y: 0.04, w: 0.176, h: 0.92 }
+  ];
+
+  var TOOLS = {
+    spray:  { radius: 28, dirt: 0.5, foam: 0.4, sound: "spray" },
+    sponge: { radius: 26, dirt: 0.72, foam: 0.08, sound: "scrub" },
+    brush:  { radius: 16, dirt: 0.9, foam: 0.04, sound: "brush" },
+    water:  { radius: 40, dirt: 0.68, foam: 0.55, sound: "wash" },
+    dryer:  { radius: 34, dirt: 0.12, foam: 0.92, sound: "dry" }
+  };
+
+  if (EMBED) {
+    document.documentElement.classList.add("embed-root");
+    document.body.classList.add("embed");
+    window.parent.postMessage({ type: "sparkle-ready" }, "*");
+  }
+
+  window.__setFeedSound = function (on) { soundOn = !!on; if (soundOn) ensureAudio(); };
+
+  function setPlaying(on) {
+    document.body.classList.toggle("playing", !!on);
+    if (EMBED) window.parent.postMessage({ type: "sparkle-interact", active: !!on }, "*");
+  }
+
+  function ensureAudio() {
+    if (!audioCtx) try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) {}
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  }
+
+  function hideHint() {
+    if (hintHidden) return;
+    hintHidden = true;
+    var el = document.getElementById("hintOverlay");
+    if (el) { el.classList.add("hide"); setTimeout(function () { el.style.display = "none"; }, 400); }
+  }
+
+  function showToast(msg, ms) {
+    var el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () { el.classList.remove("show"); }, ms || 2200);
+  }
+
+  function triggerCoinBurst() {
+    var el = document.getElementById("coinBurst");
+    if (!el) return;
+    el.classList.remove("show");
+    void el.offsetWidth;
+    el.classList.add("show");
+    setTimeout(function () { el.classList.remove("show"); }, 900);
+  }
+
+  function haptic(ms) {
+    try { if (navigator.vibrate) navigator.vibrate(ms || 12); } catch (_) {}
+  }
+
+  function updateNavHints() {
+    var rot = itemIndex === 0;
+    document.getElementById("btnPrev").setAttribute("aria-label", rot ? "Rotate left" : "Previous item");
+    document.getElementById("btnNext").setAttribute("aria-label", rot ? "Rotate right" : "Next item");
+  }
+
+  function spawnCelebrateBurst() {
+    celebrateT = 1.8;
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    var cx = cssW * 0.5 * dpr, cy = cssH * 0.48 * dpr;
+    var i, a, spd;
+    for (i = 0; i < 36; i++) {
+      a = Math.random() * Math.PI * 2;
+      spd = (2 + Math.random() * 5) * dpr;
+      particles.push({
+        type: "sparkle", x: cx, y: cy,
+        vx: Math.cos(a) * spd, vy: Math.sin(a) * spd - 2 * dpr,
+        r: (2 + Math.random() * 4) * dpr,
+        life: 0.9 + Math.random() * 0.6, maxLife: 0.9 + Math.random() * 0.6,
+        rgb: Math.random() > 0.5 ? [251, 191, 36] : [244, 114, 182]
+      });
+    }
+  }
+
+  function playCompleteSound() {
+    if (!soundOn || !audioCtx) return;
+    var now = audioCtx.currentTime;
+    [523.25, 659.25, 880].forEach(function (freq, i) {
+      var osc = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, now + i * 0.07);
+      g.gain.exponentialRampToValueAtTime(0.14, now + i * 0.07 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 0.45);
+      osc.connect(g); g.connect(audioCtx.destination);
+      osc.start(now + i * 0.07);
+      osc.stop(now + i * 0.07 + 0.5);
+    });
+  }
+
+  function playToolSound(type) {
+    if (!soundOn || !audioCtx) return;
+    var now = audioCtx.currentTime;
+    if (now - lastSoundT < 0.032) return;
+    lastSoundT = now;
+    var g = audioCtx.createGain();
+    g.connect(audioCtx.destination);
+    var len, buf, src, d, i, f, osc, bp, lp;
+
+    if (type === "spray") {
+      len = Math.floor(audioCtx.sampleRate * 0.1);
+      buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      d = buf.getChannelData(0);
+      for (i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) * 0.35;
+      src = audioCtx.createBufferSource(); src.buffer = buf;
+      bp = audioCtx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 2800; bp.Q.value = 0.7;
+      src.connect(bp); bp.connect(g);
+      g.gain.setValueAtTime(0.08, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+      src.start(now);
+    } else if (type === "scrub") {
+      len = Math.floor(audioCtx.sampleRate * 0.06);
+      buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      d = buf.getChannelData(0);
+      for (i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) * 0.25;
+      src = audioCtx.createBufferSource(); src.buffer = buf;
+      lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 900;
+      osc = audioCtx.createOscillator(); osc.type = "triangle"; osc.frequency.value = 180 + Math.random() * 80;
+      osc.connect(g); src.connect(lp); lp.connect(g);
+      g.gain.setValueAtTime(0.07, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+      osc.start(now); osc.stop(now + 0.06);
+      src.start(now);
+    } else if (type === "brush") {
+      len = Math.floor(audioCtx.sampleRate * 0.05);
+      buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      d = buf.getChannelData(0);
+      for (i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      src = audioCtx.createBufferSource(); src.buffer = buf;
+      bp = audioCtx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 1400 + Math.random() * 400; bp.Q.value = 2;
+      src.connect(bp); bp.connect(g);
+      g.gain.setValueAtTime(0.1, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+      src.start(now);
+    } else if (type === "wash") {
+      len = Math.floor(audioCtx.sampleRate * 0.11);
+      buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      d = buf.getChannelData(0);
+      for (i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) * 0.3;
+      src = audioCtx.createBufferSource(); src.buffer = buf;
+      lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.setValueAtTime(2200, now);
+      lp.frequency.exponentialRampToValueAtTime(600, now + 0.11);
+      src.connect(lp); lp.connect(g);
+      g.gain.setValueAtTime(0.09, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
+      src.start(now);
+    } else if (type === "dry") {
+      len = Math.floor(audioCtx.sampleRate * 0.14);
+      buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      d = buf.getChannelData(0);
+      for (i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) * 0.2;
+      src = audioCtx.createBufferSource(); src.buffer = buf;
+      lp = audioCtx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 450;
+      src.connect(lp); lp.connect(g);
+      g.gain.setValueAtTime(0.06, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+      src.start(now);
+    }
+  }
+
+  function noiseBurst(type) { playToolSound(type); }
+
+  function clayGrad(c2, x, y, w, h, base, light, shadow) {
+    var g = c2.createRadialGradient(x + w * 0.3, y + h * 0.2, 2, x + w * 0.5, y + h * 0.55, Math.max(w, h) * 0.85);
+    g.addColorStop(0, light || "#fff");
+    g.addColorStop(0.5, base);
+    g.addColorStop(1, shadow || base);
+    return g;
+  }
+
+  function roundRect(c2, x, y, w, h, r) {
+    c2.beginPath();
+    if (typeof c2.roundRect === "function") c2.roundRect(x, y, w, h, r);
+    else {
+      var rr = Math.min(r, w / 2, h / 2);
+      c2.moveTo(x + rr, y);
+      c2.arcTo(x + w, y, x + w, y + h, rr);
+      c2.arcTo(x + w, y + h, x, y + h, rr);
+      c2.arcTo(x, y + h, x, y, rr);
+      c2.arcTo(x, y, x + w, y, rr);
+      c2.closePath();
+    }
+  }
+
+  function isMintGreen(r, g, b) {
+    return g > 165 && r < 205 && b < 205 && g > r + 8 && g > b + 8;
+  }
+
+  function isMudPixel(r, g, b) {
+    return r > 45 && r < 155 && g > 22 && g < 115 && b > 8 && b < 95 && r > g + 5 && g > b + 2;
+  }
+
+  function isUIChrome(r, g, b) {
+    return (r > 235 && g > 235 && b > 235) || (r > 200 && g > 200 && b > 200 && Math.abs(r - g) < 12 && Math.abs(g - b) < 12);
+  }
+
+  function isShadowPixel(r, g, b) {
+    return r > 140 && r < 215 && g > 155 && g < 225 && b > 140 && b < 215 && Math.abs(r - g) < 30 && Math.abs(g - b) < 30;
+  }
+
+  function isShoePixel(r, g, b) {
+    if (isMintGreen(r, g, b) || isUIChrome(r, g, b) || isShadowPixel(r, g, b)) return false;
+    if (isMudPixel(r, g, b)) return true;
+    if (r > 210 && g > 210 && b > 210) return true;
+    if (r > 180 && g > 90 && b > 130) return true;
+    if (r > 70 && g > 40 && b > 25 && r < 160) return true;
+    return false;
+  }
+
+  function isCleanShoePixel(r, g, b) {
+    return isShoePixel(r, g, b) && !isMudPixel(r, g, b);
+  }
+
+  function prepareSneakerSprites(img) {
+    var iw = img.naturalWidth || img.width;
+    var ih = img.naturalHeight || img.height;
+    var tc = document.createElement("canvas");
+    tc.width = iw; tc.height = ih;
+    var tctx = tc.getContext("2d");
+    tctx.drawImage(img, 0, 0, iw, ih);
+    var src = tctx.getImageData(0, 0, iw, ih);
+    var minX = iw, minY = ih, maxX = 0, maxY = 0;
+    var i, r, g, b, x, y;
+    for (i = 0; i < src.data.length; i += 4) {
+      r = src.data[i]; g = src.data[i + 1]; b = src.data[i + 2];
+      if (!isCleanShoePixel(r, g, b)) continue;
+      x = (i / 4) % iw; y = Math.floor((i / 4) / iw);
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+    var pad = 8;
+    minX = Math.max(0, minX - pad);
+    minY = Math.max(0, minY - pad);
+    maxX = Math.min(iw - 1, maxX + pad);
+    maxY = Math.min(ih - 1, maxY + pad);
+    var cw = maxX - minX + 1, ch = maxY - minY + 1;
+    var cleanShoeCanvas = document.createElement("canvas");
+    cleanShoeCanvas.width = cw; cleanShoeCanvas.height = ch;
+    var muddyShoeCanvas = document.createElement("canvas");
+    muddyShoeCanvas.width = cw; muddyShoeCanvas.height = ch;
+    var cc = cleanShoeCanvas.getContext("2d");
+    var mc = muddyShoeCanvas.getContext("2d");
+    var cData = cc.createImageData(cw, ch);
+    var mData = mc.createImageData(cw, ch);
+    var y, sole, si, di;
+    for (y = minY; y <= maxY; y++) {
+      for (x = minX; x <= maxX; x++) {
+        si = (y * iw + x) * 4;
+        di = ((y - minY) * cw + (x - minX)) * 4;
+        r = src.data[si]; g = src.data[si + 1]; b = src.data[si + 2];
+        sole = (y - minY) > ch * 0.72;
+        if (!isShoePixel(r, g, b) || x < minX || x > maxX || y < minY || y > maxY) {
+          cData.data[di + 3] = 0; mData.data[di + 3] = 0;
+        } else if (isMudPixel(r, g, b)) {
+          cData.data[di] = sole ? 244 : 252;
+          cData.data[di + 1] = sole ? 114 : 252;
+          cData.data[di + 2] = sole ? 182 : 254;
+          cData.data[di + 3] = 255;
+          mData.data[di] = r; mData.data[di + 1] = g; mData.data[di + 2] = b;
+          mData.data[di + 3] = 255;
+        } else {
+          cData.data[di] = r; cData.data[di + 1] = g; cData.data[di + 2] = b;
+          cData.data[di + 3] = 255;
+          mData.data[di] = r; mData.data[di + 1] = g; mData.data[di + 2] = b;
+          mData.data[di + 3] = 255;
+        }
+      }
+    }
+    cc.putImageData(cData, 0, 0);
+    mc.putImageData(mData, 0, 0);
+    return { clean: cleanShoeCanvas, muddy: muddyShoeCanvas, pivotX: cw * 0.5, pivotY: ch * 0.82, normW: cw, normH: ch };
+  }
+
+  function computeMuddyPivot(muddyCanvas) {
+    var w = muddyCanvas.width, h = muddyCanvas.height;
+    var data = muddyCanvas.getContext("2d").getImageData(0, 0, w, h).data;
+    var sumX = 0, sumY = 0, count = 0, i, idx, x, y;
+    for (i = 3; i < data.length; i += 4) {
+      if (data[i] < 20) continue;
+      idx = (i - 3) / 4;
+      x = idx % w;
+      y = (idx / w) | 0;
+      sumX += x;
+      sumY += y;
+      count++;
+    }
+    if (count < 1) return { pivotX: w * 0.5, pivotY: h * 0.82 };
+    return { pivotX: sumX / count, pivotY: sumY / count };
+  }
+
+  function normalizeAngleSet(set) {
+    var maxW = 0, maxH = 0, pad = 14, i, entry, pivot, ox, oy;
+    var cleanNorm, muddyNorm, cc, mc;
+    for (i = 0; i < set.length; i++) {
+      entry = set[i];
+      if (!entry || !entry.muddy) continue;
+      pivot = computeMuddyPivot(entry.muddy);
+      entry._pivotX = pivot.pivotX;
+      entry._pivotY = pivot.pivotY;
+      maxW = Math.max(maxW, entry.muddy.width + pad * 2);
+      maxH = Math.max(maxH, entry.muddy.height + pad * 2);
+    }
+    if (maxW < 1 || maxH < 1) return set;
+    var normW = maxW, normH = maxH;
+    var targetPivotX = normW * 0.5;
+    var targetPivotY = normH * 0.82;
+    for (i = 0; i < set.length; i++) {
+      entry = set[i];
+      if (!entry || entry._pivotX == null) continue;
+      ox = Math.round(targetPivotX - entry._pivotX);
+      oy = Math.round(targetPivotY - entry._pivotY);
+      cleanNorm = document.createElement("canvas");
+      cleanNorm.width = normW;
+      cleanNorm.height = normH;
+      muddyNorm = document.createElement("canvas");
+      muddyNorm.width = normW;
+      muddyNorm.height = normH;
+      cc = cleanNorm.getContext("2d");
+      mc = muddyNorm.getContext("2d");
+      cc.drawImage(entry.clean, ox, oy);
+      mc.drawImage(entry.muddy, ox, oy);
+      entry.clean = cleanNorm;
+      entry.muddy = muddyNorm;
+      entry.pivotX = targetPivotX;
+      entry.pivotY = targetPivotY;
+      entry.normW = normW;
+      entry.normH = normH;
+      delete entry._pivotX;
+      delete entry._pivotY;
+    }
+    shoeLayoutCache.uniformScale = 0;
+    return set;
+  }
+
+  function getActiveCleanShoe() {
+    var entry = shoeAngleSet[shoeAngleIdx];
+    return entry ? entry.clean : null;
+  }
+
+  function getActiveMuddyShoe() {
+    var entry = shoeAngleSet[shoeAngleIdx];
+    return entry ? entry.muddy : null;
+  }
+
+  function getActiveLocalDirt() {
+    return localDirtSet[shoeAngleIdx] || null;
+  }
+
+  function sliceTurnaroundSheet(img) {
+    var iw = img.naturalWidth || img.width;
+    var ih = img.naturalHeight || img.height;
+    var panelW = Math.floor(iw / SHOE_YAW_STEPS);
+    var set = [];
+    var i, panel, sprites;
+    for (i = 0; i < SHOE_YAW_STEPS; i++) {
+      panel = document.createElement("canvas");
+      panel.width = panelW;
+      panel.height = ih;
+      panel.getContext("2d").drawImage(img, i * panelW, 0, panelW, ih, 0, 0, panelW, ih);
+      sprites = prepareSneakerSprites(panel);
+      if (sprites) set[i] = sprites;
+    }
+    return normalizeAngleSet(set);
+  }
+
+  function loadShoeAngleFallback() {
+    if (!refImg.naturalWidth) return false;
+    var sprites = prepareSneakerSprites(refImg);
+    if (!sprites) return false;
+    shoeAngleSet = normalizeAngleSet([sprites]);
+    refReady = true;
+    return true;
+  }
+
+  function getUniformScale(cssW, cssH) {
+    if (shoeLayoutCache.cssW === cssW && shoeLayoutCache.cssH === cssH && shoeLayoutCache.uniformScale > 0) {
+      return shoeLayoutCache.uniformScale;
+    }
+    var maxW = 0, maxH = 0, i, e;
+    for (i = 0; i < shoeAngleSet.length; i++) {
+      e = shoeAngleSet[i];
+      if (!e) continue;
+      maxW = Math.max(maxW, e.normW || e.clean.width);
+      maxH = Math.max(maxH, e.normH || e.clean.height);
+    }
+    var scale = maxW > 0 && maxH > 0 ? Math.min(cssW * 0.9 / maxW, cssH * 0.78 / maxH) : 1;
+    shoeLayoutCache = { cssW: cssW, cssH: cssH, uniformScale: scale };
+    return scale;
+  }
+
+  function onShoeSpritesReady() {
+    refReady = shoeAngleSet.length > 0 && !!getActiveCleanShoe();
+    loadItem(itemIndex, 0);
+  }
+
+  function sneakerSpriteLayout(cssW, cssH) {
+    var entry = shoeAngleSet[shoeAngleIdx];
+    if (!entry || !entry.clean) return null;
+    var normW = entry.normW || entry.clean.width;
+    var normH = entry.normH || entry.clean.height;
+    var pivotX = entry.pivotX != null ? entry.pivotX : normW * 0.5;
+    var pivotY = entry.pivotY != null ? entry.pivotY : normH * 0.82;
+    var uniformScale = getUniformScale(cssW, cssH);
+    var screenPivotX = cssW * 0.5;
+    var screenPivotY = cssH * 0.52;
+    var dw = normW * uniformScale;
+    var dh = normH * uniformScale;
+    return {
+      dx: screenPivotX - pivotX * uniformScale,
+      dy: screenPivotY - pivotY * uniformScale,
+      dw: dw, dh: dh, scale: uniformScale,
+      sw: normW, sh: normH,
+      pivotX: pivotX, pivotY: pivotY,
+      screenPivotX: screenPivotX, screenPivotY: screenPivotY,
+      cx: screenPivotX, cy: screenPivotY
+    };
+  }
+
+  function drawShoeSprite(c2, shoeCanvas, cssW, cssH) {
+    var L = sneakerSpriteLayout(cssW, cssH);
+    if (!L) return;
+    setSneakerAnchor(cssW, cssH);
+    c2.save();
+    if (shoeRotatePulse > 0) {
+      var pulse = 1 + 0.035 * Math.sin(shoeRotatePulse * Math.PI);
+      c2.translate(L.screenPivotX, L.screenPivotY);
+      c2.scale(pulse, pulse);
+      c2.translate(-L.screenPivotX, -L.screenPivotY);
+    }
+    c2.drawImage(shoeCanvas, L.dx, L.dy, L.dw, L.dh);
+    c2.restore();
+  }
+
+  function drawShoeShadow(c2, cssW, cssH) {
+    var L = sneakerSpriteLayout(cssW, cssH);
+    if (!L) return;
+    c2.save();
+    c2.fillStyle = "rgba(40,30,20,0.07)";
+    c2.translate(L.screenPivotX, L.screenPivotY + L.dh * 0.34);
+    c2.scale(1.05, 0.22);
+    c2.beginPath();
+    c2.ellipse(0, 0, L.dw * 0.42, L.dh * 0.1, 0, 0, Math.PI * 2);
+    c2.fill();
+    c2.restore();
+  }
+
+  function screenToShoeLocal(cx, cy, cssW, cssH) {
+    var dirt = getActiveLocalDirt();
+    if (!dirt || !dirt.canvas) return null;
+    var L = sneakerSpriteLayout(cssW, cssH);
+    if (!L) return null;
+    var lx = cx - L.dx;
+    var ly = cy - L.dy;
+    if (lx < -8 || lx > L.dw + 8 || ly < -8 || ly > L.dh + 8) return null;
+    return {
+      x: (lx / L.dw) * dirt.canvas.width,
+      y: (ly / L.dh) * dirt.canvas.height,
+      rScale: dirt.canvas.width / L.dw
+    };
+  }
+
+  function initLocalDirt(angleIdx, preCleanPct) {
+    var muddyShoeCanvas = shoeAngleSet[angleIdx] && shoeAngleSet[angleIdx].muddy;
+    if (!muddyShoeCanvas) return;
+    if (localDirtSet[angleIdx]) return;
+    var localDirtCanvas = document.createElement("canvas");
+    localDirtCanvas.width = muddyShoeCanvas.width;
+    localDirtCanvas.height = muddyShoeCanvas.height;
+    var localDirtCtx = localDirtCanvas.getContext("2d");
+    localDirtCtx.drawImage(muddyShoeCanvas, 0, 0);
+    if (preCleanPct > 0) {
+      localDirtCtx.globalCompositeOperation = "destination-out";
+      var n = Math.ceil(preCleanPct / 12);
+      var i, a, rx, ry;
+      for (i = 0; i < n; i++) {
+        a = (i / n) * Math.PI * 2;
+        rx = localDirtCanvas.width * (0.5 + Math.cos(a) * 0.22);
+        ry = localDirtCanvas.height * (0.5 + Math.sin(a) * 0.22);
+        localDirtCtx.beginPath();
+        localDirtCtx.arc(rx, ry, localDirtCanvas.width * 0.12, 0, Math.PI * 2);
+        localDirtCtx.fill();
+      }
+      localDirtCtx.globalCompositeOperation = "source-over";
+    }
+    localDirtSet[angleIdx] = { canvas: localDirtCanvas, ctx: localDirtCtx };
+  }
+
+  function ensureActiveLocalDirt(preCleanPct) {
+    initLocalDirt(shoeAngleIdx, preCleanPct || 0);
+  }
+
+  function drawDirtLayer() {
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    dirtCtx.setTransform(1, 0, 0, 1, 0, 0);
+    dirtCtx.clearRect(0, 0, dirtCanvas.width, dirtCanvas.height);
+    var activeDirt = getActiveLocalDirt();
+    if (itemIndex === 0 && activeDirt && activeDirt.canvas) {
+      dirtCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawShoeSprite(dirtCtx, activeDirt.canvas, cssW, cssH);
+      dirtCtx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+  }
+
+  function setAnchor(W, H) {
+    itemAnchor.cx = W * 0.5;
+    itemAnchor.cy = H * 0.52;
+    itemAnchor.sc = itemScale(W, H);
+    itemAnchor.dx = 0; itemAnchor.dy = 0;
+    itemAnchor.dw = 0; itemAnchor.dh = 0;
+  }
+
+  function itemScale(W, H) { return Math.min(W * 0.94, H * 0.82) / 220; }
+
+  function setSneakerAnchor(cssW, cssH) {
+    var L = sneakerSpriteLayout(cssW, cssH);
+    if (!L) { setAnchor(cssW, cssH); return; }
+    itemAnchor.cx = L.cx;
+    itemAnchor.cy = L.cy;
+    itemAnchor.sc = L.scale;
+    itemAnchor.dx = L.dx; itemAnchor.dy = L.dy;
+    itemAnchor.dw = L.dw; itemAnchor.dh = L.dh;
+  }
+
+  refImg.onload = function () {
+    if (!shoeAngleSet.length) loadShoeAngleFallback();
+  };
+  refImg.onerror = function () {
+    if (refImg.src.indexOf("sparkle-shoe-ref-user") >= 0) {
+      refImg.src = "assets/sparkle-shoe-ref.png";
+      return;
+    }
+    if (!shoeAngleSet.length) { refReady = false; loadItem(itemIndex, 0); }
+  };
+  refImg.src = "assets/sparkle-shoe-ref-user.png";
+
+  turnaroundImg.onload = function () {
+    shoeAngleSet = sliceTurnaroundSheet(turnaroundImg);
+    refReady = shoeAngleSet.length > 0 && !!getActiveCleanShoe();
+    onShoeSpritesReady();
+  };
+  turnaroundImg.onerror = function () {
+    if (!loadShoeAngleFallback()) {
+      refReady = false;
+      loadItem(itemIndex, 0);
+    } else {
+      onShoeSpritesReady();
+    }
+  };
+  turnaroundImg.src = "assets/sparkle-shoe-turnaround.png";
+
+
+  function shoeOutlinePath(c) {
+    c.beginPath();
+    c.moveTo(-80, 36);
+    c.lineTo(-84, 6);
+    c.bezierCurveTo(-86, -52, -44, -96, 6, -102);
+    c.bezierCurveTo(50, -106, 92, -82, 98, -40);
+    c.bezierCurveTo(102, -10, 100, 15, 88, 36);
+    c.lineTo(92, 54);
+    c.quadraticCurveTo(52, 66, 0, 68);
+    c.quadraticCurveTo(-48, 66, -84, 54);
+    c.closePath();
+  }
+
+  function drawPinkBow(c, mask) {
+    c.beginPath();
+    c.ellipse(-18, -62, 20, 15, -0.15, 0, Math.PI * 2);
+    c.ellipse(22, -62, 20, 15, 0.15, 0, Math.PI * 2);
+    c.fillStyle = mask ? "#fff" : clayGrad(c, -22, -72, 48, 32, "#F472B6", "#fbcfe8", "#ec4899");
+    c.fill();
+    c.beginPath(); c.ellipse(2, -56, 9, 7, 0, 0, Math.PI * 2);
+    c.fillStyle = mask ? "#fff" : "#f472b6";
+    c.fill();
+  }
+
+  function kawaiiFaceBrown(c, fx, fy, s) {
+    c.fillStyle = "#6b4423";
+    c.beginPath(); c.arc(fx - 5.5 * s, fy - 2 * s, 3 * s, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.arc(fx + 5.5 * s, fy - 2 * s, 3 * s, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = "#6b4423"; c.lineWidth = 1.6 * s; c.lineCap = "round";
+    c.beginPath(); c.arc(fx, fy + 3 * s, 5.5 * s, 0.18 * Math.PI, 0.82 * Math.PI); c.stroke();
+  }
+
+  function drawSneakerClay(c, mask, W, H) {
+    var cleanShoeCanvas = getActiveCleanShoe();
+    if (refReady && cleanShoeCanvas) {
+      if (!mask) drawShoeShadow(c, W, H);
+      drawShoeSprite(c, cleanShoeCanvas, W, H);
+      return;
+    }
+    setAnchor(W, H);
+    c.save();
+    c.translate(itemAnchor.cx, itemAnchor.cy);
+    c.scale(itemAnchor.sc, itemAnchor.sc);
+    if (!mask) {
+      c.fillStyle = "rgba(40,30,20,0.08)";
+      c.beginPath(); c.ellipse(4, 78, 100, 13, 0, 0, Math.PI * 2); c.fill();
+    }
+    if (mask) {
+      shoeOutlinePath(c);
+      c.fillStyle = "#fff";
+      c.fill();
+      drawPinkBow(c, true);
+      c.restore();
+      return;
+    }
+    shoeOutlinePath(c);
+    c.fillStyle = clayGrad(c, -84, -102, 186, 170, "#ffffff", "#fefefe", "#e5e7eb");
+    c.fill();
+    c.save();
+    c.beginPath(); c.rect(-95, 30, 190, 45); c.clip();
+    shoeOutlinePath(c);
+    c.fillStyle = clayGrad(c, -84, 30, 186, 40, "#F472B6", "#fbcfe8", "#db2777");
+    c.fill();
+    c.fillStyle = clayGrad(c, -70, 54, 160, 14, "#ec4899", "#f472b6", "#be185d");
+    c.beginPath(); c.ellipse(4, 62, 86, 7, 0, 0, Math.PI * 2); c.fill();
+    c.restore();
+    c.fillStyle = clayGrad(c, -28, -98, 56, 24, "#f3f4f6", "#ffffff", "#d1d5db");
+    c.beginPath(); c.ellipse(6, -88, 32, 11, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = "rgba(255,255,255,0.48)";
+    c.beginPath(); c.ellipse(58, -8, 22, 14, 0.12, 0, Math.PI * 2); c.fill();
+    drawPinkBow(c, false);
+    kawaiiFaceBrown(c, 26, -4, 1.3);
+    c.restore();
+  }
+
+  function drawPhoneClay(c, mask, W, H) {
+    setAnchor(W, H);
+    c.save(); c.translate(itemAnchor.cx, itemAnchor.cy); c.scale(itemAnchor.sc, itemAnchor.sc);
+    if (!mask) { c.fillStyle = "rgba(30,20,10,0.08)"; c.beginPath(); c.ellipse(0, 122, 75, 14, 0, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = mask ? "#fff" : clayGrad(c, -60, -110, 120, 225, "#334155", "#475569", "#1e293b");
+    roundRect(c, -60, -110, 120, 225, 24); c.fill();
+    c.fillStyle = mask ? "#fff" : clayGrad(c, -50, -98, 100, 195, "#BAE6FD", "#e0f2fe", "#7dd3fc");
+    roundRect(c, -50, -98, 100, 195, 16); c.fill();
+    if (!mask) kawaiiFaceBrown(c, 0, -10, 2.2);
+    c.restore();
+  }
+
+  function drawMugClay(c, mask, W, H) {
+    setAnchor(W, H);
+    c.save(); c.translate(itemAnchor.cx, itemAnchor.cy); c.scale(itemAnchor.sc, itemAnchor.sc);
+    c.fillStyle = mask ? "#fff" : clayGrad(c, -64, -80, 128, 145, "#FFFDD0", "#fffef8", "#fde68a");
+    roundRect(c, -64, -80, 128, 145, 20); c.fill();
+    c.lineWidth = 14; c.strokeStyle = mask ? "#fff" : "#7dd3fc";
+    c.beginPath(); c.arc(70, 0, 36, -Math.PI * 0.5, Math.PI * 0.5); c.stroke();
+    if (!mask) kawaiiFaceBrown(c, 0, -20, 1.8);
+    c.restore();
+  }
+
+  function drawKeyboardClay(c, mask, W, H) {
+    setAnchor(W, H);
+    c.save(); c.translate(itemAnchor.cx, itemAnchor.cy); c.scale(itemAnchor.sc, itemAnchor.sc);
+    c.fillStyle = mask ? "#fff" : clayGrad(c, -110, -54, 220, 108, "#f1f5f9", "#fff", "#cbd5e1");
+    roundRect(c, -110, -54, 220, 108, 16); c.fill();
+    if (!mask) kawaiiFaceBrown(c, 0, 40, 1.2);
+    c.restore();
+  }
+
+  var MASK_DRAWERS = [drawSneakerClay, drawPhoneClay, drawMugClay, drawKeyboardClay];
+  var DRAWERS = MASK_DRAWERS.map(function (fn) {
+    return function (c, W, H) { fn(c, false, W, H); };
+  });
+
+  function makeOffscreen() {
+    var cv = document.createElement("canvas");
+    return { c: cv, x: cv.getContext("2d") };
+  }
+
+  function initCanvases() {
+    if (!itemCanvas) {
+      itemCanvas = makeOffscreen().c; itemCtx = itemCanvas.getContext("2d");
+      dirtCanvas = makeOffscreen().c; dirtCtx = dirtCanvas.getContext("2d");
+      foamCanvas = makeOffscreen().c; foamCtx = foamCanvas.getContext("2d");
+      maskCanvas = makeOffscreen().c; maskCtx = maskCanvas.getContext("2d");
+    }
+    var pw = canvas.width, ph = canvas.height;
+    [itemCanvas, dirtCanvas, foamCanvas, maskCanvas].forEach(function (cv) { cv.width = pw; cv.height = ph; });
+  }
+
+  function buildItemMask(cssW, cssH) {
+    var pw = maskCanvas.width, ph = maskCanvas.height;
+    maskCtx.setTransform(1, 0, 0, 1, 0, 0);
+    maskCtx.clearRect(0, 0, pw, ph);
+    var cleanShoeCanvas = getActiveCleanShoe();
+    if (itemIndex === 0 && refReady && cleanShoeCanvas) {
+      maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawShoeSprite(maskCtx, cleanShoeCanvas, cssW, cssH);
+      maskCtx.setTransform(1, 0, 0, 1, 0, 0);
+      var snap = maskCtx.getImageData(0, 0, pw, ph);
+      var j, a;
+      for (j = 3; j < snap.data.length; j += 4) {
+        a = snap.data[j];
+        snap.data[j - 3] = 255; snap.data[j - 2] = 255; snap.data[j - 1] = 255;
+        snap.data[j] = a > 20 ? 255 : 0;
+      }
+      maskCtx.putImageData(snap, 0, 0);
+    } else {
+      maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      MASK_DRAWERS[itemIndex](maskCtx, true, cssW, cssH);
+      maskCtx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+  }
+
+  function splatDirt(preCleanPct) {
+    var W = dirtCanvas.width, H = dirtCanvas.height;
+    if (itemIndex === 0 && refReady && getActiveMuddyShoe()) {
+      ensureActiveLocalDirt(preCleanPct || 0);
+      drawDirtLayer();
+      return;
+    }
+    dirtCtx.setTransform(1, 0, 0, 1, 0, 0);
+    dirtCtx.clearRect(0, 0, W, H);
+    dirtCtx.drawImage(maskCanvas, 0, 0);
+    dirtCtx.globalCompositeOperation = "source-in";
+    dirtCtx.fillStyle = "#5c3a1e";
+    dirtCtx.fillRect(0, 0, W, H);
+    dirtCtx.globalCompositeOperation = "source-atop";
+    var i, p, sc = itemAnchor.sc * dpr;
+    var blobs = [
+      { lx: 0, ly: -45, r: 75 }, { lx: -35, ly: -15, r: 58 }, { lx: 40, ly: -8, r: 52 },
+      { lx: -15, ly: 20, r: 50 }, { lx: 25, ly: 28, r: 46 }, { lx: -50, ly: -50, r: 44 },
+      { lx: 50, ly: -42, r: 42 }, { lx: 0, ly: -75, r: 40 }, { lx: -25, ly: 35, r: 38 }
+    ];
+    for (i = 0; i < blobs.length; i++) {
+      p = { x: (itemAnchor.cx + blobs[i].lx * itemAnchor.sc) * dpr, y: (itemAnchor.cy + blobs[i].ly * itemAnchor.sc) * dpr, r: blobs[i].r * sc };
+      var g = dirtCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      g.addColorStop(0, "rgba(45,28,12,0.95)");
+      g.addColorStop(0.6, "rgba(92,58,28,0.85)");
+      g.addColorStop(1, "rgba(92,58,28,0)");
+      dirtCtx.fillStyle = g;
+      dirtCtx.beginPath(); dirtCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2); dirtCtx.fill();
+    }
+    var drips = [{ lx: -25, ly: -30, len: 55 }, { lx: 35, ly: -15, len: 65 }, { lx: -50, ly: 10, len: 50 }, { lx: 15, ly: 40, len: 45 }];
+    for (i = 0; i < drips.length; i++) {
+      var d = drips[i];
+      p = { x: (itemAnchor.cx + d.lx * itemAnchor.sc) * dpr, y: (itemAnchor.cy + d.ly * itemAnchor.sc) * dpr };
+      dirtCtx.fillStyle = "rgba(55,35,15,0.9)";
+      dirtCtx.beginPath();
+      dirtCtx.moveTo(p.x - 10 * sc, p.y);
+      dirtCtx.bezierCurveTo(p.x + 8 * sc, p.y + d.len * sc * 0.45, p.x - 4 * sc, p.y + d.len * sc, p.x + 6 * sc, p.y + d.len * sc * 1.05);
+      dirtCtx.bezierCurveTo(p.x + 14 * sc, p.y + d.len * sc * 0.5, p.x + 10 * sc, p.y, p.x - 10 * sc, p.y);
+      dirtCtx.fill();
+    }
+    if (preCleanPct > 0) {
+      dirtCtx.globalCompositeOperation = "destination-out";
+      var eraseN = Math.ceil(blobs.length * preCleanPct / 100);
+      for (i = 0; i < eraseN; i++) {
+        p = { x: (itemAnchor.cx + blobs[i].lx * itemAnchor.sc) * dpr, y: (itemAnchor.cy + blobs[i].ly * itemAnchor.sc) * dpr, r: blobs[i].r * sc * 1.1 };
+        dirtCtx.beginPath(); dirtCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2); dirtCtx.fill();
+      }
+    }
+  }
+
+  function splatFoam() {
+    foamCtx.setTransform(1, 0, 0, 1, 0, 0);
+    foamCtx.clearRect(0, 0, foamCanvas.width, foamCanvas.height);
+  }
+
+  function angleCleanPct(angleIdx) {
+    var sprites = shoeAngleSet[angleIdx];
+    var dirt = localDirtSet[angleIdx];
+    if (!sprites || !sprites.muddy) return 0;
+    if (!dirt || !dirt.ctx) return 0;
+    var w = dirt.canvas.width, h = dirt.canvas.height;
+    var dirtData = dirt.ctx.getImageData(0, 0, w, h).data;
+    var base = sprites.muddy.getContext("2d").getImageData(0, 0, w, h).data;
+    var total = 0, dirty = 0, i;
+    for (i = 3; i < dirtData.length; i += 16) {
+      if (base[i] < 20) continue;
+      total++;
+      if (dirtData[i] > 30) dirty++;
+    }
+    if (total < 1) return 0;
+    return Math.max(0, Math.min(100, Math.round((1 - dirty / total) * 100)));
+  }
+
+  function allAnglesClean() {
+    var ai, found = false;
+    for (ai = 0; ai < SHOE_YAW_STEPS; ai++) {
+      if (!shoeAngleSet[ai]) continue;
+      found = true;
+      if (angleCleanPct(ai) < 100) return false;
+    }
+    return found;
+  }
+
+  function getCleanPct() {
+    if (itemIndex === 0 && refReady && shoeAngleSet.length) {
+      return angleCleanPct(shoeAngleIdx);
+    }
+    var w = dirtCanvas.width, h = dirtCanvas.height;
+    var dirt = dirtCtx.getImageData(0, 0, w, h).data;
+    var mask = maskCtx.getImageData(0, 0, w, h).data;
+    var total = 0, dirty = 0;
+    for (var i = 3; i < dirt.length; i += 16) {
+      if (mask[i] < 128) continue;
+      total++;
+      if (dirt[i] > 30) dirty++;
+    }
+    if (total < 1) return 0;
+    return Math.max(0, Math.min(100, Math.round((1 - dirty / total) * 100)));
+  }
+
+  function updateHUD(force) {
+    var now = performance.now();
+    if (!force && scrubbing && now - lastHudMs < 70) return;
+    lastHudMs = now;
+    var pct = getCleanPct();
+    if (pct !== cachedPct) {
+      cachedPct = pct;
+      document.getElementById("progressFill").style.width = pct + "%";
+      var pctEl = document.getElementById("progressPct");
+      pctEl.textContent = pct + "%";
+      if (pct > 0 && pct < 100) {
+        pctEl.classList.remove("pulse");
+        void pctEl.offsetWidth;
+        pctEl.classList.add("pulse");
+      }
+    }
+    if ((itemIndex === 0 && refReady && shoeAngleSet.length ? allAnglesClean() : pct >= 100) && !itemClean[itemIndex]) {
+      itemClean[itemIndex] = true;
+      coins += 10;
+      document.getElementById("coinCount").textContent = String(coins);
+      spawnCelebrateBurst();
+      triggerCoinBurst();
+      playCompleteSound();
+      haptic(28);
+      var names = ["Sneaker", "Phone", "Mug", "Keyboard"];
+      showToast("✨ Sparkle! " + names[itemIndex] + " 100% clean · +10 coins", 2800);
+      if (itemIndex < 3) {
+        setTimeout(function () {
+          showToast("Tap ▶ for next item →", 2000);
+        }, 2400);
+      }
+    }
+  }
+
+  function rotateShoe(dir) {
+    if (itemIndex !== 0 || !shoeAngleSet.length) return;
+    var start = shoeAngleIdx, tries = 0;
+    do {
+      shoeAngleIdx = (shoeAngleIdx + dir + SHOE_YAW_STEPS) % SHOE_YAW_STEPS;
+      tries++;
+      if (shoeAngleSet[shoeAngleIdx]) break;
+    } while (tries < SHOE_YAW_STEPS && shoeAngleIdx !== start);
+    shoeRotatePulse = 1;
+    shoeRotatePulseStart = performance.now();
+    ensureActiveLocalDirt(0);
+    redrawShoePose();
+  }
+
+  function redrawShoePose() {
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    itemCtx.fillStyle = "#B8E6C8";
+    itemCtx.fillRect(0, 0, canvas.width, canvas.height);
+    itemCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    DRAWERS[itemIndex](itemCtx, cssW, cssH);
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    buildItemMask(cssW, cssH);
+    drawDirtLayer();
+    updateHUD(true);
+    updateNavHints();
+    setPlaying(true);
+  }
+
+  function redrawCurrentItem(preClean) {
+    initCanvases();
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    itemCtx.fillStyle = "#B8E6C8";
+    itemCtx.fillRect(0, 0, canvas.width, canvas.height);
+    itemCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    DRAWERS[itemIndex](itemCtx, cssW, cssH);
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    buildItemMask(cssW, cssH);
+    splatDirt(preClean || 0);
+    splatFoam();
+    updateHUD(true);
+    updateNavHints();
+    setPlaying(true);
+  }
+
+  function loadItem(idx, preClean) {
+    itemIndex = ((idx % 4) + 4) % 4;
+    if (itemIndex !== 0) { shoeAngleIdx = 0; localDirtSet = []; }
+    particles = [];
+    initCanvases();
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    itemCtx.fillStyle = "#B8E6C8";
+    itemCtx.fillRect(0, 0, canvas.width, canvas.height);
+    itemCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    DRAWERS[itemIndex](itemCtx, cssW, cssH);
+    itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+    buildItemMask(cssW, cssH);
+    splatDirt(preClean || 0);
+    splatFoam();
+    cachedPct = 0;
+    updateHUD(true);
+    updateNavHints();
+    setPlaying(true);
+  }
+
+  function spawnToolEffects(cx, cy) {
+    if (particles.length > 200) particles.splice(0, particles.length - 160);
+    var px = cx * dpr, py = cy * dpr;
+    var i, ang, spd, p, n;
+    if (tool === "spray") {
+      for (i = 0; i < 8; i++) {
+        ang = -Math.PI * 0.65 + (Math.random() - 0.5) * 1.4;
+        spd = (1.8 + Math.random() * 3.5) * dpr;
+        particles.push({
+          type: "mist", x: px + (Math.random() - 0.5) * 6 * dpr, y: py + (Math.random() - 0.5) * 6 * dpr,
+          vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+          r: (2.5 + Math.random() * 5) * dpr,
+          life: 0.45 + Math.random() * 0.2, maxLife: 0.45 + Math.random() * 0.2,
+          rgb: Math.random() > 0.45 ? [255, 255, 255] : [186, 230, 253]
+        });
+      }
+    } else if (tool === "sponge") {
+      for (i = 0; i < 5; i++) {
+        ang = Math.random() * Math.PI * 2;
+        spd = (0.6 + Math.random() * 1.8) * dpr;
+        particles.push({
+          type: "bubble", x: px, y: py,
+          vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd - 1.2 * dpr,
+          r: (4 + Math.random() * 7) * dpr,
+          life: 0.5 + Math.random() * 0.35, maxLife: 0.5 + Math.random() * 0.35,
+          rgb: Math.random() > 0.4 ? [254, 240, 138] : [134, 239, 172]
+        });
+      }
+    } else if (tool === "brush") {
+      for (i = 0; i < 6; i++) {
+        ang = (Math.random() - 0.5) * Math.PI * 0.8;
+        particles.push({
+          type: "scrub", x: px + (Math.random() - 0.5) * 14 * dpr, y: py + (Math.random() - 0.5) * 14 * dpr,
+          vx: Math.cos(ang) * 0.5 * dpr, vy: Math.sin(ang) * 0.5 * dpr,
+          len: (8 + Math.random() * 14) * dpr, rot: ang + (Math.random() - 0.5) * 0.6,
+          life: 0.22 + Math.random() * 0.18, maxLife: 0.22 + Math.random() * 0.18,
+          rgb: Math.random() > 0.5 ? [34, 197, 94] : [253, 224, 71]
+        });
+      }
+    } else if (tool === "water") {
+      n = 7 + Math.floor(Math.random() * 4);
+      for (i = 0; i < n; i++) {
+        ang = Math.PI * 0.55 + (Math.random() - 0.5) * 0.9;
+        spd = (2.5 + Math.random() * 4) * dpr;
+        particles.push({
+          type: "drop", x: px + (Math.random() - 0.5) * 10 * dpr, y: py + (Math.random() - 0.5) * 8 * dpr,
+          vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd + 1.5 * dpr,
+          rx: (3.5 + Math.random() * 4) * dpr, ry: (5 + Math.random() * 5) * dpr,
+          life: 0.55 + Math.random() * 0.45, maxLife: 0.55 + Math.random() * 0.45,
+          face: Math.random() < 0.35,
+          rgb: [96, 165, 250]
+        });
+      }
+    } else if (tool === "dryer") {
+      for (i = 0; i < 6; i++) {
+        particles.push({
+          type: "wind", x: px + (Math.random() - 0.5) * 20 * dpr, y: py + (Math.random() - 0.5) * 16 * dpr,
+          vx: (3 + Math.random() * 4) * dpr, vy: (Math.random() - 0.5) * 1.2 * dpr,
+          len: (16 + Math.random() * 22) * dpr,
+          life: 0.35 + Math.random() * 0.25, maxLife: 0.35 + Math.random() * 0.25,
+          rgb: Math.random() > 0.5 ? [248, 200, 220] : [255, 255, 255]
+        });
+      }
+      if (Math.random() < 0.45) {
+        particles.push({
+          type: "sparkle", x: px, y: py,
+          vx: (1 + Math.random() * 2) * dpr, vy: (-1 - Math.random() * 2) * dpr,
+          r: (2 + Math.random() * 3) * dpr,
+          life: 0.4 + Math.random() * 0.3, maxLife: 0.4 + Math.random() * 0.3,
+          rgb: [251, 191, 36]
+        });
+      }
+    }
+  }
+
+  function stepParticles(dt) {
+    var sec = Math.min(dt / 1000, 0.05);
+    var i, p;
+    for (i = particles.length - 1; i >= 0; i--) {
+      p = particles[i];
+      p.life -= sec;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      p.x += p.vx * sec * 55;
+      p.y += p.vy * sec * 55;
+      if (p.type === "bubble") { p.vy -= 0.9 * dpr * sec; p.r *= 1 + sec * 0.8; }
+      if (p.type === "drop") { p.vy += 2.2 * dpr * sec; p.vx *= 1 - sec * 0.3; }
+      if (p.type === "mist") { p.vx *= 1 - sec * 0.5; p.vy *= 1 - sec * 0.5; p.r *= 1 + sec * 0.6; }
+    }
+  }
+
+  function drawKawaiiMini(c2, x, y, s) {
+    c2.fillStyle = "rgba(30,58,95,0.9)";
+    c2.beginPath(); c2.arc(x - s * 0.55, y - s * 0.15, s * 0.38, 0, Math.PI * 2); c2.fill();
+    c2.beginPath(); c2.arc(x + s * 0.55, y - s * 0.15, s * 0.38, 0, Math.PI * 2); c2.fill();
+    c2.strokeStyle = "rgba(30,58,95,0.9)"; c2.lineWidth = Math.max(0.8, s * 0.28); c2.lineCap = "round";
+    c2.beginPath(); c2.arc(x, y + s * 0.35, s, 0.2 * Math.PI, 0.8 * Math.PI); c2.stroke();
+  }
+
+  function drawParticles(c2) {
+    var i, p, a, g;
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      a = Math.max(0, Math.min(1, p.life / p.maxLife));
+      c2.save();
+      c2.globalAlpha = a;
+      if (p.type === "mist") {
+        g = c2.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.9)");
+        g.addColorStop(1, "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0)");
+        c2.fillStyle = g;
+        c2.beginPath(); c2.arc(p.x, p.y, p.r, 0, Math.PI * 2); c2.fill();
+      } else if (p.type === "bubble") {
+        c2.fillStyle = "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.75)";
+        c2.strokeStyle = "rgba(255,255,255,0.85)";
+        c2.lineWidth = 1.2 * dpr;
+        c2.beginPath(); c2.arc(p.x, p.y, p.r, 0, Math.PI * 2); c2.fill(); c2.stroke();
+      } else if (p.type === "scrub") {
+        c2.strokeStyle = "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.85)";
+        c2.lineWidth = 2.5 * dpr; c2.lineCap = "round";
+        c2.beginPath();
+        c2.moveTo(p.x - Math.cos(p.rot) * p.len * 0.5, p.y - Math.sin(p.rot) * p.len * 0.5);
+        c2.lineTo(p.x + Math.cos(p.rot) * p.len * 0.5, p.y + Math.sin(p.rot) * p.len * 0.5);
+        c2.stroke();
+      } else if (p.type === "drop") {
+        c2.fillStyle = "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.82)";
+        c2.beginPath(); c2.ellipse(p.x, p.y, p.rx, p.ry, 0, 0, Math.PI * 2); c2.fill();
+        c2.fillStyle = "rgba(191,219,254,0.55)";
+        c2.beginPath(); c2.ellipse(p.x - p.rx * 0.25, p.y - p.ry * 0.25, p.rx * 0.35, p.ry * 0.3, 0, 0, Math.PI * 2); c2.fill();
+        if (p.face) drawKawaiiMini(c2, p.x, p.y, Math.min(p.rx, p.ry) * 0.55);
+      } else if (p.type === "wind") {
+        c2.strokeStyle = "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.7)";
+        c2.lineWidth = 2 * dpr; c2.lineCap = "round";
+        c2.beginPath();
+        c2.moveTo(p.x, p.y);
+        c2.quadraticCurveTo(p.x + p.len * 0.35, p.y + 3 * dpr, p.x + p.len, p.y);
+        c2.stroke();
+      } else if (p.type === "sparkle") {
+        c2.fillStyle = "rgba(" + p.rgb[0] + "," + p.rgb[1] + "," + p.rgb[2] + ",0.95)";
+        c2.beginPath(); c2.arc(p.x, p.y, p.r, 0, Math.PI * 2); c2.fill();
+        c2.strokeStyle = "rgba(255,255,255,0.9)"; c2.lineWidth = 1 * dpr;
+        c2.beginPath();
+        c2.moveTo(p.x - p.r * 1.8, p.y); c2.lineTo(p.x + p.r * 1.8, p.y);
+        c2.moveTo(p.x, p.y - p.r * 1.8); c2.lineTo(p.x, p.y + p.r * 1.8);
+        c2.stroke();
+      }
+      c2.restore();
+    }
+  }
+
+  function foamBoostAt(px, py) {
+    if (!foamCanvas || foamCanvas.width < 1) return 1;
+    var fx = Math.max(0, Math.min(foamCanvas.width - 1, Math.round(px)));
+    var fy = Math.max(0, Math.min(foamCanvas.height - 1, Math.round(py)));
+    var a = foamCtx.getImageData(fx, fy, 1, 1).data[3];
+    return a > 40 ? 1.35 : 1;
+  }
+
+  function applyTool(cx, cy) {
+    hideHint();
+    spawnToolEffects(cx, cy);
+    var t = TOOLS[tool];
+    if (!t) return;
+    var cssW = canvas.width / dpr, cssH = canvas.height / dpr;
+    var px = cx * dpr, py = cy * dpr, r = t.radius * dpr;
+    var dirtMul = t.dirt;
+    if (tool === "brush" || tool === "sponge") dirtMul *= foamBoostAt(px, py);
+    if (tool === "water") dirtMul *= 1.12;
+    if (tool === "dryer") dirtMul *= 0.85;
+
+    var activeDirt = getActiveLocalDirt();
+    if (itemIndex === 0 && activeDirt && activeDirt.ctx) {
+      var loc = screenToShoeLocal(cx, cy, cssW, cssH);
+      if (loc) {
+        activeDirt.ctx.globalCompositeOperation = "destination-out";
+        activeDirt.ctx.beginPath();
+        activeDirt.ctx.arc(loc.x, loc.y, loc.rScale * t.radius * dirtMul, 0, Math.PI * 2);
+        activeDirt.ctx.fill();
+        activeDirt.ctx.globalCompositeOperation = "source-over";
+      }
+      drawDirtLayer();
+    } else {
+      dirtCtx.globalCompositeOperation = "destination-out";
+      dirtCtx.beginPath(); dirtCtx.arc(px, py, r * dirtMul, 0, Math.PI * 2); dirtCtx.fill();
+    }
+
+    if (tool === "spray") {
+      foamCtx.globalCompositeOperation = "source-over";
+      var fg = foamCtx.createRadialGradient(px, py, 0, px, py, r * 0.75);
+      fg.addColorStop(0, "rgba(255,255,255,0.92)");
+      fg.addColorStop(1, "rgba(255,255,255,0)");
+      foamCtx.fillStyle = fg;
+      foamCtx.beginPath(); foamCtx.arc(px, py, r * 0.65, 0, Math.PI * 2); foamCtx.fill();
+      foamCtx.globalCompositeOperation = "destination-in";
+      foamCtx.drawImage(maskCanvas, 0, 0);
+    } else if (t.foam > 0.3) {
+      foamCtx.globalCompositeOperation = "destination-out";
+      foamCtx.beginPath(); foamCtx.arc(px, py, r * t.foam, 0, Math.PI * 2); foamCtx.fill();
+    }
+    playToolSound(t.sound);
+    haptic(8);
+    updateHUD(false);
+  }
+
+  function render() {
+    var W = canvas.width, H = canvas.height;
+    var now = performance.now();
+    var dt = lastFrameTs ? now - lastFrameTs : 16;
+    lastFrameTs = now;
+    if (shoeRotatePulse > 0) {
+      shoeRotatePulse = Math.max(0, 1 - (now - shoeRotatePulseStart) / 150);
+      if (itemIndex === 0 && refReady) {
+        var cssW = W / dpr, cssH = H / dpr;
+        itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+        itemCtx.fillStyle = "#B8E6C8";
+        itemCtx.fillRect(0, 0, W, H);
+        itemCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        DRAWERS[itemIndex](itemCtx, cssW, cssH);
+        itemCtx.setTransform(1, 0, 0, 1, 0, 0);
+        drawDirtLayer();
+      }
+    }
+    stepParticles(dt);
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(itemCanvas, 0, 0);
+    ctx.drawImage(dirtCanvas, 0, 0);
+    ctx.drawImage(foamCanvas, 0, 0);
+    drawParticles(ctx);
+    var bloom = ctx.createRadialGradient(W * 0.5, H * 0.42, W * 0.04, W * 0.5, H * 0.45, W * 0.58);
+    bloom.addColorStop(0, "rgba(255,255,255,0.16)");
+    bloom.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = bloom;
+    ctx.fillRect(0, 0, W, H);
+    animId = requestAnimationFrame(render);
+  }
+
+  function syncCanvas() {
+    var rect = document.getElementById("mainArea").getBoundingClientRect();
+    if (rect.width < 16 || rect.height < 16) return false;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var newW = Math.round(rect.width * dpr), newH = Math.round(rect.height * dpr);
+    if (canvas.width !== newW || canvas.height !== newH) {
+      canvas.width = newW; canvas.height = newH;
+      loadItem(itemIndex, 0);
+    }
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+    return true;
+  }
+
+  function boot() { if (syncCanvas() && !animId) render(); }
+
+  function canvasPos(e) {
+    var r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  canvas.addEventListener("pointerdown", function (e) {
+    e.preventDefault(); e.stopPropagation();
+    ensureAudio();
+    if (!EMBED && !soundOn) { soundOn = true; }
+    scrubbing = true;
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    applyTool(canvasPos(e).x, canvasPos(e).y);
+    setPlaying(true);
+  });
+  canvas.addEventListener("pointermove", function (e) {
+    if (!scrubbing) return;
+    e.preventDefault();
+    applyTool(canvasPos(e).x, canvasPos(e).y);
+  });
+  canvas.addEventListener("pointerup", function () { scrubbing = false; });
+  canvas.addEventListener("pointercancel", function () { scrubbing = false; });
+
+  document.querySelectorAll(".tool-slot").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      tool = btn.dataset.tool;
+      document.querySelectorAll(".tool-slot").forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      setPlaying(true);
+    });
+  });
+
+  document.getElementById("btnPrev").onclick = function (e) {
+    e.stopPropagation();
+    if (itemIndex === 0) rotateShoe(-1);
+    else loadItem(itemIndex - 1, 0);
+  };
+  document.getElementById("btnNext").onclick = function (e) {
+    e.stopPropagation();
+    if (itemIndex === 0) rotateShoe(1);
+    else loadItem(itemIndex + 1, 0);
+  };
+  document.getElementById("btnBack").onclick = function (e) {
+    e.stopPropagation();
+    if (EMBED) window.parent.postMessage({ type: "sparkle-interact", active: false }, "*");
+    else history.back();
+  };
+  document.getElementById("toolBar").addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+  document.querySelectorAll(".nav-arrow").forEach(function (b) {
+    b.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+  });
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return m + ":" + (sec < 10 ? "0" : "") + sec;
+  }
+
+  setInterval(function () {
+    if (!timerRunning || timerSec <= 0) return;
+    timerSec--;
+    document.getElementById("timer").textContent = formatTime(timerSec);
+  }, 1000);
+
+  window.addEventListener("message", function (e) {
+    if (e.data?.type === "sparkle-sound") { soundOn = !!e.data.enabled; if (soundOn) ensureAudio(); }
+    if (e.data?.type === "sparkle-resize") boot();
+    if (e.data?.type === "sparkle-start") { setPlaying(true); ensureAudio(); soundOn = true; }
+  });
+
+  function isToolBgPixel(r, g, b, a) {
+    if (a < 18) return true;
+    if (r > 208 && g > 212 && b > 222) return true;
+    if (r > 195 && g > 198 && b > 205 && Math.abs(r - g) < 14 && Math.abs(g - b) < 18) return true;
+    return false;
+  }
+
+  function trimToolSprite(cv) {
+    var ctx = cv.getContext("2d");
+    var w = cv.width, h = cv.height;
+    var data = ctx.getImageData(0, 0, w, h).data;
+    var minX = w, minY = h, maxX = 0, maxY = 0, x, y, i;
+    for (y = 0; y < h; y++) {
+      for (x = 0; x < w; x++) {
+        i = (y * w + x) * 4;
+        if (isToolBgPixel(data[i], data[i + 1], data[i + 2], data[i + 3])) continue;
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
+    }
+    if (maxX <= minX || maxY <= minY) return cv;
+    var pad = Math.round(Math.min(w, h) * 0.04);
+    minX = Math.max(0, minX - pad);
+    minY = Math.max(0, minY - pad);
+    maxX = Math.min(w - 1, maxX + pad);
+    maxY = Math.min(h - 1, maxY + pad);
+    var cw = maxX - minX + 1, ch = maxY - minY + 1;
+    var out = document.createElement("canvas");
+    out.width = cw; out.height = ch;
+    out.getContext("2d").drawImage(cv, minX, minY, cw, ch, 0, 0, cw, ch);
+    return out;
+  }
+
+  function initToolSprites() {
+    var toolbarImg = new Image();
+    toolbarImg.onload = function () {
+      var tw = toolbarImg.naturalWidth || toolbarImg.width;
+      var th = toolbarImg.naturalHeight || toolbarImg.height;
+      document.querySelectorAll(".tool-slot").forEach(function (btn, i) {
+        var crop = TOOL_CROPS[i];
+        if (!crop) return;
+        var sx = Math.round(crop.x * tw);
+        var sy = Math.round(crop.y * th);
+        var sw = Math.round(crop.w * tw);
+        var sh = Math.round(crop.h * th);
+        var tc = document.createElement("canvas");
+        tc.width = sw; tc.height = sh;
+        var tctx = tc.getContext("2d");
+        tctx.drawImage(toolbarImg, sx, sy, sw, sh, 0, 0, sw, sh);
+        var trimmed = trimToolSprite(tc);
+        var img = document.createElement("img");
+        img.className = "tool-icon";
+        img.alt = btn.getAttribute("aria-label") || "";
+        img.src = trimmed.toDataURL("image/png");
+        btn.appendChild(img);
+      });
+    };
+    toolbarImg.src = "assets/sparkle-toolbar-ref.png";
+  }
+
+  window.addEventListener("resize", boot);
+  initToolSprites();
+  boot();
+  if (turnaroundImg.complete && turnaroundImg.naturalWidth) {
+    shoeAngleSet = sliceTurnaroundSheet(turnaroundImg);
+    refReady = shoeAngleSet.length > 0 && !!getActiveCleanShoe();
+  } else if (refImg.complete && refImg.naturalWidth) {
+    loadShoeAngleFallback();
+  }
+  loadItem(0, 0);
+})();
+</script>
+</body>
+</html>

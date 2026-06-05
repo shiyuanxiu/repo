@@ -22,6 +22,8 @@
     { "id": "beat", "name": "Mochi Snake", "slug": "snake-bite", "gistKey": "MochiSnake", "tag": "#MochiSnake", "category": "arcade", "feed": "games" },
     { "id": "hole", "name": "Sushi Black Hole", "slug": "hole-swallow", "gistKey": "HoleSwallow", "tag": "#HoleSwallow", "category": "arcade", "feed": "games" },
     { "id": "slash", "name": "Fruit Slash", "slug": "fruit-slash", "gistKey": "FruitSlash", "tag": "#FruitSlash", "category": "arcade", "feed": "games" },
-    { "id": "pacman", "name": "Pac-Man Classic", "slug": "pacman", "gistKey": "PacMan", "tag": "#PacMan", "category": "arcade", "feed": "games" }
+    { "id": "pacman", "name": "Pac-Man Classic", "slug": "pacman", "gistKey": "PacMan", "tag": "#PacMan", "category": "arcade", "feed": "games" },
+    { "id": "chibimg", "name": "Chibi Magical Girl's Art Adventure", "slug": "chibi-magical-girls", "gistKey": "ChibiMagicalGirl", "tag": "#ChibiMagicalGirl", "category": "social", "feed": "games" },
+    { "id": "growfish", "name": "Grow a Fish", "slug": "grow-a-fish", "gistKey": "GrowAFish", "tag": "#GrowAFish", "category": "chill", "feed": "games" }
   ]
 }

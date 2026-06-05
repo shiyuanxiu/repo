@@ -56,7 +56,7 @@ let lastEarthTaskIndex = -1;
 let currentEarthQuest = null;
 let lastCompletedEarthTask = "";
 
-const soundState = { fortune: false, earth: false, chick: false, block: false, shop: false, leap: false, run: false, face: false, box: false, sente: false, pet: false, spot: false, mj: false, star: false, stack: false, match: false, merge: false, beat: false, hole: false, slash: false, pacman: false };
+const soundState = { fortune: false, earth: false, chick: false, block: false, shop: false, leap: false, run: false, face: false, box: false, sente: false, pet: false, spot: false, mj: false, star: false, stack: false, match: false, merge: false, beat: false, hole: false, slash: false, pacman: false, gungate: false, chibimg: false, streetfight: false, growfish: false };
 
 /* ===== DOM ===== */
 const drawScene = document.getElementById("drawScene");
@@ -3138,7 +3138,7 @@ const GAME_CATEGORIES = {
   fortune: "chill", earth: "chill", block: "puzzle", leap: "arcade",
   face: "social", box: "social", pet: "chill", spot: "chill",
   mj: "puzzle", star: "arcade", stack: "puzzle", match: "puzzle",
-  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade", pacman: "arcade",
+  merge: "puzzle", beat: "arcade", hole: "arcade", slash: "arcade", pacman: "arcade", gungate: "arcade", chibimg: "social", streetfight: "arcade", growfish: "chill",
 };
 
 const TODAY_PICKS = [
@@ -3179,7 +3179,7 @@ const GAME_LABELS = {
   run: "Neon Rush", face: "Runway Glow-Up", box: "Mystery Flavor Box",
   sente: "Born To vs Forced To", pet: "Office Pets", spot: "Rainbow Salt Lake",
   mj: "Brain Sketch", star: "Starfall", stack: "Piggy Catch", match: "Memory Match",
-  merge: "2048", beat: "Mochi Snake", hole: "Sushi Black Hole", slash: "Fruit Slash", pacman: "Pac-Man Classic",
+  merge: "2048", beat: "Mochi Snake", hole: "Sushi Black Hole", slash: "Fruit Slash", pacman: "Pac-Man Classic", gungate: "GunGateGang", chibimg: "Chibi Magical Girl's Art Adventure", streetfight: "Bruce Lee's Street Fight", growfish: "Grow a Fish",
 };
 
 let feedSearchQuery = "";
@@ -9794,6 +9794,10 @@ function loadIframeGame(game) {
     slash: { id: "slashFrame", src: "games/fruit-slash.html?embed=1&v=ios-audio-unlock" },
     hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=ios-audio-unlock" },
     pacman: { id: "pacmanFrame", src: "games/pacman.html?embed=1&v=pacman-v7" },
+    gungate: { id: "gungateFrame", src: "games/gungate-gang.html?embed=1&v=gungate-v7" },
+    chibimg: { id: "chibimgFrame", src: "games/chibi-magical-girls.html?embed=1&v=mg-coloring-v20" },
+    streetfight: { id: "streetfightFrame", src: "games/bruce-lee-street-fight.html?embed=1&v=streetfight-v1" },
+    growfish: { id: "growfishFrame", src: "games/grow-a-fish.html?embed=1&v=growfish-v20" },
   };
   const cfg = map[game];
   if (!cfg) return false;
@@ -9877,15 +9881,224 @@ function initPacmanFeed() {
   loadIframeGame("pacman");
 }
 
+function syncGungateFeedSound() {
+  const frame = document.getElementById("gungateFrame");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.gungate);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "gungate-sound", enabled: soundState.gungate }, "*");
+}
+
+function initGungateFeed() {
+  loadIframeGame("gungate");
+}
+
+function syncChibimgFeedSound() {
+  const frame = document.getElementById("chibimgFrame");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.chibimg);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "chibimg-sound", enabled: soundState.chibimg }, "*");
+}
+
+function initChibimgFeed() {
+  loadIframeGame("chibimg");
+}
+
+function syncStreetfightFeedSound() {
+  const frame = document.getElementById("streetfightFrame");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.streetfight);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "streetfight-sound", enabled: soundState.streetfight }, "*");
+}
+
+function initStreetfightFeed() {
+  loadIframeGame("streetfight");
+}
+
+function syncGrowfishFeedSound() {
+  const frame = document.getElementById("growfishFrame");
+  const win = frame?.contentWindow;
+  if (!win) return;
+  try {
+    if (typeof win.__setFeedSound === "function") {
+      win.__setFeedSound(soundState.growfish);
+      return;
+    }
+  } catch (_) { /* noop */ }
+  win.postMessage({ type: "growfish-sound", enabled: soundState.growfish }, "*");
+}
+
+function growfishCoverIsGreen(r, g, b) {
+  return g > 160 && g > r * 1.25 && g > b * 1.25;
+}
+
+function growfishCoverTrimCanvas(canvas) {
+  const tc = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  const id = tc.getImageData(0, 0, w, h);
+  const d = id.data;
+  let top = h;
+  let left = w;
+  let right = 0;
+  let bottom = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      if (d[i + 3] > 24) {
+        if (y < top) top = y;
+        if (y > bottom) bottom = y;
+        if (x < left) left = x;
+        if (x > right) right = x;
+      }
+    }
+  }
+  if (right <= left) return canvas;
+  const tw = right - left + 1;
+  const th = bottom - top + 1;
+  const trimmed = document.createElement("canvas");
+  trimmed.width = tw;
+  trimmed.height = th;
+  trimmed.getContext("2d").drawImage(canvas, left, top, tw, th, 0, 0, tw, th);
+  return trimmed;
+}
+
+function growfishCoverExtractRegion(img, x0, sw, sh) {
+  const off = document.createElement("canvas");
+  off.width = sw;
+  off.height = sh;
+  const oc = off.getContext("2d");
+  oc.drawImage(img, x0, 0, sw, sh, 0, 0, sw, sh);
+  const id = oc.getImageData(0, 0, sw, sh);
+  const d = id.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (growfishCoverIsGreen(d[i], d[i + 1], d[i + 2])) d[i + 3] = 0;
+  }
+  oc.putImageData(id, 0, 0);
+  return growfishCoverTrimCanvas(off);
+}
+
+function growfishCoverPanelsFromSheet(img) {
+  const w = img.width;
+  const h = img.height;
+  const temp = document.createElement("canvas");
+  temp.width = w;
+  temp.height = h;
+  const tc = temp.getContext("2d");
+  tc.drawImage(img, 0, 0);
+  const id = tc.getImageData(0, 0, w, h);
+  const d = id.data;
+  const cols = [];
+  const threshold = Math.max(4, h * 0.015);
+  for (let x = 0; x < w; x++) {
+    let content = 0;
+    for (let y = 0; y < h; y++) {
+      const i = (y * w + x) * 4;
+      if (d[i + 3] > 20 && !growfishCoverIsGreen(d[i], d[i + 1], d[i + 2])) content++;
+    }
+    cols.push(content);
+  }
+  const regions = [];
+  let start = -1;
+  for (let x = 0; x < w; x++) {
+    if (cols[x] > threshold) {
+      if (start < 0) start = x;
+    } else if (start >= 0) {
+      regions.push({ x0: start, x1: x });
+      start = -1;
+    }
+  }
+  if (start >= 0) regions.push({ x0: start, x1: w });
+  if (!regions.length) return [];
+  regions.sort((a, b) => a.x0 - b.x0);
+  const merged = [regions[0]];
+  for (let ri = 1; ri < regions.length; ri++) {
+    const prev = merged[merged.length - 1];
+    const cur = regions[ri];
+    if (cur.x0 - prev.x1 < w * 0.01) prev.x1 = cur.x1;
+    else merged.push(cur);
+  }
+  while (merged.length > 4) {
+    let bestIdx = 0;
+    let bestGap = merged[1].x0 - merged[0].x1;
+    for (let ri = 1; ri < merged.length - 1; ri++) {
+      const gap = merged[ri + 1].x0 - merged[ri].x1;
+      if (gap < bestGap) { bestGap = gap; bestIdx = ri; }
+    }
+    merged[bestIdx].x1 = merged[bestIdx + 1].x1;
+    merged.splice(bestIdx + 1, 1);
+  }
+  const pad = Math.max(2, Math.floor(w * 0.008));
+  const out = [];
+  for (let ri = 0; ri < 4; ri++) {
+    const rgn = merged[ri] || merged[merged.length - 1];
+    const sx = Math.max(0, rgn.x0 - pad);
+    const ex = Math.min(w, rgn.x1 + pad);
+    out.push(growfishCoverExtractRegion(img, sx, ex - sx, h).toDataURL("image/png"));
+  }
+  return out;
+}
+
+function initGrowfishCover() {
+  const stage = document.querySelector(".growfish-cover-stage");
+  if (!stage || stage.dataset.fishReady === "1") return;
+  const img = new Image();
+  img.onload = function () {
+    if (!img.naturalWidth) return;
+    const panels = growfishCoverPanelsFromSheet(img);
+    if (panels.length < 4) return;
+    stage.dataset.fishReady = "1";
+    stage.replaceChildren();
+    [
+      { cls: "growfish-cover-fish-img growfish-cover-fish-img--prey", src: panels[0] },
+      { cls: "growfish-cover-fish-img growfish-cover-fish-img--clown", src: panels[1] },
+      { cls: "growfish-cover-fish-img growfish-cover-fish-img--hero", src: panels[2] },
+      { cls: "growfish-cover-fish-img growfish-cover-fish-img--shark", src: panels[3] },
+    ].forEach(({ cls, src }) => {
+      const el = document.createElement("img");
+      el.className = cls;
+      el.alt = "";
+      el.draggable = false;
+      el.decoding = "async";
+      el.src = src;
+      stage.appendChild(el);
+    });
+  };
+  img.onerror = function () { /* keep empty stage */ };
+  img.src = "games/assets/growfish-fish-sheet.png";
+}
+
+function initGrowfishFeed() {
+  initGrowfishCover();
+  loadIframeGame("growfish");
+}
+
 function ensureVisibleIframeGames() {
   document.querySelectorAll(".feed-item[data-feed='games']:not(.hidden)").forEach((item) => {
     const game = item.dataset.game;
-    if (game === "hole" || game === "slash" || game === "pacman") loadIframeGame(game);
+    if (game === "hole" || game === "slash" || game === "pacman" || game === "gungate" || game === "chibimg" || game === "streetfight" || game === "growfish") loadIframeGame(game);
   });
 }
 
 function initIframeFeedRetry() {
-  const iframeGames = ["hole", "slash", "pacman"];
+  const iframeGames = ["hole", "slash", "pacman", "gungate", "chibimg", "streetfight", "growfish"];
   const feed = document.getElementById("feed");
   if (!feed) return;
 
@@ -9935,7 +10148,18 @@ function initIframeFeedRetry() {
     if (!document.hidden) retryVisible();
   });
 
-  ["holeCard", "slashCard", "pacmanCard"].forEach((id) => {
+  function activateChibimgCard() {
+    const card = document.getElementById("chibimgCard");
+    const frame = document.getElementById("chibimgFrame");
+    if (!card || card.classList.contains("iframe-active")) return;
+    loadIframeGame("chibimg");
+    card.classList.add("iframe-active");
+    unlockIframeGameAudio("chibimg");
+    frame?.focus();
+    try { frame?.contentWindow?.postMessage({ type: "chibimg-start" }, "*"); } catch (_) { /* noop */ }
+  }
+
+  ["holeCard", "slashCard", "pacmanCard", "gungateCard", "chibimgCard", "streetfightCard", "growfishCard"].forEach((id) => {
     const card = document.getElementById(id);
     if (!card) return;
     const game = id.replace(/Card$/, "").toLowerCase();
@@ -9944,32 +10168,62 @@ function initIframeFeedRetry() {
       loadIframeGame(game);
       card.classList.add("iframe-active");
       unlockIframeGameAudio(game);
-      document.getElementById(`${game}Frame`)?.focus();
+      const frame = document.getElementById(`${game}Frame`);
+      frame?.focus();
+      if (game === "chibimg") {
+        try { frame?.contentWindow?.postMessage({ type: "chibimg-start" }, "*"); } catch (_) { /* noop */ }
+      }
+      if (game === "streetfight") {
+        try { frame?.contentWindow?.postMessage({ type: "streetfight-start" }, "*"); } catch (_) { /* noop */ }
+      }
+      if (game === "growfish") {
+        try { frame?.contentWindow?.postMessage({ type: "growfish-start" }, "*"); } catch (_) { /* noop */ }
+      }
     });
   });
 
+  document.querySelector(".chibimg-cover")?.addEventListener("click", (e) => {
+    if (e.target.closest(".chibimg-astrocade-btn, .card-controls, .control-btn")) return;
+    e.stopPropagation();
+    activateChibimgCard();
+  });
+
   document.addEventListener("keydown", (e) => {
-    const card = document.getElementById("pacmanCard");
-    if (!card?.classList.contains("iframe-active")) return;
-    const dirMap = { ArrowLeft: 2, ArrowRight: 0, ArrowUp: 3, ArrowDown: 1 };
-    if (dirMap[e.key] === undefined) return;
+    const pacCard = document.getElementById("pacmanCard");
+    if (pacCard?.classList.contains("iframe-active")) {
+      const dirMap = { ArrowLeft: 2, ArrowRight: 0, ArrowUp: 3, ArrowDown: 1 };
+      if (dirMap[e.key] !== undefined) {
+        e.preventDefault();
+        e.stopPropagation();
+        const frame = document.getElementById("pacmanFrame");
+        const win = frame?.contentWindow;
+        if (win) {
+          try {
+            if (typeof win.__pacmanSetDir === "function") win.__pacmanSetDir(dirMap[e.key]);
+            else win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
+          } catch (_) {
+            win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
+          }
+          frame?.focus();
+        }
+      }
+      return;
+    }
+    const gunCard = document.getElementById("gungateCard");
+    if (!gunCard?.classList.contains("iframe-active")) return;
+    const steerMap = { ArrowLeft: -1, ArrowRight: 1, a: -1, A: -1, d: 1, D: 1 };
+    if (steerMap[e.key] === undefined) return;
     e.preventDefault();
     e.stopPropagation();
-    const frame = document.getElementById("pacmanFrame");
-    const win = frame?.contentWindow;
-    if (!win) return;
-    try {
-      if (typeof win.__pacmanSetDir === "function") win.__pacmanSetDir(dirMap[e.key]);
-      else win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
-    } catch (_) {
-      win.postMessage({ type: "pacman-dir", dir: dirMap[e.key] }, "*");
-    }
-    frame?.focus();
+    const gunFrame = document.getElementById("gungateFrame");
+    gunFrame?.contentWindow?.postMessage({ type: "gungate-steer", dir: steerMap[e.key] }, "*");
+    gunFrame?.focus();
   }, true);
 }
 
 function deactivateIframeCards() {
-  document.querySelectorAll(".hole-card.iframe-active, .slash-card.iframe-active, .pacman-card.iframe-active").forEach((card) => {
+  document.querySelectorAll(".hole-card.iframe-active, .slash-card.iframe-active, .pacman-card.iframe-active, .gungate-card.iframe-active, .chibimg-card.iframe-active, .streetfight-card.iframe-active, .growfish-card.iframe-active").forEach((card) => {
+    if (card.classList.contains("chibimg-card")) return;
     card.classList.remove("iframe-active");
   });
 }
@@ -9993,7 +10247,7 @@ function initIframeScrollShield() {
   feed.addEventListener(
     "touchstart",
     (e) => {
-      if (e.target.closest(".iframe-feed-shield-hint, .card-controls, .control-btn")) return;
+      if (e.target.closest(".iframe-feed-shield-hint, .card-controls, .control-btn, .chibimg-astrocade-btn, .gungate-astrocade-btn, .streetfight-astrocade-btn, .growfish-astrocade-btn")) return;
       deactivateIframeCards();
     },
     { passive: true },
@@ -10107,6 +10361,14 @@ document.querySelectorAll(".sound-toggle").forEach((btn) => {
       syncSlashFeedSound();
     } else if (game === "pacman") {
       syncPacmanFeedSound();
+    } else if (game === "gungate") {
+      syncGungateFeedSound();
+    } else if (game === "chibimg") {
+      syncChibimgFeedSound();
+    } else if (game === "streetfight") {
+      syncStreetfightFeedSound();
+    } else if (game === "growfish") {
+      syncGrowfishFeedSound();
     }
   });
 });
@@ -10233,10 +10495,14 @@ const GAME_SHARE_META = {
   hole: { title: "Sushi Black Hole", text: "Drag, combo, FEVER mode — swallow everything", tag: "#HoleSwallow" },
   slash: { title: "Fruit Slash", text: "Swipe fruit, dodge bombs, clear levels", tag: "#FruitSlash" },
   pacman: { title: "Pac-Man Classic", text: "Eat pellets, power up, dodge ghosts — 12 mazes", tag: "#PacMan" },
+  gungate: { title: "GunGateGang", text: "Build your gang, run multiplier gates, smash obstacles", tag: "#GunGateGang" },
+  chibimg: { title: "Chibi Magical Girl's Art Adventure", text: "Tap to color chibi line art — palette, undo, save pages", tag: "#ChibiMagicalGirl" },
+  streetfight: { title: "Bruce Lee's Street Fight", text: "Pick your fighter and brawl through neon city streets — punch, kick, combos", tag: "#BruceLeeStreetFight" },
+  growfish: { title: "Grow a Fish", text: "Eat smaller fish, dodge predators, evolve from fry to shark", tag: "#GrowAFish" },
 };
 
 const RECOMMEND_ORDER = ["chick", "run", "shop", "sente", "fortune", "earth", "block", "leap"];
-const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "pacman", "slash", "hole", "beat"];
+const GAMES_ORDER = ["face", "box", "pet", "spot", "mj", "star", "stack", "match", "merge", "pacman", "chibimg", "growfish", "slash", "hole", "beat"];
 
 const lazyInited = new Set();
 let feedProgressObserver = null;
@@ -10249,6 +10515,7 @@ function initFeedOptimizations() {
   polishTrustSignals();
   tagFeedItems();
   reorderFeedItems();
+  initGrowfishCover();
   // Ad injection disabled for Miniverse
   initSavedGames();
   initStreakUI();
@@ -10259,6 +10526,12 @@ function initFeedOptimizations() {
     if (e.data?.type === "hole-ready") syncHoleFeedSound();
     if (e.data?.type === "slash-ready") syncSlashFeedSound();
     if (e.data?.type === "pacman-ready") syncPacmanFeedSound();
+    if (e.data?.type === "gungate-ready") syncGungateFeedSound();
+    if (e.data?.type === "chibimg-ready") {
+      syncChibimgFeedSound();
+    }
+    if (e.data?.type === "streetfight-ready") syncStreetfightFeedSound();
+    if (e.data?.type === "growfish-ready") syncGrowfishFeedSound();
     if (e.data?.type === "hole-interact") {
       document.getElementById("holeCard")?.classList.toggle("iframe-active", !!e.data.active);
     }
@@ -10267,6 +10540,18 @@ function initFeedOptimizations() {
     }
     if (e.data?.type === "pacman-interact") {
       document.getElementById("pacmanCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "gungate-interact") {
+      document.getElementById("gungateCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "chibimg-interact") {
+      document.getElementById("chibimgCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "streetfight-interact") {
+      document.getElementById("streetfightCard")?.classList.toggle("iframe-active", !!e.data.active);
+    }
+    if (e.data?.type === "growfish-interact") {
+      document.getElementById("growfishCard")?.classList.toggle("iframe-active", !!e.data.active);
     }
   });
   initFeedProgress();
@@ -10314,7 +10599,7 @@ const CREATOR_EMOJI = {
   fortune: "🌸", earth: "🌍", chick: "🐣", block: "🦌", shop: "🏪",
   leap: "🐸", run: "⚡", face: "💅", box: "🎁", sente: "✨",
   pet: "🐾", spot: "🌈", mj: "🧠", star: "⭐", stack: "🐷",
-  match: "🃏", merge: "🎯", beat: "🐍", hole: "🕳️", slash: "🍉", pacman: "👾",
+  match: "🃏", merge: "🎯", beat: "🐍", hole: "🕳️", slash: "🍉", pacman: "👾", gungate: "🔫", chibimg: "✨", streetfight: "🥊", growfish: "🐟",
 };
 
 function polishTrustSignals() {
@@ -10596,6 +10881,10 @@ const LAZY_GAME_INIT = {
   hole: () => { if (!lazyInited.has("hole")) { initHoleFeed(); lazyInited.add("hole"); } },
   slash: () => { if (!lazyInited.has("slash")) { initSlashFeed(); lazyInited.add("slash"); } },
   pacman: () => { if (!lazyInited.has("pacman")) { initPacmanFeed(); lazyInited.add("pacman"); } },
+  gungate: () => { if (!lazyInited.has("gungate")) { initGungateFeed(); lazyInited.add("gungate"); } },
+  chibimg: () => { if (!lazyInited.has("chibimg")) { initChibimgFeed(); lazyInited.add("chibimg"); } },
+  streetfight: () => { if (!lazyInited.has("streetfight")) { initStreetfightFeed(); lazyInited.add("streetfight"); } },
+  growfish: () => { if (!lazyInited.has("growfish")) { initGrowfishFeed(); lazyInited.add("growfish"); } },
   merge: () => { if (!lazyInited.has("merge")) { initNumberMerge(); lazyInited.add("merge"); } },
   match: () => { if (!lazyInited.has("match")) { initMemoryMatch(); lazyInited.add("match"); } },
 };

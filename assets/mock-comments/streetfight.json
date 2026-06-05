@@ -1,0 +1,42 @@
+{
+  "gameId": "streetfight",
+  "totalLike": 62,
+  "comments": [
+    {
+      "commentId": "streetfight-m1-1001",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Bruce Lee rainbow select border is fire — picked him and cleared Stage 1 first try 🥊",
+      "createTime": "2026-06-05 09:12:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "streetfight-m1-1002",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Bad Girl in the red dress hits different — kick combo on the mohawk punk feels like Streets of Rage",
+      "createTime": "2026-06-05 11:38:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "streetfight-m1-1003",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Chuck Norris denim vest sprite made me laugh — beat the gi fighter wave with 3 lives left",
+      "createTime": "2026-06-05 14:05:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "streetfight-m1-1004",
+      "userId": "77210493",
+      "username": "ArcadeAva",
+      "avatar": "https://avatars.githubusercontent.com/u/77210493?v=4",
+      "content": "SPECIAL meter filling on hits is satisfying — ASTROCADE neon bg on char select is perfect pixel vibes",
+      "createTime": "2026-06-05 17:22:00",
+      "replyTo": ""
+    }
+  ]
+}

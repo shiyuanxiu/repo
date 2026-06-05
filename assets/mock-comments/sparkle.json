@@ -1,0 +1,42 @@
+{
+  "gameId": "sparkle",
+  "totalLike": 56,
+  "comments": [
+    {
+      "commentId": "sparkle-m1-1001",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "the sponge scrub sound is so satisfying — cleaned the sneaker in one go 🧽✨",
+      "createTime": "2026-06-04 08:15:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "sparkle-m1-1002",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "hairdryer on the mug foam hits different ASMR — need more items!",
+      "createTime": "2026-06-04 10:42:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "sparkle-m1-1003",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "pastel clay vibes are adorable — keyboard was gross but so fun to scrub clean",
+      "createTime": "2026-06-04 13:20:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "sparkle-m1-1004",
+      "userId": "77210493",
+      "username": "ArcadeAva",
+      "avatar": "https://avatars.githubusercontent.com/u/77210493?v=4",
+      "content": "+10 coins when you hit 100% clean feels great — phone screen sparkle ✨",
+      "createTime": "2026-06-04 16:05:00",
+      "replyTo": ""
+    }
+  ]
+}

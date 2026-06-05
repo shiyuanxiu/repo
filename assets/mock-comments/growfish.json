@@ -1,0 +1,42 @@
+{
+  "gameId": "growfish",
+  "totalLike": 58,
+  "comments": [
+    {
+      "commentId": "growfish-m1-1001",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "Evolved to SHARK in one run — the growth bar and level-up chime feel so satisfying 🐟",
+      "createTime": "2026-06-05 10:22:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "growfish-m1-1002",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Sea urchins got me twice before I learned to swim around them — love the underwater bubble vibes",
+      "createTime": "2026-06-05 12:48:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "growfish-m1-1003",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "Spent 50 coins on speed boost and cleaned up a whole school of minnows — coins from pellets add up fast",
+      "createTime": "2026-06-05 15:10:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "growfish-m1-1004",
+      "userId": "77210493",
+      "username": "ArcadeAva",
+      "avatar": "https://avatars.githubusercontent.com/u/77210493?v=4",
+      "content": "Drag controls on mobile feel smooth — dodging the red predators as a tiny fry is tense in the best way",
+      "createTime": "2026-06-05 18:35:00",
+      "replyTo": ""
+    }
+  ]
+}

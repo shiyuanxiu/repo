@@ -1,0 +1,42 @@
+{
+  "gameId": "chibimg",
+  "totalLike": 48,
+  "comments": [
+    {
+      "commentId": "chibimg-m1-1001",
+      "userId": "50391827",
+      "username": "EmilyCodes",
+      "avatar": "https://avatars.githubusercontent.com/u/50391827?v=4",
+      "content": "the Studio tab is so cute — pigtails + lavender dress is my go-to combo ✨",
+      "createTime": "2026-06-03 09:12:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "chibimg-m1-1002",
+      "userId": "61938472",
+      "username": "codeNinja42",
+      "avatar": "https://avatars.githubusercontent.com/u/61938472?v=4",
+      "content": "Moon scene sparkles hit different — collected all 32 on my first adventure run",
+      "createTime": "2026-06-03 11:30:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "chibimg-m1-1003",
+      "userId": "55829103",
+      "username": "JordanLee",
+      "avatar": "https://avatars.githubusercontent.com/u/55829103?v=4",
+      "content": "heart eyes + star wand = peak magical girl energy, erika nailed the vibe",
+      "createTime": "2026-06-03 14:05:00",
+      "replyTo": ""
+    },
+    {
+      "commentId": "chibimg-m1-1004",
+      "userId": "77210493",
+      "username": "ArcadeAva",
+      "avatar": "https://avatars.githubusercontent.com/u/77210493?v=4",
+      "content": "tap sparkles in Adventure mode is oddly satisfying — meadow → castle → sky → moon 🌙",
+      "createTime": "2026-06-03 16:40:00",
+      "replyTo": ""
+    }
+  ]
+}

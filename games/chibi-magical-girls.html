@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Magical Girl Coloring — 293 kawaii chibi pages. Tap to fill, undo, save your art.">
+  <title>Magical Girl Coloring | Miniverse</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; min-height: -webkit-fill-available; overflow: hidden;
+      background: linear-gradient(180deg, #fdf2f8, #ede9fe);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      touch-action: manipulation; user-select: none; -webkit-user-select: none; color: #4c1d95;
+    }
+    html.embed-root, body.embed { height: 100%; overflow: hidden; }
+    body.playing #artViewport { touch-action: none; }
+
+    #wrap {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      max-width: 480px; margin: 0 auto;
+      background: linear-gradient(180deg, #fce7f3 0%, #f5f3ff 50%, #ede9fe 100%);
+    }
+    body.embed #wrap { position: absolute; inset: 0; max-width: none; margin: 0; width: 100%; }
+
+    #topBar {
+      flex: 0 0 auto; display: flex; align-items: center; gap: 6px; z-index: 20;
+      padding: max(8px, env(safe-area-inset-top)) 10px 8px;
+      background: linear-gradient(90deg, #f9a8d4, #c4b5fd);
+      box-shadow: 0 2px 12px rgba(167, 139, 250, 0.35);
+    }
+    .nav-btn {
+      width: 34px; height: 34px; border: none; border-radius: 10px; cursor: pointer;
+      background: rgba(255,255,255,0.9); color: #7c3aed; font-size: 18px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .nav-btn:disabled { opacity: 0.35; cursor: default; }
+    #pageBadge {
+      min-width: 72px; text-align: center; font-size: 13px; font-weight: 900;
+      background: #fde047; color: #713f12; border-radius: 8px; padding: 4px 10px;
+    }
+    #btnMyArt {
+      border: none; border-radius: 10px; cursor: pointer; min-height: 34px; padding: 0 10px;
+      background: rgba(255,255,255,0.92); color: #6d28d9; font-size: 11px; font-weight: 800;
+    }
+    .top-spacer { flex: 1; }
+    #zoomBar {
+      display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.92);
+      border-radius: 999px; padding: 3px 6px;
+    }
+    #zoomBar button {
+      width: 28px; height: 28px; border: none; border-radius: 50%; cursor: pointer;
+      background: #f3e8ff; color: #7c3aed; font-size: 16px; font-weight: 800;
+    }
+    #zoomLabel { font-size: 11px; font-weight: 800; min-width: 40px; text-align: center; color: #5b21b6; }
+
+    #artWrap {
+      flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center;
+      padding: 4px 8px; overflow: hidden;
+    }
+    #artViewport {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      transform-origin: center center; overflow: hidden;
+    }
+    #artBoard {
+      position: relative; flex-shrink: 0;
+      width: min(100%, calc((100vh - 200px) * 9 / 16));
+      max-height: 100%; aspect-ratio: 9 / 16;
+      background: #fff; border: 3px solid #f9a8d4; border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(167, 139, 250, 0.28); overflow: hidden;
+    }
+    #fillC { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block; }
+    #lineC {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2;
+      pointer-events: none; display: block;
+    }
+
+    #toolBar {
+      flex: 0 0 auto; z-index: 20; background: rgba(237, 233, 254, 0.97);
+      border-top: 2px solid #e9d5ff; border-radius: 18px 18px 0 0;
+      padding: 8px 10px max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 20px rgba(167, 139, 250, 0.12);
+    }
+    #palette {
+      display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+      margin-bottom: 6px; max-width: 100%;
+    }
+    .swatch {
+      width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px;
+      border: 2px solid transparent; cursor: pointer; position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .swatch.active { border-color: #fff; box-shadow: 0 0 0 2px #fde047; }
+    .swatch.active::after {
+      content: "★"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+    }
+    #rainbowRow { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    #pickedDot {
+      width: 28px; height: 28px; border-radius: 8px; border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #a855f7; flex-shrink: 0;
+    }
+    #hueSlider {
+      flex: 1; height: 16px; border-radius: 999px; appearance: none; -webkit-appearance: none; cursor: pointer;
+      background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #06b6d4, #3b82f6, #a855f7, #ec4899);
+    }
+    #hueSlider::-webkit-slider-thumb {
+      appearance: none; width: 24px; height: 24px; border-radius: 50%;
+      background: #fff; border: 3px solid #a855f7;
+    }
+    #actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .act-btn {
+      min-height: 46px; border: none; border-radius: 14px; cursor: pointer;
+      background: linear-gradient(180deg, #ddd6fe, #c4b5fd); color: #5b21b6;
+      font-size: 11px; font-weight: 800; box-shadow: 0 3px 0 #a78bfa;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    }
+    .act-btn .ico { font-size: 16px; }
+    .act-btn.save { background: linear-gradient(180deg, #fde047, #facc15); color: #713f12; box-shadow: 0 3px 0 #ca8a04; }
+    .act-btn:disabled { opacity: 0.4; cursor: default; }
+
+    .overlay {
+      position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px; padding: 24px;
+      background: rgba(253, 242, 248, 0.96); text-align: center;
+    }
+    .overlay.hidden { display: none; }
+    .overlay h1 { font-size: 1.3rem; font-weight: 900; color: #7c3aed; }
+    .btn {
+      min-height: 48px; padding: 0 28px; border: none; border-radius: 999px; cursor: pointer;
+      background: linear-gradient(135deg, #f472b6, #a78bfa); color: #fff; font-weight: 900;
+    }
+    #myArtGrid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+      width: min(100%, 340px); max-height: 50vh; overflow-y: auto;
+    }
+    #myArtGrid .thumb {
+      aspect-ratio: 9/16; border-radius: 8px; background: #fff; border: 2px solid #e9d5ff;
+      overflow: hidden; position: relative; cursor: pointer;
+    }
+    #myArtGrid .thumb.saved { border-color: #fde047; }
+    body.embed #topBar { padding: 4px 8px; }
+    body.embed #pageBadge { font-size: 11px; min-width: 58px; padding: 3px 6px; }
+    body.embed #btnMyArt { min-height: 28px; font-size: 10px; padding: 0 8px; }
+    body.embed #zoomBar { display: none; }
+    body.embed #toolBar { padding: 4px 8px max(4px, env(safe-area-inset-bottom)); }
+    body.embed #palette { gap: 4px; margin-bottom: 4px; }
+    body.embed .swatch { width: 32px; height: 32px; flex: 0 0 32px; border-radius: 6px; }
+    body.embed #rainbowRow { margin-bottom: 4px; }
+    body.embed #pickedDot { width: 22px; height: 22px; }
+    body.embed #hueSlider { height: 12px; }
+    body.embed .act-btn { min-height: 32px; font-size: 9px; border-radius: 10px; }
+    body.embed .act-btn .ico { font-size: 13px; }
+    body.embed #artWrap { min-height: 0; flex: 1 1 0; }
+    body.embed #artBoard { width: auto; height: 100%; max-width: 100%; max-height: 100%; aspect-ratio: 9 / 16; }
+    body.embed #attribution { display: none; }
+    #attribution { text-align: center; font-size: 9px; color: rgba(91,33,182,0.4); padding: 4px; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <header id="topBar">
+      <button class="nav-btn" id="btnPrev" type="button" aria-label="Previous">‹</button>
+      <span id="pageBadge">1 / 293</span>
+      <button class="nav-btn" id="btnNext" type="button" aria-label="Next">›</button>
+      <button id="btnMyArt" type="button">🖼 My Art</button>
+      <span class="top-spacer"></span>
+      <div id="zoomBar">
+        <button type="button" id="btnZoomOut" aria-label="Zoom out">−</button>
+        <span id="zoomLabel">100%</span>
+        <button type="button" id="btnZoomIn" aria-label="Zoom in">+</button>
+      </div>
+    </header>
+
+    <div id="artWrap">
+      <div id="artViewport">
+        <div id="artBoard">
+          <canvas id="fillC"></canvas>
+          <canvas id="lineC"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <footer id="toolBar">
+      <div id="palette"></div>
+      <div id="rainbowRow">
+        <div id="pickedDot"></div>
+        <input type="range" id="hueSlider" min="0" max="360" value="0" aria-label="Rainbow">
+      </div>
+      <div id="actions">
+        <button class="act-btn" id="btnUndo" type="button" disabled><span class="ico">↶</span>Undo</button>
+        <button class="act-btn" id="btnRedo" type="button" disabled><span class="ico">↷</span>Redo</button>
+        <button class="act-btn save" id="btnSave" type="button"><span class="ico">💛</span>Save</button>
+        <button class="act-btn" id="btnClear" type="button"><span class="ico">🧹</span>Clear</button>
+      </div>
+    </footer>
+
+    <div id="myArtOverlay" class="overlay hidden">
+      <h1>My Art Gallery</h1>
+      <div id="myArtGrid"></div>
+      <button class="btn" id="btnCloseMyArt" type="button">CLOSE</button>
+    </div>
+    <p id="attribution">Magical Girl Coloring · 293 pages</p>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var EMBED = new URLSearchParams(location.search).get("embed") === "1";
+  var PAGE_COUNT = 293;
+  var ART_W = 360, ART_H = 640;
+  var REF_PAGE1 = "../assets/chibimg/page-001.png?v=2";
+  var SAVE_KEY = "mg-coloring-v19";
+
+  var SWATCHES = [
+    "#ef4444", "#f97316", "#eab308", "#22c55e", "#06b6d4", "#a855f7",
+    "#ec4899", "#ea580c", "#92400e", "#374151", "#9ca3af", "#2563eb"
+  ];
+
+  var fillC = document.getElementById("fillC");
+  var lineC = document.getElementById("lineC");
+  var artViewport = document.getElementById("artViewport");
+  var fctx = fillC.getContext("2d", { willReadFrequently: true });
+  var lctx = lineC.getContext("2d");
+  var dpr = 1, page = 0, zoom = 1, picked = SWATCHES[0];
+  var undoStack = [], redoStack = [], saves = {};
+  var borderData = null, maskW = 0, maskH = 0;
+  var refImg = null, svgCache = {};
+
+  if (EMBED) {
+    document.documentElement.classList.add("embed-root");
+    document.body.classList.add("embed");
+    window.parent.postMessage({ type: "chibimg-ready" }, "*");
+  }
+
+  try { saves = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}"); } catch (_) { saves = {}; }
+
+  function setPlaying(on) {
+    document.body.classList.toggle("playing", !!on);
+    if (EMBED) window.parent.postMessage({ type: "chibimg-interact", active: !!on }, "*");
+  }
+
+  function isLine(r, g, b) {
+    return (r + g + b) < 120 || (r < 85 && g < 85 && b < 85);
+  }
+
+  function starPts(cx, cy, r) {
+    var pts = [], i, a;
+    for (i = 0; i < 5; i++) {
+      a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      pts.push((cx + Math.cos(a) * r).toFixed(1) + "," + (cy + Math.sin(a) * r).toFixed(1));
+      a += Math.PI / 5;
+      pts.push((cx + Math.cos(a) * r * 0.42).toFixed(1) + "," + (cy + Math.sin(a) * r * 0.42).toFixed(1));
+    }
+    return pts.join(" ");
+  }
+
+  function decoStars(n, k) {
+    var s = "", i, x, y, r;
+    for (i = 0; i < n; i++) {
+      x = 24 + ((k * 19 + i * 47) % 312);
+      y = 24 + ((k * 29 + i * 61) % 580);
+      r = 5 + (i % 3) * 2;
+      if (x > 90 && x < 270 && y > 100 && y < 540) continue;
+      s += '<polygon points="' + starPts(x, y, r) + '"/>';
+    }
+    return s;
+  }
+
+  function svgPage(k) {
+    if (svgCache[k]) return svgCache[k];
+    var t = k % 12, s = decoStars(6 + (k % 5), k), body = "";
+    if (t === 0) {
+      body = '<circle cx="180" cy="210" r="50"/><path d="M130 210 C120 280 115 360 118 440"/><path d="M230 210 C240 280 245 360 242 440"/>' +
+        '<path d="M148 280 L212 280 L222 360 L138 360 Z"/><path d="M152 360 L148 430"/><path d="M208 360 L212 430"/>';
+    } else if (t === 1) {
+      body = '<circle cx="180" cy="200" r="48"/><circle cx="125" cy="185" r="20"/><circle cx="235" cy="185" r="20"/>' +
+        '<path d="M145 255 L215 255 L225 340 L135 340 Z"/>';
+    } else {
+      body = '<circle cx="180" cy="205" r="46"/><path d="M150 260 L210 260 L218 350 L142 350 Z"/>' +
+        '<path d="M150 270 L110 310"/><path d="M210 270 L250 250 L290 210"/>';
+    }
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640"><g fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      s + body + '</g></svg>';
+    svgCache[k] = svg;
+    return svg;
+  }
+
+  function canvasCssSize() {
+    return { w: fillC.width / dpr, h: fillC.height / dpr };
+  }
+
+  function canvasPixelSize() {
+    return { w: fillC.width, h: fillC.height };
+  }
+
+  var lastWrapW = 0, lastWrapH = 0;
+
+  function layoutBoard() {
+    var wrap = document.getElementById("artWrap");
+    var board = document.getElementById("artBoard");
+    if (!wrap || !board) return;
+    var r = wrap.getBoundingClientRect();
+    if (r.width < 16 || r.height < 16) return;
+    if (Math.abs(r.width - lastWrapW) < 2 && Math.abs(r.height - lastWrapH) < 2) return;
+    lastWrapW = r.width;
+    lastWrapH = r.height;
+    var pad = 8;
+    var maxW = r.width - pad;
+    var maxH = r.height - pad;
+    var w = maxW;
+    var h = w * 16 / 9;
+    if (h > maxH) {
+      h = maxH;
+      w = h * 9 / 16;
+    }
+    w = Math.max(16, Math.floor(w));
+    h = Math.max(16, Math.floor(h));
+    board.style.width = w + "px";
+    board.style.height = h + "px";
+  }
+
+  function syncCanvas() {
+    layoutBoard();
+    var board = document.getElementById("artBoard");
+    var rect = board.getBoundingClientRect();
+    if (rect.width < 16 || rect.height < 16) return false;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var newW = Math.round(rect.width * dpr);
+    var newH = Math.round(rect.height * dpr);
+    if (fillC.width !== newW || fillC.height !== newH) {
+      fillC.width = lineC.width = newW;
+      fillC.height = lineC.height = newH;
+    }
+    fillC.style.width = lineC.style.width = rect.width + "px";
+    fillC.style.height = lineC.style.height = rect.height + "px";
+    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return true;
+  }
+
+  function buildBorderMask() {
+    if (fillC.width < 2) return;
+    maskW = fillC.width; maskH = fillC.height;
+    var mc = document.createElement("canvas");
+    mc.width = maskW; mc.height = maskH;
+    var m = mc.getContext("2d");
+    m.drawImage(lineC, 0, 0, maskW, maskH);
+    borderData = m.getImageData(0, 0, maskW, maskH).data;
+  }
+
+  function isBorderPx(xi, yi) {
+    if (!borderData || xi < 0 || yi < 0 || xi >= maskW || yi >= maskH) return true;
+    var i = (yi * maskW + xi) * 4;
+    return borderData[i] < 100 && borderData[i + 1] < 100 && borderData[i + 2] < 100 && borderData[i + 3] > 128;
+  }
+
+  function blitContain(ctx, img, w, h) {
+    var iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, w, h);
+    if (!iw || !ih) return;
+    var scale = Math.min(w / iw, h / ih);
+    var dw = iw * scale, dh = ih * scale;
+    var ox = (w - dw) / 2, oy = (h - dh) / 2;
+    ctx.drawImage(img, ox, oy, dw, dh);
+  }
+
+  function rasterReference(img, w, h) {
+    var tmp = document.createElement("canvas");
+    tmp.width = w; tmp.height = h;
+    var t = tmp.getContext("2d");
+    blitContain(t, img, w, h);
+    var src = t.getImageData(0, 0, w, h);
+    fctx.setTransform(1, 0, 0, 1, 0, 0);
+    lctx.setTransform(1, 0, 0, 1, 0, 0);
+    var fill = fctx.createImageData(w, h);
+    lctx.clearRect(0, 0, w, h);
+    var lines = lctx.createImageData(w, h);
+    var i, r, g, b;
+    for (i = 0; i < src.data.length; i += 4) {
+      r = src.data[i]; g = src.data[i + 1]; b = src.data[i + 2];
+      if (isLine(r, g, b)) {
+        fill.data[i] = fill.data[i + 1] = fill.data[i + 2] = 255;
+        lines.data[i] = lines.data[i + 1] = lines.data[i + 2] = 17;
+        lines.data[i + 3] = 255;
+      } else {
+        fill.data[i] = fill.data[i + 1] = fill.data[i + 2] = 255;
+        fill.data[i + 3] = 255;
+        lines.data[i + 3] = 0;
+      }
+    }
+    fctx.putImageData(fill, 0, 0);
+    lctx.putImageData(lines, 0, 0);
+    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildBorderMask();
+  }
+
+  function extractFromReference(img, w, h) {
+    rasterReference(img, w, h);
+  }
+
+  function extractLinesFromReference(img, w, h) {
+    rasterReference(img, w, h);
+  }
+
+  function extractFromSvgImage(img, w, h) {
+    var tmp = document.createElement("canvas");
+    tmp.width = w; tmp.height = h;
+    var t = tmp.getContext("2d");
+    blitContain(t, img, w, h);
+    var src = t.getImageData(0, 0, w, h);
+    fctx.setTransform(1, 0, 0, 1, 0, 0);
+    lctx.setTransform(1, 0, 0, 1, 0, 0);
+    var fill = fctx.createImageData(w, h);
+    lctx.clearRect(0, 0, w, h);
+    var lines = lctx.createImageData(w, h);
+    var i, r, g, b;
+    for (i = 0; i < src.data.length; i += 4) {
+      r = src.data[i]; g = src.data[i + 1]; b = src.data[i + 2];
+      if (isLine(r, g, b)) {
+        fill.data[i] = fill.data[i + 1] = fill.data[i + 2] = 255;
+        lines.data[i] = lines.data[i + 1] = lines.data[i + 2] = 17;
+        lines.data[i + 3] = 255;
+      } else {
+        fill.data[i] = fill.data[i + 1] = fill.data[i + 2] = 255;
+        fill.data[i + 3] = 255;
+        lines.data[i + 3] = 0;
+      }
+    }
+    fctx.putImageData(fill, 0, 0);
+    lctx.putImageData(lines, 0, 0);
+    fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildBorderMask();
+  }
+
+  function clearWhite() {
+    var sz = canvasCssSize();
+    fctx.fillStyle = "#fff";
+    fctx.fillRect(0, 0, sz.w, sz.h);
+  }
+
+  function ensureRefImg(cb, errCb) {
+    if (refImg && refImg.complete && refImg.naturalWidth) { cb(refImg); return; }
+    if (!refImg) refImg = new Image();
+    refImg.onload = function () { cb(refImg); };
+    refImg.onerror = function () { if (errCb) errCb(); };
+    if (!refImg.src) refImg.src = REF_PAGE1;
+  }
+
+  function loadPage(restore, cb) {
+    borderData = null;
+    undoStack = []; redoStack = [];
+    document.getElementById("btnUndo").disabled = true;
+    document.getElementById("btnRedo").disabled = true;
+    var sz = canvasPixelSize();
+    if (sz.w < 2) { if (cb) cb(); return; }
+    var css = canvasCssSize();
+    var key = String(page);
+
+    function finish() { if (cb) cb(); }
+
+    function afterArt() {
+      if (restore && saves[key]) {
+        var im = new Image();
+        im.onload = function () {
+          clearWhite();
+          fctx.drawImage(im, 0, 0, css.w, css.h);
+          buildBorderMask();
+          finish();
+        };
+        im.onerror = function () { finish(); };
+        im.src = saves[key];
+      } else finish();
+    }
+
+    if (page === 0) {
+      var doneRef = function () {
+        if (restore && saves[key]) {
+          var im = new Image();
+          im.onload = function () {
+            fctx.drawImage(im, 0, 0, css.w, css.h);
+            finish();
+          };
+          im.onerror = function () { finish(); };
+          im.src = saves[key];
+        } else finish();
+      };
+      ensureRefImg(function () {
+        if (restore && saves[key]) extractLinesFromReference(refImg, sz.w, sz.h);
+        else extractLinesFromReference(refImg, sz.w, sz.h);
+        doneRef();
+      }, function () { clearWhite(); finish(); });
+      return;
+    }
+
+    var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgPage(page));
+    var img = new Image();
+    img.onload = function () {
+      extractFromSvgImage(img, sz.w, sz.h);
+      afterArt();
+    };
+    img.onerror = function () { clearWhite(); finish(); };
+    img.src = url;
+  }
+
+  function updateBadge() {
+    document.getElementById("pageBadge").textContent = (page + 1) + " / " + PAGE_COUNT;
+    document.getElementById("btnPrev").disabled = page <= 0;
+    document.getElementById("btnNext").disabled = page >= PAGE_COUNT - 1;
+  }
+
+  var bootTimer = null, artReady = false, lastCanvasW = 0, lastCanvasH = 0;
+
+  function boot() {
+    clearTimeout(bootTimer);
+    bootTimer = setTimeout(function () {
+      if (!syncCanvas()) return;
+      updateBadge();
+      var sizeChanged = fillC.width !== lastCanvasW || fillC.height !== lastCanvasH;
+      lastCanvasW = fillC.width;
+      lastCanvasH = fillC.height;
+      if (EMBED) window.parent.postMessage({ type: "chibimg-resize" }, "*");
+      if (sizeChanged || !artReady) {
+        loadPage(true, function () { artReady = true; });
+      }
+    }, 60);
+  }
+
+  refImg = new Image();
+  refImg.src = REF_PAGE1;
+  requestAnimationFrame(function () {
+    requestAnimationFrame(boot);
+  });
+  window.addEventListener("resize", boot);
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(boot).observe(document.getElementById("artWrap"));
+  }
+
+  function hexToRgb(hex) {
+    var n = parseInt(hex.slice(1), 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+
+  function hslToHex(h, s, l) {
+    s /= 100; l /= 100;
+    var c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+    var r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; } else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    var h2 = function (v) { v = Math.round((v + m) * 255).toString(16); return v.length < 2 ? "0" + v : v; };
+    return "#" + h2(r) + h2(g) + h2(b);
+  }
+
+  function setPicked(c) {
+    picked = c;
+    document.getElementById("pickedDot").style.background = c;
+  }
+  setPicked(picked);
+
+  function pushUndo() {
+    undoStack.push(fctx.getImageData(0, 0, fillC.width, fillC.height));
+    if (undoStack.length > 40) undoStack.shift();
+    redoStack = [];
+    document.getElementById("btnUndo").disabled = false;
+    document.getElementById("btnRedo").disabled = true;
+  }
+
+  function floodFill(px, py, color) {
+    if (!borderData) return;
+    var w = fillC.width, h = fillC.height;
+    var xi = Math.floor(px * dpr), yi = Math.floor(py * dpr);
+    if (xi < 0 || yi < 0 || xi >= w || yi >= h || isBorderPx(xi, yi)) return;
+    var img = fctx.getImageData(0, 0, w, h), data = img.data;
+    var idx = (yi * w + xi) * 4;
+    var fill = hexToRgb(color);
+    if (data[idx] === fill.r && data[idx + 1] === fill.g && data[idx + 2] === fill.b) return;
+    pushUndo();
+    var stack = [[xi, yi]], fr = fill.r, fg = fill.g, fb = fill.b, tr, tg, tb;
+    while (stack.length) {
+      var p = stack.pop(); xi = p[0]; yi = p[1];
+      if (xi < 0 || yi < 0 || xi >= w || yi >= h || isBorderPx(xi, yi)) continue;
+      idx = (yi * w + xi) * 4;
+      tr = data[idx]; tg = data[idx + 1]; tb = data[idx + 2];
+      if (tr === fr && tg === fg && tb === fb) continue;
+      data[idx] = fr; data[idx + 1] = fg; data[idx + 2] = fb; data[idx + 3] = 255;
+      stack.push([xi + 1, yi], [xi - 1, yi], [xi, yi + 1], [xi, yi - 1]);
+    }
+    fctx.putImageData(img, 0, 0);
+    setPlaying(true);
+  }
+
+  function buildPalette() {
+    var el = document.getElementById("palette");
+    el.innerHTML = "";
+    SWATCHES.forEach(function (col) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "swatch" + (col === picked ? " active" : "");
+      b.style.background = col;
+      b.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        setPicked(col);
+        el.querySelectorAll(".swatch").forEach(function (s) { s.classList.remove("active"); });
+        b.classList.add("active");
+      });
+      el.appendChild(b);
+    });
+  }
+  buildPalette();
+
+  document.getElementById("hueSlider").addEventListener("input", function () {
+    setPicked(hslToHex(+this.value, 88, 55));
+    document.querySelectorAll(".swatch").forEach(function (s) { s.classList.remove("active"); });
+  });
+  document.getElementById("toolBar").addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+
+  fillC.addEventListener("pointerdown", function (e) {
+    e.preventDefault(); e.stopPropagation();
+    var r = fillC.getBoundingClientRect();
+    floodFill(e.clientX - r.left, e.clientY - r.top, picked);
+  });
+
+  function goPage(n) {
+    if (n < 0 || n >= PAGE_COUNT) return;
+    page = n;
+    updateBadge();
+    loadPage(true);
+    setPlaying(true);
+  }
+
+  document.getElementById("btnPrev").onclick = function () { goPage(page - 1); };
+  document.getElementById("btnNext").onclick = function () { goPage(page + 1); };
+
+  document.getElementById("btnZoomIn").onclick = function () {
+    zoom = Math.min(1.5, +(zoom + 0.1).toFixed(1));
+    artViewport.style.transform = "scale(" + zoom + ")";
+    document.getElementById("zoomLabel").textContent = Math.round(zoom * 100) + "%";
+  };
+  document.getElementById("btnZoomOut").onclick = function () {
+    zoom = Math.max(0.7, +(zoom - 0.1).toFixed(1));
+    artViewport.style.transform = "scale(" + zoom + ")";
+    document.getElementById("zoomLabel").textContent = Math.round(zoom * 100) + "%";
+  };
+
+  document.getElementById("btnUndo").onclick = function () {
+    if (!undoStack.length) return;
+    redoStack.push(fctx.getImageData(0, 0, fillC.width, fillC.height));
+    fctx.putImageData(undoStack.pop(), 0, 0);
+    document.getElementById("btnUndo").disabled = !undoStack.length;
+    document.getElementById("btnRedo").disabled = false;
+    setPlaying(true);
+  };
+  document.getElementById("btnRedo").onclick = function () {
+    if (!redoStack.length) return;
+    undoStack.push(fctx.getImageData(0, 0, fillC.width, fillC.height));
+    fctx.putImageData(redoStack.pop(), 0, 0);
+    document.getElementById("btnUndo").disabled = false;
+    document.getElementById("btnRedo").disabled = !redoStack.length;
+    setPlaying(true);
+  };
+  document.getElementById("btnClear").onclick = function () {
+    pushUndo();
+    var sz = canvasPixelSize();
+    if (page === 0 && refImg && refImg.complete) extractLinesFromReference(refImg, sz.w, sz.h);
+    else clearWhite();
+    setPlaying(true);
+  };
+  document.getElementById("btnSave").onclick = function () {
+    var tmp = document.createElement("canvas");
+    tmp.width = fillC.width; tmp.height = fillC.height;
+    var t = tmp.getContext("2d");
+    t.drawImage(fillC, 0, 0);
+    t.drawImage(lineC, 0, 0);
+    saves[String(page)] = tmp.toDataURL("image/png");
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(saves)); } catch (_) {}
+    setPlaying(true);
+  };
+
+  document.getElementById("btnMyArt").onclick = function () {
+    var grid = document.getElementById("myArtGrid");
+    grid.innerHTML = "";
+    Object.keys(saves).sort(function (a, b) { return +a - +b; }).forEach(function (k) {
+      var d = document.createElement("div");
+      d.className = "thumb saved";
+      var im = document.createElement("img");
+      im.src = saves[k];
+      im.style.cssText = "width:100%;height:100%;object-fit:cover";
+      d.appendChild(im);
+      (function (idx) {
+        d.onclick = function () { goPage(idx); document.getElementById("myArtOverlay").classList.add("hidden"); };
+      })(+k);
+      grid.appendChild(d);
+    });
+    if (!grid.children.length) grid.innerHTML = "<p style='grid-column:1/-1;padding:12px;color:#a78bfa'>No saved art yet</p>";
+    document.getElementById("myArtOverlay").classList.remove("hidden");
+  };
+  document.getElementById("btnCloseMyArt").onclick = function () {
+    document.getElementById("myArtOverlay").classList.add("hidden");
+  };
+
+  window.__setFeedSound = function () {};
+  window.addEventListener("message", function (e) {
+    if (e.data?.type === "chibimg-resize") boot();
+    if (e.data?.type === "chibimg-start") setPlaying(true);
+  });
+})();
+</script>
+</body>
+</html>

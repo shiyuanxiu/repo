@@ -29,6 +29,9 @@
         "merge",
         "hole",
         "slash",
+        "pacman",
+        "chibimg",
+        "growfish",
         "beat"
       ]
     }
@@ -193,6 +196,30 @@
       "feed": "games",
       "commentCount": 7,
       "totalLike": 88
+    },
+    "chibimg": {
+      "file": "chibimg.json",
+      "name": "Chibi Magical Girl's Art Adventure",
+      "gistKey": "ChibiMagicalGirl",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 48
+    },
+    "streetfight": {
+      "file": "streetfight.json",
+      "name": "Bruce Lee's Street Fight",
+      "gistKey": "BruceLeeStreetFight",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 62
+    },
+    "growfish": {
+      "file": "growfish.json",
+      "name": "Grow a Fish",
+      "gistKey": "GrowAFish",
+      "feed": "games",
+      "commentCount": 4,
+      "totalLike": 58
     }
   }
 }

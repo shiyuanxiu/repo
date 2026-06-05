@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 520">
+  <g fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- background bubbles (away from character) -->
+    <circle cx="58" cy="420" r="22"/>
+    <circle cx="342" cy="400" r="18"/>
+    <circle cx="330" cy="310" r="14"/>
+    <!-- body -->
+    <path d="M164 254 L236 254 L248 334 L152 334 Z"/>
+    <path d="M172 334 L168 400"/>
+    <path d="M228 334 L232 400"/>
+    <ellipse cx="166" cy="408" rx="11" ry="6"/>
+    <ellipse cx="234" cy="408" rx="11" ry="6"/>
+    <!-- arms -->
+    <path d="M164 268 L124 310"/>
+    <path d="M236 268 L276 252 L312 212"/>
+    <!-- head (single circle, no overlap) -->
+    <circle cx="200" cy="198" r="46"/>
+    <!-- side buns — tangent to head, not crossing face -->
+    <circle cx="128" cy="198" r="22"/>
+    <circle cx="272" cy="198" r="22"/>
+    <!-- simple bangs arc -->
+    <path d="M158 178 Q200 162 242 178"/>
+    <!-- face -->
+    <ellipse cx="184" cy="200" rx="7" ry="9"/>
+    <ellipse cx="216" cy="200" rx="7" ry="9"/>
+    <path d="M192 218 Q200 224 208 218"/>
+  </g>
+  <g fill="#111111" stroke="none">
+    <circle cx="186" cy="201" r="2.5"/>
+    <circle cx="214" cy="201" r="2.5"/>
+    <polygon points="128,188 131,194 137,194 132,197 134,203 128,199 122,203 124,197 119,194 125,194"/>
+    <polygon points="272,188 275,194 281,194 276,197 278,203 272,199 266,203 268,197 263,194 269,194"/>
+    <polygon points="200,278 203,284 209,284 204,287 206,293 200,289 194,293 196,287 191,284 197,284"/>
+    <polygon points="312,212 314,217 319,217 315,220 317,225 312,222 307,225 309,220 305,217 310,217"/>
+  </g>
+</svg>

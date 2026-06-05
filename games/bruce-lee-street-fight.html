@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Bruce Lee's Street Fight — pixel beat 'em up. Select your fighter and brawl through the city.">
+  <title>Bruce Lee's Street Fight | Miniverse</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; min-height: 100%; min-height: -webkit-fill-available;
+      overflow: hidden; background: #0a0e18; color: #f8fafc;
+      font-family: "Courier New", Courier, monospace;
+      touch-action: manipulation; user-select: none; -webkit-user-select: none;
+    }
+    html.embed-root, body.embed { height: 100%; min-height: -webkit-fill-available; overflow: hidden; }
+    body.embed:not(.playing) { touch-action: pan-y; }
+    body.embed.playing { touch-action: none; }
+    #wrap { position: fixed; inset: 0; display: flex; flex-direction: column; }
+    body.embed #wrap { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #canvasWrap { flex: 1 1 0; min-height: 0; position: relative; background: #0a0e18; }
+    canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; }
+    #touchControls {
+      position: absolute; inset: 0; pointer-events: none; z-index: 30;
+      display: none;
+    }
+    body.touch #touchControls { display: block; }
+    .dpad {
+      position: absolute; left: max(12px, env(safe-area-inset-left));
+      bottom: max(16px, env(safe-area-inset-bottom));
+      width: 130px; height: 130px; pointer-events: auto;
+    }
+    .dpad-btn {
+      position: absolute; width: 42px; height: 42px; border-radius: 8px;
+      background: rgba(0,0,0,0.45); border: 2px solid rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.85); font-size: 18px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dpad-btn:active { background: rgba(255,140,0,0.55); }
+    .dpad-up { top: 0; left: 44px; }
+    .dpad-down { bottom: 0; left: 44px; }
+    .dpad-left { top: 44px; left: 0; }
+    .dpad-right { top: 44px; right: 0; }
+    .action-btns {
+      position: absolute; right: max(12px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      display: flex; gap: 14px; pointer-events: auto;
+    }
+    .act-btn {
+      width: 58px; height: 58px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.5);
+      font-weight: 900; font-size: 15px; color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .act-btn:active { transform: scale(0.94); }
+    #btnPunch { background: linear-gradient(145deg, #dc2626, #991b1b); }
+    #btnKick { background: linear-gradient(145deg, #2563eb, #1d4ed8); }
+    #attribution {
+      flex-shrink: 0; padding: 6px 10px max(6px, env(safe-area-inset-bottom));
+      text-align: center; font-size: 10px; color: rgba(255,255,255,0.35);
+    }
+    body.embed #attribution { display: none; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="canvasWrap">
+      <canvas id="c"></canvas>
+      <div id="touchControls">
+        <div class="dpad">
+          <button type="button" class="dpad-btn dpad-up" data-dir="up">▲</button>
+          <button type="button" class="dpad-btn dpad-down" data-dir="down">▼</button>
+          <button type="button" class="dpad-btn dpad-left" data-dir="left">◀</button>
+          <button type="button" class="dpad-btn dpad-right" data-dir="right">▶</button>
+        </div>
+        <div class="action-btns">
+          <button type="button" class="act-btn" id="btnPunch">Z</button>
+          <button type="button" class="act-btn" id="btnKick">X</button>
+        </div>
+      </div>
+    </div>
+    <p id="attribution">Bruce Lee's Street Fight — pixel beat 'em up on Miniverse</p>
+  </div>
+  <script>
+(function () {
+  "use strict";
+
+  var EMBED = new URLSearchParams(location.search).get("embed") === "1";
+  var canvas = document.getElementById("c");
+  var ctx = canvas.getContext("2d");
+  var dpr = 1;
+  var GW = 320, GH = 480;
+
+  var FIGHTERS = [
+    { id: "badgirl", name: "BAD GIRL", accent: "#f97316" },
+    { id: "police", name: "POLICE", accent: "#3b82f6" },
+    { id: "chuck", name: "CHUCK NORRIS", accent: "#a16207" },
+    { id: "bruce", name: "BRUCE LEE", accent: "#eab308", rainbow: true },
+    { id: "scorpion", name: "SCORPION", accent: "#06b6d4" },
+    { id: "rayden", name: "RAYDEN", accent: "#e2e8f0" }
+  ];
+
+  var state = "select";
+  var selIdx = 3;
+  var selRow = 1;
+  var selCol = 0;
+  var rainbowT = 0;
+  var startBtnHover = false;
+
+  var player = null;
+  var enemies = [];
+  var particles = [];
+  var floatTexts = [];
+  var camX = 0;
+  var stageW = 900;
+  var stage = 1;
+  var score = 0;
+  var coins = 0;
+  var lives = 4;
+  var timer = 120;
+  var timerAcc = 0;
+  var special = 0;
+  var wave = 0;
+  var waveTimer = 0;
+  var stageClear = false;
+  var gameOver = false;
+  var selectedFighter = 3;
+  var soundOn = false;
+  var audioCtx = null;
+  var keys = {};
+  var touchDirs = {};
+  var touchPunch = false;
+  var touchKick = false;
+  var interactActive = false;
+  var bgPhase = 0;
+
+  var WALK_Y0 = 300;
+  var WALK_Y1 = 400;
+  var GRAVITY = 0.55;
+  var GROUND_Z = 0;
+
+  function ensureAudio() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (_) { /* noop */ }
+    }
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  }
+
+  function beep(freq, dur, vol, type) {
+    if (!soundOn || !audioCtx) return;
+    var o = audioCtx.createOscillator();
+    var g = audioCtx.createGain();
+    o.type = type || "square";
+    o.frequency.value = freq;
+    g.gain.value = vol || 0.08;
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g);
+    g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + dur);
+  }
+
+  function sfxPunch() { beep(180, 0.06, 0.1); beep(90, 0.04, 0.06, "triangle"); }
+  function sfxKick() { beep(120, 0.07, 0.1); beep(60, 0.05, 0.07, "sawtooth"); }
+  function sfxHit() { beep(220, 0.05, 0.09); beep(140, 0.08, 0.05, "triangle"); }
+  function sfxSelect() { beep(440, 0.04, 0.06); }
+  function sfxStart() { beep(330, 0.08, 0.08); beep(660, 0.1, 0.07); }
+  function sfxDie() { beep(200, 0.15, 0.1); beep(80, 0.2, 0.08); }
+  function sfxWin() { beep(523, 0.1, 0.08); beep(659, 0.1, 0.08); beep(784, 0.15, 0.09); }
+
+  function setPlaying(on) {
+    document.body.classList.toggle("playing", !!on);
+    if (EMBED) {
+      if (on !== interactActive) {
+        interactActive = on;
+        window.parent.postMessage({ type: "streetfight-interact", active: on }, "*");
+      }
+    }
+  }
+
+  function postReady() {
+    if (EMBED) window.parent.postMessage({ type: "streetfight-ready" }, "*");
+  }
+
+  function resize() {
+    var wrap = document.getElementById("canvasWrap");
+    var rect = wrap.getBoundingClientRect();
+    dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+  }
+
+  function scale() {
+    var sx = canvas.width / GW;
+    var sy = canvas.height / GH;
+    return Math.floor(Math.min(sx, sy));
+  }
+
+  function toGame(clientX, clientY) {
+    var rect = canvas.getBoundingClientRect();
+    var sc = scale();
+    var ox = (canvas.width / dpr - GW * sc) / 2;
+    var oy = (canvas.height / dpr - GH * sc) / 2;
+    return {
+      x: (clientX - rect.left - ox) / sc,
+      y: (clientY - rect.top - oy) / sc,
+      sc: sc
+    };
+  }
+
+  function beginFrame() {
+    var sc = scale();
+    var ox = (canvas.width / dpr - GW * sc) / 2;
+    var oy = (canvas.height / dpr - GH * sc) / 2;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#0a0e18";
+    ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    ctx.save();
+    ctx.translate(ox, oy);
+    ctx.scale(sc, sc);
+    return sc;
+  }
+
+  function endFrame() { ctx.restore(); }
+
+  function rect(x, y, w, h, c) {
+    ctx.fillStyle = c;
+    ctx.fillRect(Math.round(x), Math.round(y), w, h);
+  }
+
+  function rainbowColor(t) {
+    var h = (t * 120) % 360;
+    return "hsl(" + h + ",100%,55%)";
+  }
+
+  function drawPixelFighter(c, fid, x, y, facing, anim, attacking) {
+    var s = 1;
+    var flip = facing < 0 ? -1 : 1;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(flip, 1);
+
+    if (fid === 0) {
+      rect(-5, -28, 10, 10, "#fcd34d");
+      rect(-6, -18, 12, 14, "#fcd34d");
+      rect(-8, -4, 16, 22, "#dc2626");
+      rect(-10, 18, 6, 10, "#1e293b");
+      rect(4, 18, 6, 10, "#1e293b");
+      rect(-7, -6, 4, 8, "#b45309");
+      rect(3, -6, 4, 8, "#b45309");
+    } else if (fid === 1) {
+      rect(-6, -30, 12, 8, "#1e3a8a");
+      rect(-5, -22, 10, 10, "#fde68a");
+      rect(-8, -12, 16, 18, "#1d4ed8");
+      rect(-3, -12, 6, 4, "#fbbf24");
+      rect(-8, 6, 7, 14, "#1e3a8a");
+      rect(1, 6, 7, 14, "#1e3a8a");
+      rect(-9, 20, 8, 8, "#0f172a");
+      rect(1, 20, 8, 8, "#0f172a");
+    } else if (fid === 2) {
+      rect(-5, -28, 10, 10, "#92400e");
+      rect(-7, -18, 14, 6, "#78350f");
+      rect(-8, -12, 16, 14, "#2563eb");
+      rect(-6, 2, 12, 12, "#1e40af");
+      rect(-8, 14, 7, 12, "#1e40af");
+      rect(1, 14, 7, 12, "#1e40af");
+      rect(-9, 26, 8, 6, "#0f172a");
+      rect(1, 26, 8, 6, "#0f172a");
+    } else if (fid === 3) {
+      rect(-5, -28, 10, 10, "#fde68a");
+      rect(-6, -18, 12, 14, "#fde68a");
+      rect(-7, -4, 14, 16, "#0f172a");
+      rect(-8, 12, 7, 14, "#0f172a");
+      rect(1, 12, 7, 14, "#0f172a");
+      rect(-9, 26, 8, 6, "#f8fafc");
+      rect(1, 26, 8, 6, "#f8fafc");
+      if (attacking) rect(4, -8, 10, 4, "#fde68a");
+    } else if (fid === 4) {
+      rect(-6, -30, 12, 12, "#0ea5e9");
+      rect(-4, -18, 8, 6, "#0ea5e9");
+      rect(-8, -12, 16, 18, "#0369a1");
+      rect(-8, 6, 7, 14, "#0c4a6e");
+      rect(1, 6, 7, 14, "#0c4a6e");
+      rect(-9, 20, 8, 8, "#020617");
+      rect(1, 20, 8, 8, "#020617");
+    } else {
+      rect(-8, -32, 16, 6, "#fef3c7");
+      rect(-5, -26, 10, 10, "#fde68a");
+      rect(-8, -16, 16, 20, "#f8fafc");
+      rect(-3, -16, 6, 4, "#0f172a");
+      rect(-8, 4, 7, 16, "#f8fafc");
+      rect(1, 4, 7, 16, "#f8fafc");
+      rect(-9, 20, 8, 8, "#334155");
+      rect(1, 20, 8, 8, "#334155");
+    }
+
+    if (attacking && anim > 0) {
+      var ext = fid === 3 ? 14 : 10;
+      rect(6, -6, ext, 5, attacking === "kick" ? "#94a3b8" : "#fca5a5");
+    }
+    ctx.restore();
+  }
+
+  function drawEnemySprite(e) {
+    var x = e.x - camX;
+    var y = e.y;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(e.facing, 1);
+    if (e.type === "punk") {
+      rect(-5, -26, 10, 8, "#ef4444");
+      rect(-5, -18, 10, 10, "#fde68a");
+      rect(-7, -8, 14, 14, "#166534");
+      rect(-8, 6, 6, 12, "#1e293b");
+      rect(2, 6, 6, 12, "#1e293b");
+    } else if (e.type === "gi") {
+      rect(-5, -26, 10, 10, "#fde68a");
+      rect(-8, -16, 16, 18, "#f8fafc");
+      rect(-8, 2, 16, 4, "#0f172a");
+      rect(-8, 6, 7, 14, "#f8fafc");
+      rect(1, 6, 7, 14, "#f8fafc");
+    } else {
+      rect(-5, -24, 10, 10, "#78716c");
+      rect(-7, -14, 14, 16, "#44403c");
+      rect(-7, 2, 6, 14, "#292524");
+      rect(1, 2, 6, 14, "#292524");
+    }
+    if (e.hitFlash > 0) {
+      ctx.globalAlpha = 0.5;
+      rect(-10, -30, 20, 40, "#fff");
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+
+  function drawSelectBg() {
+    var g = ctx.createLinearGradient(0, 0, 0, GH);
+    g.addColorStop(0, "#0f172a");
+    g.addColorStop(0.5, "#1e293b");
+    g.addColorStop(1, "#0f172a");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, GW, GH);
+
+    rect(0, 340, GW, 140, "#1e293b");
+    rect(0, 360, GW, 4, "#334155");
+
+    rect(20, 80, 60, 120, "#1e293b");
+    rect(25, 90, 8, 12, "#fef08a");
+    rect(240, 60, 70, 100, "#312e81");
+    rect(245, 70, 8, 10, "#fef08a");
+
+    ctx.font = "bold 9px monospace";
+    ctx.fillStyle = "#64748b";
+    ctx.fillText("CLOSED", 252, 155);
+
+    ctx.save();
+    ctx.shadowColor = "#a855f7";
+    ctx.shadowBlur = 12;
+    ctx.font = "bold 11px monospace";
+    ctx.fillStyle = "#c084fc";
+    ctx.fillText("ASTRO", 228, 48);
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillText("CADE", 252, 60);
+    ctx.restore();
+
+    rect(40, 200, 8, 40, "#475569");
+    rect(36, 198, 16, 6, "#64748b");
+  }
+
+  function drawSelectTitle() {
+    ctx.textAlign = "center";
+    var tg = ctx.createLinearGradient(60, 16, 60, 36);
+    tg.addColorStop(0, "#fb923c");
+    tg.addColorStop(0.5, "#f97316");
+    tg.addColorStop(1, "#ea580c");
+    ctx.fillStyle = tg;
+    ctx.font = "bold 14px monospace";
+    ctx.fillText("BRUCE LEE'S", GW / 2, 22);
+    ctx.fillText("STREET FIGHT", GW / 2, 38);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "9px monospace";
+    ctx.fillText("SELECT YOUR FIGHTER", GW / 2, 54);
+    ctx.textAlign = "left";
+  }
+
+  function drawSelectGrid() {
+    var cols = 3, rows = 2;
+    var cellW = 88, cellH = 100;
+    var startX = (GW - cols * cellW - 20) / 2;
+    var startY = 72;
+
+    for (var i = 0; i < 6; i++) {
+      var row = Math.floor(i / 3);
+      var col = i % 3;
+      var cx = startX + col * (cellW + 10);
+      var cy = startY + row * (cellH + 12);
+      var f = FIGHTERS[i];
+      var sel = i === selIdx;
+
+      rect(cx, cy, cellW, cellH, "#1e293b");
+      rect(cx + 2, cy + 2, cellW - 4, cellH - 4, "#0f172a");
+
+      if (sel) {
+        ctx.strokeStyle = f.rainbow ? rainbowColor(rainbowT) : f.accent;
+        ctx.lineWidth = f.rainbow ? 3 : 2;
+        ctx.strokeRect(cx - 2, cy - 2, cellW + 4, cellH + 4);
+        if (f.rainbow) {
+          ctx.strokeStyle = rainbowColor(rainbowT + 0.3);
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cx - 5, cy - 5, cellW + 10, cellH + 10);
+        }
+      }
+
+      drawPixelFighter(null, i, cx + cellW / 2, cy + cellH / 2 + 8, 1, 0, false);
+
+      ctx.fillStyle = sel ? "#fff" : "#94a3b8";
+      ctx.font = "bold 7px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(f.name, cx + cellW / 2, cy + cellH - 6);
+    }
+    ctx.textAlign = "left";
+  }
+
+  function drawStartButton() {
+    var bx = GW / 2 - 70, by = GH - 58, bw = 140, bh = 32;
+    var hover = startBtnHover || keys.Enter || keys[" "];
+    rect(bx, by, bw, bh, hover ? "#ef4444" : "#dc2626");
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(bx, by, bw, bh);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 11px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText("START GAME", GW / 2, by + 21);
+    ctx.textAlign = "left";
+    return { x: bx, y: by, w: bw, h: bh };
+  }
+
+  function drawStageBg() {
+    var g = ctx.createLinearGradient(0, 0, 0, GH);
+    g.addColorStop(0, "#0c1222");
+    g.addColorStop(0.4, "#1a2332");
+    g.addColorStop(1, "#2d3748");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, GW, GH);
+
+    var off = (camX * 0.3) % 80;
+    for (var i = -1; i < 6; i++) {
+      var bx = i * 100 - off;
+      rect(bx, 40, 90, 200, "#1e293b");
+      rect(bx + 8, 50, 12, 16, "#fef08a");
+      rect(bx + 30, 70, 10, 14, "#334155");
+      rect(bx + 50, 55, 14, 18, "#fef08a");
+      rect(bx + 70, 90, 8, 60, "#475569");
+      for (var fy = 95; fy < 150; fy += 18) rect(bx + 70, fy, 20, 3, "#64748b");
+    }
+
+    rect(180 - camX * 0.1, 120, 40, 12, "#64748b");
+    ctx.fillStyle = "#ef4444";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText("GA!", 188 - camX * 0.1, 130);
+
+    rect(0, WALK_Y0 - 20, GW + stageW, WALK_Y1 - WALK_Y0 + 40, "#374151");
+    rect(0, WALK_Y1, GW + stageW, GH - WALK_Y1, "#1f2937");
+    rect(60 - camX * 0.5, WALK_Y0 + 30, 20, 24, "#64748b");
+
+    bgPhase += 0.02;
+  }
+
+  function drawHUD() {
+    rect(4, 4, GW - 8, 52, "rgba(0,0,0,0.55)");
+    drawPixelFighter(null, selectedFighter, 22, 28, 1, 0, false);
+
+    var hpW = 100;
+    rect(38, 10, hpW, 8, "#14532d");
+    var hpPct = player ? player.hp / player.maxHp : 1;
+    rect(38, 10, hpW * hpPct, 8, "#22c55e");
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "8px monospace";
+    ctx.fillText("♥ x" + lives, 38, 28);
+    ctx.fillStyle = "#fbbf24";
+    ctx.fillText("🪙 x" + coins, 90, 28);
+    ctx.fillStyle = "#fff";
+    ctx.fillText("SCORE: " + String(score).padStart(6, "0"), 38, 40);
+
+    ctx.textAlign = "center";
+    ctx.font = "bold 16px monospace";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(String(Math.ceil(timer)), GW / 2, 18);
+    ctx.font = "8px monospace";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("STAGE " + stage, GW / 2, 30);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#4ade80";
+    ctx.font = "8px monospace";
+    ctx.fillText("LV. " + stage, GW - 8, 18);
+    ctx.textAlign = "left";
+
+    rect(38, 44, 180, 5, "#334155");
+    rect(38, 44, 180 * (special / 100), 5, "#eab308");
+    ctx.fillStyle = "#eab308";
+    ctx.font = "7px monospace";
+    ctx.fillText("SPECIAL", 38, 43);
+  }
+
+  function makePlayer() {
+    return {
+      x: 80, y: 350, z: 0.5, vx: 0, vy: 0, vz: 0,
+      w: 20, h: 36, facing: 1, hp: 100, maxHp: 100,
+      onGround: true, jumpVel: 0,
+      state: "idle", stateT: 0, atkType: null, invuln: 0,
+      fighterId: selectedFighter
+    };
+  }
+
+  function makeEnemy(type, x, y) {
+    var hp = type === "gi" ? 50 : type === "punk" ? 35 : 28;
+    return {
+      type: type, x: x, y: y, z: 0.3 + Math.random() * 0.4,
+      vx: 0, vy: 0, w: 18, h: 34, facing: -1,
+      hp: hp, maxHp: hp, state: "walk", stateT: 0,
+      atkCd: 0, hitFlash: 0, dead: false, knockX: 0
+    };
+  }
+
+  function spawnWave() {
+    wave++;
+    var baseX = camX + GW + 40 + wave * 30;
+    var types = ["punk", "thug", "gi"];
+    var count = Math.min(2 + wave, 5);
+    for (var i = 0; i < count; i++) {
+      var t = types[i % 3];
+      if (wave > 2 && i === count - 1) t = "gi";
+      enemies.push(makeEnemy(t, baseX + i * 50, WALK_Y0 + 20 + (i % 3) * 35));
+    }
+  }
+
+  function startGame() {
+    ensureAudio();
+    sfxStart();
+    selectedFighter = selIdx;
+    player = makePlayer();
+    enemies = [];
+    particles = [];
+    floatTexts = [];
+    camX = 0;
+    score = 0;
+    coins = 0;
+    lives = 4;
+    timer = 120;
+    timerAcc = 0;
+    special = 0;
+    wave = 0;
+    waveTimer = 1;
+    stageClear = false;
+    gameOver = false;
+    stage = 1;
+    state = "play";
+    setPlaying(true);
+    spawnWave();
+  }
+
+  function resetToSelect() {
+    state = "select";
+    player = null;
+    enemies = [];
+    setPlaying(false);
+  }
+
+  function overlap(a, b, pad) {
+    pad = pad || 0;
+    return Math.abs(a.x - b.x) < (a.w + b.w) / 2 + pad &&
+      Math.abs(a.y - b.y) < (a.h + b.h) / 2 + pad;
+  }
+
+  function attackHitbox(p) {
+    var reach = p.atkType === "kick" ? 28 : 22;
+    return {
+      x: p.x + p.facing * (p.w / 2 + reach / 2),
+      y: p.y - 4,
+      w: reach,
+      h: 24
+    };
+  }
+
+  function damageEnemy(e, dmg, kb) {
+    e.hp -= dmg;
+    e.hitFlash = 8;
+    e.knockX = kb;
+    e.vx = kb;
+    score += dmg * 10;
+    special = Math.min(100, special + 4);
+    sfxHit();
+    particles.push({ x: e.x - camX, y: e.y - 20, t: 0, c: "#fca5a5" });
+    floatTexts.push({ x: e.x - camX, y: e.y - 30, t: 0, text: "-" + dmg });
+    if (e.hp <= 0 && !e.dead) {
+      e.dead = true;
+      coins++;
+      score += 200;
+    }
+  }
+
+  function damagePlayer(dmg) {
+    if (!player || player.invuln > 0) return;
+    player.hp -= dmg;
+    player.invuln = 40;
+    sfxDie();
+    if (player.hp <= 0) {
+      lives--;
+      if (lives <= 0) {
+        gameOver = true;
+        state = "gameover";
+        setPlaying(false);
+      } else {
+        player.hp = player.maxHp;
+        player.x = camX + 60;
+        player.invuln = 90;
+      }
+    }
+  }
+
+  function updatePlayer(dt) {
+    if (!player) return;
+    var p = player;
+    var spd = 2.2;
+    var mx = 0, my = 0;
+
+    if (keys.ArrowLeft || keys.a || keys.A || touchDirs.left) mx -= 1;
+    if (keys.ArrowRight || keys.d || keys.D || touchDirs.right) mx += 1;
+    if (keys.ArrowUp || keys.w || keys.W || touchDirs.up) { my -= 1; if (p.onGround) { p.onGround = false; p.jumpVel = -7.5; } }
+    if (keys.ArrowDown || keys.s || keys.S || touchDirs.down) my += 1;
+
+    if (p.state === "attack") {
+      p.stateT--;
+      if (p.stateT <= 0) { p.state = "idle"; p.atkType = null; }
+    } else {
+      if ((keys.z || keys.Z || touchPunch) && p.onGround) {
+        p.state = "attack"; p.stateT = 14; p.atkType = "punch";
+        sfxPunch();
+      } else if ((keys.x || keys.X || touchKick) && p.onGround) {
+        p.state = "attack"; p.stateT = 18; p.atkType = "kick";
+        sfxKick();
+      }
+    }
+    touchPunch = false;
+    touchKick = false;
+
+    if (p.state !== "attack") {
+      p.vx = mx * spd;
+      p.vy = my * spd * 0.7;
+    } else {
+      p.vx *= 0.85;
+      p.vy *= 0.85;
+    }
+
+    if (!p.onGround) {
+      p.jumpVel += GRAVITY;
+      p.y += p.jumpVel;
+      if (p.y >= 350) { p.y = 350; p.onGround = true; p.jumpVel = 0; }
+    } else {
+      p.y += p.vy;
+      p.x += p.vx;
+    }
+
+    p.y = Math.max(WALK_Y0, Math.min(WALK_Y1, p.y));
+    p.x = Math.max(camX + 10, Math.min(camX + GW - 30, p.x));
+    if (mx !== 0) p.facing = mx > 0 ? 1 : -1;
+    if (p.invuln > 0) p.invuln--;
+
+    if (p.state === "attack" && p.stateT > 4 && p.stateT < 12) {
+      var hb = attackHitbox(p);
+      enemies.forEach(function (e) {
+        if (e.dead) return;
+        if (Math.abs(hb.x - e.x) < hb.w / 2 + e.w / 2 && Math.abs(hb.y - e.y) < hb.h / 2 + e.h / 2) {
+          var dmg = p.atkType === "kick" ? 18 : 12;
+          damageEnemy(e, dmg, p.facing * 4);
+        }
+      });
+    }
+
+    if (p.x > camX + GW * 0.65) camX = Math.min(stageW - GW + 100, p.x - GW * 0.55);
+  }
+
+  function updateEnemies(dt) {
+    var alive = 0;
+    enemies.forEach(function (e) {
+      if (e.dead) return;
+      alive++;
+      e.hitFlash = Math.max(0, e.hitFlash - 1);
+      e.x += e.vx + e.knockX;
+      e.knockX *= 0.8;
+      e.vx *= 0.9;
+
+      if (e.hitFlash > 0) return;
+
+      var dx = player.x - e.x;
+      var dy = player.y - e.y;
+      e.facing = dx >= 0 ? 1 : -1;
+
+      if (Math.abs(dx) < 30 && Math.abs(dy) < 30) {
+        e.stateT--;
+        if (e.stateT <= 0) {
+          e.stateT = 40 + Math.random() * 30;
+          if (Math.abs(dx) < 26) damagePlayer(e.type === "gi" ? 12 : 8);
+        }
+      } else {
+        e.x += e.facing * (e.type === "gi" ? 0.9 : 1.2);
+        e.y += dy > 0 ? 0.4 : -0.4;
+        e.y = Math.max(WALK_Y0, Math.min(WALK_Y1, e.y));
+      }
+    });
+    enemies = enemies.filter(function (e) { return !e.dead || e.hitFlash > 0; });
+
+    if (alive === 0) {
+      waveTimer -= dt;
+      if (waveTimer <= 0) {
+        if (wave >= 3) {
+          stageClear = true;
+          state = "victory";
+          sfxWin();
+          setPlaying(false);
+        } else {
+          waveTimer = 90;
+          spawnWave();
+        }
+      }
+    }
+  }
+
+  function updatePlay(dt) {
+    timerAcc += dt;
+    if (timerAcc >= 60) {
+      timerAcc = 0;
+      timer--;
+      if (timer <= 0 && !gameOver) {
+        gameOver = true;
+        state = "gameover";
+        setPlaying(false);
+      }
+    }
+    updatePlayer(dt);
+    updateEnemies(dt);
+
+    particles.forEach(function (p) { p.t++; p.y -= 0.5; });
+    particles = particles.filter(function (p) { return p.t < 20; });
+    floatTexts.forEach(function (f) { f.t++; f.y -= 0.8; });
+    floatTexts = floatTexts.filter(function (f) { return f.t < 30; });
+  }
+
+  function drawPlay() {
+    drawStageBg();
+
+    var drawList = enemies.slice();
+    if (player) drawList.push(player);
+    drawList.sort(function (a, b) { return a.y - b.y; });
+
+    drawList.forEach(function (e) {
+      if (e === player) {
+        var px = player.x - camX;
+        if (player.invuln % 6 < 3) {
+          drawPixelFighter(null, player.fighterId, px, player.y, player.facing, player.stateT, player.atkType);
+        }
+      } else {
+        drawEnemySprite(e);
+      }
+    });
+
+    particles.forEach(function (p) {
+      ctx.globalAlpha = 1 - p.t / 20;
+      rect(p.x, p.y, 3, 3, p.c);
+      ctx.globalAlpha = 1;
+    });
+    floatTexts.forEach(function (f) {
+      ctx.fillStyle = "#fff";
+      ctx.font = "8px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(f.text, f.x, f.y - f.t);
+    });
+    ctx.textAlign = "left";
+
+    drawHUD();
+  }
+
+  function drawOverlay(title, sub, btnText) {
+    ctx.fillStyle = "rgba(0,0,0,0.72)";
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.textAlign = "center";
+    ctx.fillStyle = title === "VICTORY!" ? "#4ade80" : title === "GAME OVER" ? "#ef4444" : "#fff";
+    ctx.font = "bold 18px monospace";
+    ctx.fillText(title, GW / 2, GH / 2 - 30);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "10px monospace";
+    ctx.fillText(sub, GW / 2, GH / 2 - 8);
+    ctx.fillStyle = "#fbbf24";
+    ctx.fillText("SCORE: " + score, GW / 2, GH / 2 + 12);
+
+    var bx = GW / 2 - 55, by = GH / 2 + 36;
+    rect(bx, by, 110, 28, "#dc2626");
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(bx, by, 110, 28);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(btnText, GW / 2, by + 18);
+    ctx.textAlign = "left";
+    return { x: bx, y: by, w: 110, h: 28 };
+  }
+
+  function updateSelect() {
+    rainbowT += 0.02;
+    if (keys.ArrowRight) { selCol = Math.min(2, selCol + 1); selIdx = selRow * 3 + selCol; sfxSelect(); keys.ArrowRight = false; }
+    if (keys.ArrowLeft) { selCol = Math.max(0, selCol - 1); selIdx = selRow * 3 + selCol; sfxSelect(); keys.ArrowLeft = false; }
+    if (keys.ArrowDown) { selRow = Math.min(1, selRow + 1); selIdx = selRow * 3 + selCol; sfxSelect(); keys.ArrowDown = false; }
+    if (keys.ArrowUp) { selRow = Math.max(0, selRow - 1); selIdx = selRow * 3 + selCol; sfxSelect(); keys.ArrowUp = false; }
+  }
+
+  function render() {
+    beginFrame();
+    if (state === "select") {
+      updateSelect();
+      drawSelectBg();
+      drawSelectTitle();
+      drawSelectGrid();
+      drawStartButton();
+    } else if (state === "play") {
+      drawPlay();
+    } else if (state === "victory") {
+      drawPlay();
+      drawOverlay("VICTORY!", "STAGE " + stage + " CLEAR!", "CONTINUE");
+    } else if (state === "gameover") {
+      if (player) drawPlay();
+      else { drawSelectBg(); }
+      drawOverlay("GAME OVER", "TRY AGAIN?", "RETRY");
+    }
+    endFrame();
+  }
+
+  var lastT = 0;
+  function loop(t) {
+    var dt = lastT ? Math.min(3, (t - lastT) / 16.67) : 1;
+    lastT = t;
+    if (state === "play") updatePlay(dt);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  function hitRect(gx, gy, r) {
+    return gx >= r.x && gx <= r.x + r.w && gy >= r.y && gy <= r.y + r.h;
+  }
+
+  function onPointer(clientX, clientY) {
+    var g = toGame(clientX, clientY);
+    ensureAudio();
+    setPlaying(true);
+
+    if (state === "select") {
+      var cellW = 88, cellH = 100;
+      var startX = (GW - 3 * cellW - 20) / 2;
+      var startY = 72;
+      for (var i = 0; i < 6; i++) {
+        var row = Math.floor(i / 3), col = i % 3;
+        var cx = startX + col * (cellW + 10);
+        var cy = startY + row * (cellH + 12);
+        if (hitRect(g.x, g.y, { x: cx, y: cy, w: cellW, h: cellH })) {
+          selIdx = i; selRow = row; selCol = col;
+          sfxSelect();
+          return;
+        }
+      }
+      var btn = { x: GW / 2 - 70, y: GH - 58, w: 140, h: 32 };
+      if (hitRect(g.x, g.y, btn)) startGame();
+    } else if (state === "victory" || state === "gameover") {
+      var ob = { x: GW / 2 - 55, y: GH / 2 + 36, w: 110, h: 28 };
+      if (hitRect(g.x, g.y, ob)) {
+        if (state === "victory") { stage++; timer = 120; stageClear = false; state = "play"; wave = 0; waveTimer = 1; enemies = []; spawnWave(); setPlaying(true); }
+        else startGame();
+      }
+    }
+  }
+
+  canvas.addEventListener("pointerdown", function (e) {
+    e.preventDefault();
+    onPointer(e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener("pointermove", function (e) {
+    if (state !== "select") return;
+    var g = toGame(e.clientX, e.clientY);
+    var btn = { x: GW / 2 - 70, y: GH - 58, w: 140, h: 32 };
+    startBtnHover = hitRect(g.x, g.y, btn);
+  });
+
+  window.addEventListener("keydown", function (e) {
+    keys[e.key] = true;
+    if (state === "select" && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      startGame();
+    }
+    if (state === "victory" && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      stage++; timer = 120; state = "play"; wave = 0; waveTimer = 1; enemies = []; spawnWave(); setPlaying(true);
+    }
+    if (state === "gameover" && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      startGame();
+    }
+  }, true);
+
+  window.addEventListener("keyup", function (e) { keys[e.key] = false; }, true);
+
+  document.querySelectorAll(".dpad-btn").forEach(function (btn) {
+    var dir = btn.dataset.dir;
+    btn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      touchDirs[dir] = true;
+      setPlaying(true);
+      ensureAudio();
+    });
+    btn.addEventListener("pointerup", function () { touchDirs[dir] = false; });
+    btn.addEventListener("pointerleave", function () { touchDirs[dir] = false; });
+  });
+
+  document.getElementById("btnPunch").addEventListener("pointerdown", function (e) {
+    e.preventDefault(); touchPunch = true; setPlaying(true); ensureAudio();
+  });
+  document.getElementById("btnKick").addEventListener("pointerdown", function (e) {
+    e.preventDefault(); touchKick = true; setPlaying(true); ensureAudio();
+  });
+
+  if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
+    document.body.classList.add("touch");
+  }
+
+  if (EMBED) {
+    document.documentElement.classList.add("embed-root");
+    document.body.classList.add("embed");
+  }
+
+  window.__setFeedSound = function (enabled) {
+    soundOn = !!enabled;
+    if (enabled) ensureAudio();
+  };
+  window.__unlockGameAudio = function () { window.__setFeedSound(true); };
+
+  window.addEventListener("message", function (e) {
+    if (e.data?.type === "streetfight-sound") { soundOn = !!e.data.enabled; if (e.data.enabled) ensureAudio(); }
+    if (e.data?.type === "streetfight-resize") resize();
+    if (e.data?.type === "streetfight-start") { ensureAudio(); soundOn = true; setPlaying(true); }
+  });
+
+  window.addEventListener("resize", resize);
+  resize();
+  postReady();
+  requestAnimationFrame(loop);
+})();
+  </script>
+</body>
+</html>
