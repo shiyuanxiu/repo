@@ -9795,7 +9795,7 @@ function loadIframeGame(game) {
     hole: { id: "holeFrame", src: "games/hole-swallow.html?embed=1&v=ios-audio-unlock" },
     pacman: { id: "pacmanFrame", src: "games/pacman.html?embed=1&v=pacman-v7" },
     gungate: { id: "gungateFrame", src: "games/gungate-gang.html?embed=1&v=gungate-v7" },
-    chibimg: { id: "chibimgFrame", src: "games/chibi-magical-girls.html?embed=1&v=mg-coloring-v20" },
+    chibimg: { id: "chibimgFrame", src: "games/chibi-magical-girls.html?embed=1&v=mg-coloring-v21" },
     streetfight: { id: "streetfightFrame", src: "games/bruce-lee-street-fight.html?embed=1&v=streetfight-v1" },
     growfish: { id: "growfishFrame", src: "games/grow-a-fish.html?embed=1&v=growfish-v20" },
   };

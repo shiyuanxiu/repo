@@ -1079,109 +1079,46 @@ body::before {
 .chibimg-cover-bg {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(253, 244, 255, 0.08) 0%, transparent 30%, rgba(88, 28, 135, 0.12) 100%),
-    url("games/assets/chibimg-cover.png") center 42% / cover no-repeat;
+  background-color: #fce7f3;
+  background-image: url("games/assets/chibimg-cover-astrocade.webp");
+  background-repeat: no-repeat;
+  background-position: center 14%;
+  background-size: cover;
 }
 
 .chibimg-cover-shine {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 45% at 50% 12%, rgba(255, 255, 255, 0.55) 0%, transparent 58%),
-    radial-gradient(circle at 18% 78%, rgba(253, 224, 71, 0.28) 0%, transparent 28%),
-    radial-gradient(circle at 82% 70%, rgba(244, 114, 182, 0.22) 0%, transparent 32%);
+    radial-gradient(ellipse 85% 40% at 50% 8%, rgba(255, 255, 255, 0.28) 0%, transparent 62%);
   pointer-events: none;
 }
 
-.chibimg-cover-sparkles {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.chibimg-cover-vignette {
   position: absolute;
   inset: 0;
+  background: linear-gradient(180deg, transparent 52%, rgba(45, 27, 78, 0.18) 72%, rgba(45, 27, 78, 0.62) 100%);
   pointer-events: none;
-}
-
-.chibimg-cover-sparkles li {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #fde047;
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  filter: drop-shadow(0 0 6px rgba(253, 224, 71, 0.75));
-  animation: chibimg-cover-sparkle 2.8s ease-in-out infinite;
-}
-
-.chibimg-cover-sparkles li:nth-child(1) { top: 16%; left: 14%; animation-delay: 0s; transform: scale(0.7); }
-.chibimg-cover-sparkles li:nth-child(2) { top: 24%; right: 16%; animation-delay: 0.6s; transform: scale(0.55); }
-.chibimg-cover-sparkles li:nth-child(3) { top: 52%; left: 10%; animation-delay: 1.1s; transform: scale(0.65); }
-.chibimg-cover-sparkles li:nth-child(4) { top: 58%; right: 12%; animation-delay: 0.3s; transform: scale(0.8); }
-.chibimg-cover-sparkles li:nth-child(5) { top: 34%; left: 48%; animation-delay: 1.6s; transform: scale(0.45); opacity: 0.85; }
-
-@keyframes chibimg-cover-sparkle {
-  0%, 100% { opacity: 0.35; transform: scale(0.6) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(18deg); }
-}
-
-.chibimg-cover-copy {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  width: min(90%, 300px);
-  text-align: center;
-  padding: 0.55rem 0.85rem 0.65rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(244, 114, 182, 0.45);
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.22);
-  backdrop-filter: blur(6px);
-  pointer-events: none;
-}
-
-.chibimg-cover-kicker {
-  margin: 0 0 0.2rem;
-  font-size: clamp(0.5rem, 2vw, 0.65rem);
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: #db2777;
-}
-
-.chibimg-cover-title {
-  margin: 0;
-  font-size: clamp(1.05rem, 4.8vw, 1.55rem);
-  font-weight: 900;
-  line-height: 1.08;
-  letter-spacing: 0.02em;
-  color: #581c87;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-.chibimg-cover-sub {
-  margin: 0.3rem 0 0;
-  font-size: clamp(0.58rem, 2.2vw, 0.72rem);
-  font-weight: 700;
-  color: #a855f7;
 }
 
 .chibimg-cover-cta {
   position: absolute;
   left: 50%;
-  bottom: 11%;
+  bottom: 10%;
   transform: translateX(-50%);
   z-index: 2;
   margin: 0;
-  padding: 0.45rem 1rem;
+  padding: 0.5rem 1.15rem;
   border-radius: 999px;
-  font-size: clamp(0.62rem, 2.4vw, 0.76rem);
+  font-size: clamp(0.64rem, 2.5vw, 0.78rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
-  color: #581c87;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(244, 114, 182, 0.5);
-  box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25);
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: rgba(45, 27, 78, 0.78);
+  border: 1px solid rgba(249, 168, 212, 0.55);
+  box-shadow: 0 8px 22px rgba(88, 28, 135, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   pointer-events: none;
   animation: chibimg-cover-cta-pulse 2.4s ease-in-out infinite;
 }
